@@ -15,16 +15,23 @@ class EFrameBufferObject {
     var texName: Int = 0
         private set
 
+    private val tmpArgs = IntArray(1)
     fun setup(width: Int, height: Int) {
-        val args = IntArray(1)
+        tmpArgs[0] = 0
+        val args = tmpArgs
+
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
         require(!(width > args[0] || height > args[0])) { "GL_MAX_TEXTURE_SIZE " + args[0] }
+
         GLES20.glGetIntegerv(GLES20.GL_MAX_RENDERBUFFER_SIZE, args, 0)
         require(!(width > args[0] || height > args[0])) { "GL_MAX_RENDERBUFFER_SIZE " + args[0] }
+
         GLES20.glGetIntegerv(GLES20.GL_FRAMEBUFFER_BINDING, args, 0)
         val saveFrameBuffer = args[0]
+
         GLES20.glGetIntegerv(GLES20.GL_RENDERBUFFER_BINDING, args, 0)
         val saveRenderBuffer = args[0]
+
         GLES20.glGetIntegerv(GLES20.GL_TEXTURE_BINDING_2D, args, 0)
         val saveTexName = args[0]
 
@@ -41,8 +48,7 @@ class EFrameBufferObject {
             renderBufferName = args[0]
             GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderBufferName)
             GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, width, height)
-            GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER,
-                    renderBufferName)
+            GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, renderBufferName)
 
             GLES20.glGenTextures(args.size, args, 0)
             texName = args[0]
@@ -84,6 +90,7 @@ class EFrameBufferObject {
     }
 
     fun enable() {
+        ///启用离屏渲染
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
     }
 }

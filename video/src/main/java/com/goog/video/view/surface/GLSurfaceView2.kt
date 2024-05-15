@@ -31,6 +31,6 @@ open class GLSurfaceView2 @JvmOverloads constructor(context: Context?, attrs: At
 
     override fun onPause() {
         super.onPause()
-        renderer.release()
+        renderer.onPause()
     }
 }

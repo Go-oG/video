@@ -33,7 +33,12 @@ class GlLookUpTableFilter(private var lutTexture: Bitmap?) : GlFilter() {
         }
     }
 
-    fun releaseLutBitmap() {
+    override fun release() {
+        super.release()
+        releaseLutBitmap()
+    }
+
+    private fun releaseLutBitmap() {
         if (lutTexture != null && !lutTexture!!.isRecycled) {
             lutTexture!!.recycle()
             lutTexture = null

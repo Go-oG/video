@@ -21,7 +21,9 @@ import javax.microedition.khronos.opengles.GL10
 //FrameBufferObjectRenderer
 abstract class EFBORenderer : GLSurfaceView.Renderer {
     private var fbo = EFrameBufferObject()
+
     private var normalShader: GlFilter? = null
+
     private val runOnDraw: Queue<Runnable> = LinkedList()
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -43,6 +45,7 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
             }
         }
         fbo.enable()
+
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
 
         onDrawFrame(fbo)
@@ -67,9 +70,12 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
 
 class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     SurfaceTexture.OnFrameAvailableListener {
+    private val handler = Handler(Looper.getMainLooper())
+    private var player: Player? = null
+    private var playSurface: Surface? = null
     private var previewTexture: ESurfaceTexture? = null
-    private var updateSurface = false
 
+    private var updateSurface = false
     private var texName = 0
 
     private val MVPMatrix = FloatArray(16)
@@ -83,10 +89,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     private var glFilter: GlFilter? = null
     private var isNewFilter = false
-
     private var aspectRatio = 1f
-
-    private var player: Player? = null
 
     init {
         Matrix.setIdentityM(STMatrix, 0)
@@ -94,12 +97,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     fun setGlFilter(filter: GlFilter?) {
         glSurfaceView.queueEvent {
-            if (glFilter != null) {
-                glFilter!!.release()
-                if (glFilter is GlLookUpTableFilter) {
-                    (glFilter as GlLookUpTableFilter).releaseLutBitmap()
-                }
-            }
+            glFilter?.release()
             glFilter = filter
             isNewFilter = true
             glSurfaceView.requestRender()
@@ -115,20 +113,23 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         texName = args[0]
 
         previewTexture = ESurfaceTexture(texName)
-        previewTexture?.setFrameAvailableListener(this)
+        previewTexture!!.setFrameAvailableListener(this)
 
         GLES20.glBindTexture(previewTexture!!.textureTarget, texName)
+
         // GL_TEXTURE_EXTERNAL_OES
         EGLUtil.setupSampler(previewTexture!!.textureTarget, GLES20.GL_LINEAR, GLES20.GL_NEAREST)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
 
         filterFramebufferObject = EFrameBufferObject()
+
         // GL_TEXTURE_EXTERNAL_OES
         previewFilter = GlPreviewFilter(previewTexture!!.textureTarget)
         previewFilter!!.setup()
-        Handler(Looper.getMainLooper()).post {
-            val surface = Surface(previewTexture!!.texture)
-            player!!.setVideoSurface(surface)
+
+        val surface = Surface(previewTexture!!.texture)
+        handler.post {
+            resetSurface(surface, false)
         }
 
         Matrix.setLookAtM(VMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
@@ -146,13 +147,12 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     override fun onSurfaceChanged(width: Int, height: Int) {
         Log.d(TAG, "onSurfaceChanged width = $width  height = $height")
-        filterFramebufferObject!!.setup(width, height)
-        previewFilter!!.setFrameSize(width, height)
-        if (glFilter != null) {
-            glFilter!!.setFrameSize(width, height)
-        }
+        filterFramebufferObject?.setup(width, height)
+        previewFilter?.setFrameSize(width, height)
+        glFilter?.setFrameSize(width, height)
 
         aspectRatio = width.toFloat() / height
+
         Matrix.frustumM(ProjMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, 5f, 7f)
         Matrix.setIdentityM(MMatrix, 0)
     }
@@ -167,17 +167,15 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         }
 
         if (isNewFilter) {
-            if (glFilter != null) {
-                glFilter!!.setup()
-                glFilter!!.setFrameSize(fbo!!.width, fbo.height)
-            }
+            glFilter?.setup()
+            glFilter?.setFrameSize(fbo!!.width, fbo.height)
             isNewFilter = false
         }
 
         if (glFilter != null) {
-            filterFramebufferObject!!.enable()
-            GLES20.glViewport(0, 0, filterFramebufferObject!!.width,
-                    filterFramebufferObject!!.height)
+            val filterFBO = filterFramebufferObject!!
+            filterFBO.enable()
+            GLES20.glViewport(0, 0, filterFBO.width, filterFBO.height)
         }
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
@@ -185,12 +183,12 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         Matrix.multiplyMM(MVPMatrix, 0, VMatrix, 0, MMatrix, 0)
         Matrix.multiplyMM(MVPMatrix, 0, ProjMatrix, 0, MVPMatrix, 0)
 
-        previewFilter!!.draw(texName, MVPMatrix, STMatrix, aspectRatio)
+        previewFilter?.draw(texName, MVPMatrix, STMatrix, aspectRatio)
 
         if (glFilter != null) {
-            fbo!!.enable()
+            fbo?.enable()
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-            glFilter!!.draw(filterFramebufferObject!!.texName, fbo)
+            glFilter?.draw(filterFramebufferObject!!.texName, fbo)
         }
     }
 
@@ -202,20 +200,39 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     fun setPlayer(player: Player?) {
         this.player = player
+        resetSurface(playSurface, true)
     }
 
-    fun release() {
-        if (glFilter != null) {
-            glFilter!!.release()
+    private fun resetSurface(newSurface: Surface?, force: Boolean) {
+        if (newSurface == playSurface) {
+            if (force) {
+                player?.setVideoSurface(newSurface)
+            }
+            return
         }
-        if (previewTexture != null) {
-            previewTexture!!.release()
+        val old = playSurface
+        playSurface = null
+        try {
+            player?.setVideoSurface(null)
+            old?.release()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
+        playSurface = newSurface
+        player?.setVideoSurface(playSurface)
+    }
+
+    ///由外界调用
+    fun onPause() {
+        glFilter?.release()
+        previewTexture?.release()
     }
 
     companion object {
         private val TAG: String = SimpleRenderer::class.java.simpleName
     }
+
 }
 
 interface ISurfaceView {
