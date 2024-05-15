@@ -17,3 +17,7 @@ fun safeInterrupt(block: () -> Unit) {
         currentThread().interrupt()
     }
 }
+
+fun checkArgs(value: Boolean) {
+    require(value) { "Args check failed" }
+}
