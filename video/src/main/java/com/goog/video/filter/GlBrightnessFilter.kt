@@ -1,14 +1,19 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 /**
  * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
  */
-class GlBrightnessFilter :GlFilter(){
+class GlBrightnessFilter(value: Float = 0f) : GlFilter() {
+    init {
+        setBrightness(value)
+    }
     private var brightness = 0f
 
     fun setBrightness(brightness: Float) {
+        checkArgs(brightness >= -1.0f && brightness <= 1.0f)
         this.brightness = brightness
     }
 

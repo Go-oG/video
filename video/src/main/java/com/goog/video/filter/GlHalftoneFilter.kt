@@ -1,17 +1,31 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlHalftoneFilter : GlFilter() {
+///半色调滤镜
+class GlHalftoneFilter(fraction: Float = 0.01f, aspectRatio: Float = 1f) : GlFilter() {
     private var fractionalWidthOfPixel = 0.01f
     private var aspectRatio = 1f
 
-    fun setFractionalWidthOfAPixel(fractionalWidthOfAPixel: Float) {
-        this.fractionalWidthOfPixel = fractionalWidthOfAPixel
+    init {
+        setFractionalWidthOfAPixel(fraction)
+        setAspectRatio(aspectRatio)
+    }
+
+    fun setAspectRatio(v: Float) {
+        checkArgs(v > 0, "aspect ratio must be greater than 0")
+        this.aspectRatio = v
+    }
+
+    fun setFractionalWidthOfAPixel(v: Float) {
+        checkArgs(v > 0, "fractional width of a pixel must be greater than 0")
+        this.fractionalWidthOfPixel = v
     }
 
     override fun setFrameSize(width: Int, height: Int) {
         super.setFrameSize(width, height)
+        ///TODO: 写反了?
         aspectRatio = height.toFloat() / width.toFloat()
     }
 

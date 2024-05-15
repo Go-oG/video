@@ -1,11 +1,35 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlGaussianBlurFilter : GlFilter() {
-    var texelWidthOffset: Float = 0.01f
-    var texelHeightOffset: Float = 0.01f
-    var blurSize: Float = 0.2f
+class GlGaussianBlurFilter(widthOffset: Float = 0.01f, heightOffset: Float = 0.01f, blurSize: Float = 0.2f) :
+    GlFilter() {
+
+    private var texelWidthOffset: Float = 0.01f
+    private var texelHeightOffset: Float = 0.01f
+    private var blurSize: Float = 0.2f
+
+    init {
+        setTexelWidthOffset(widthOffset)
+        setTexelHeightOffset(heightOffset)
+        setBlurSize(blurSize)
+    }
+
+    fun setTexelWidthOffset(v: Float) {
+        checkArgs(v >= 0.0f, "texelWidthOffset must be >= 0")
+        texelWidthOffset = v
+    }
+
+    fun setTexelHeightOffset(v: Float) {
+        checkArgs(v >= 0.0f, "texelHeightOffset must be >= 0")
+        texelHeightOffset = v
+    }
+
+    fun setBlurSize(v: Float) {
+        checkArgs(v >= 0.0f, "blurSize must be >= 0")
+        blurSize = v
+    }
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("texelWidthOffset", texelWidthOffset)

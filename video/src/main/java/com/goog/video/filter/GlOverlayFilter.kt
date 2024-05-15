@@ -10,11 +10,11 @@ import com.goog.video.model.Resolution
 
 abstract class GlOverlayFilter : GlFilter() {
     private val textures = IntArray(1)
-
     private var bitmap: Bitmap? = null
 
     protected var inputResolution: Resolution = Resolution(1280, 720)
 
+    //TODO 参数范围待确认
     fun setResolution(resolution: Resolution) {
         this.inputResolution = resolution
     }

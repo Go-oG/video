@@ -1,13 +1,20 @@
 package com.goog.video.filter
 
-import android.graphics.PointF
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlSwirlFilter : GlFilter() {
+class GlSwirlFilter(angle: Float = 1f, radius: Float = 0.5f, cx: Float = 0.5f, cy: Float = 0.5f) : GlFilter() {
     private var angle = 1.0f
     private var radius = 0.5f
-    private var center = PointF(0.5f, 0.5f)
+    private var centerX = 0.5f
+    private var centerY = 0.5f
 
+    init {
+        setAngle(angle)
+        setRadius(radius)
+        setCenterX(cx)
+        setCenterY(cy)
+    }
     fun setAngle(angle: Float) {
         this.angle = angle
     }
@@ -16,12 +23,19 @@ class GlSwirlFilter : GlFilter() {
         this.radius = radius
     }
 
-    fun setCenter(center: PointF) {
-        this.center = center
+    fun setCenterX(v: Float) {
+        checkArgs(v in 0.0..1.0, "centerX must be in the range [0, 1]")
+        this.centerX = v
     }
 
+    fun setCenterY(v: Float) {
+        checkArgs(v in 0.0..1.0, "centerY must be in the range [0, 1]")
+        this.centerY = v
+    }
+
+
     override fun onDraw(fbo: EFrameBufferObject?) {
-        putVec2("center", center.x,center.y)
+        putVec2("center", centerX, centerY)
         put("radius", radius)
         put("angle", angle)
     }

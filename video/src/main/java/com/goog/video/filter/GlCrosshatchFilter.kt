@@ -1,21 +1,28 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlCrosshatchFilter : GlFilter() {
+class GlCrosshatchFilter(space: Float = 0.03f, lineWidth: Float = 0.003f) : GlFilter() {
     private var crossHatchSpacing = 0.03f
     private var lineWidth = 0.003f
 
+    init {
+        setCrossHatchSpacing(space)
+        setLineWidth(lineWidth)
+    }
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("crossHatchSpacing", crossHatchSpacing)
         put("lineWidth", lineWidth)
     }
 
     fun setCrossHatchSpacing(crossHatchSpacing: Float) {
+        checkArgs(crossHatchSpacing >=0.0f, "crossHatchSpacing must be >= 0")
         this.crossHatchSpacing = crossHatchSpacing
     }
 
     fun setLineWidth(lineWidth: Float) {
+        checkArgs(lineWidth >=0.0f, "lineWidth must be >= 0")
         this.lineWidth = lineWidth
     }
 

@@ -1,15 +1,10 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-/**
- * Adjusts the individual RGB channels of an image
- * red: Normalized values by which each color channel is multiplied.
- * The range is from 0.0 up, with 1.0 as the default.
- * green:
- * blue:
- */
-class GlRGBFilter : GlFilter() {
+class GlRGBFilter(r: Float = 1f, g: Float = 1f, b: Float = 1f, brightness: Float = 0f,
+    saturation: Float = 1f, contrast: Float = 1.2f) : GlFilter() {
     private var red = 1f
     private var green = 1f
     private var blue = 1f
@@ -17,27 +12,42 @@ class GlRGBFilter : GlFilter() {
     private var saturation = 1f
     private var contrast = 1.2f
 
-    fun setRed(red: Float) {
-        this.red = red
+    init {
+        setRed(r)
+        setGreen(g)
+        setBlue(b)
+        setBrightness(brightness)
+        setSaturation(saturation)
+        setContrast(contrast)
     }
 
-    fun setGreen(green: Float) {
-        this.green = green
+    fun setRed(v: Float) {
+        checkArgs(v in 0f..1f, "red must be >= 0 and <=1")
+        this.red = v
+    }
+
+    fun setGreen(v: Float) {
+        checkArgs(v in 0f..1f, "green must be >= 0 and <=1")
+        this.green = v
     }
 
     fun setBlue(blue: Float) {
+        checkArgs(blue in 0f..1f, "blue must be >= 0 and <=1")
         this.blue = blue
     }
 
     fun setBrightness(brightness: Float) {
+        checkArgs(brightness in 0f..1f, "brightness must be >= 0 and <=1")
         this.brightness = brightness
     }
 
     fun setSaturation(saturation: Float) {
+        checkArgs(saturation in 0f..1f, "saturation must be >= 0 and <=1")
         this.saturation = saturation
     }
 
     fun setContrast(contrast: Float) {
+        checkArgs(contrast >= 0f, "contrast must be >= 0")
         this.contrast = contrast
     }
 

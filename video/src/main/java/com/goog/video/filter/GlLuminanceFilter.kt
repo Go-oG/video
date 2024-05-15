@@ -1,6 +1,8 @@
 package com.goog.video.filter
 
 class GlLuminanceFilter : GlFilter() {
+
+    //TODO 待实现参数？
     override fun getFragmentShader(): String {
         return """
           precision mediump float;

@@ -3,11 +3,15 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GlCornerFilter : GlFilter() {
+class GlCornerFilter(corner: Float = 0f) : GlFilter() {
     private var topLeftRadius = 0.0f
     private var topRightRadius = 0.0f
     private var bottomLeftRadius = 0.0f
     private var bottomRightRadius = 0.0f
+
+    init {
+        setCorner(corner)
+    }
 
     fun setCorner(corner: Float) {
         checkArgs(corner >= 0.0f, "corner must be >= 0")
@@ -50,10 +54,8 @@ class GlCornerFilter : GlFilter() {
     override fun getFragmentShader(): String {
         return """
             precision mediump float;
-
             varying highp vec2 vTextureCoord;
             uniform sampler2D sTexture;
-
             uniform float topLeftRadius;
             uniform float topRightRadius;
             uniform float bottomLeftRadius;

@@ -1,18 +1,25 @@
 package com.goog.video.filter
 
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlHighlightShadowFilter : GlFilter() {
+class GlHighlightShadowFilter(shadows: Float = 1f, highlights: Float = 0f) : GlFilter() {
     private var shadows = 1f
     private var highlights = 0f
 
-    fun setShadows(shadows: Float) {
-        this.shadows = shadows
+    init {
+        setShadows(shadows)
+        setHighlights(highlights)
     }
 
-    fun setHighlights(highlights: Float) {
-        this.highlights = highlights
+    fun setShadows(v: Float) {
+        checkArgs(v >= 0)
+        shadows = v
+    }
+
+    fun setHighlights(v: Float) {
+        checkArgs(v >= 0)
+        highlights = v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

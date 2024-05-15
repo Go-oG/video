@@ -1,12 +1,18 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlHueFilter : GlFilter() {
+class GlHueFilter(hue: Float = 90f) : GlFilter() {
     private var hue = 90f
 
-    fun setHue(hue: Float) {
-        this.hue = hue
+    init {
+        setHue(hue)
+    }
+
+    fun setHue(v: Float) {
+        checkArgs(v in 0f..360f, "Hue must be in range [0, 360]")
+        this.hue = v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

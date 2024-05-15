@@ -33,7 +33,7 @@ class GlToneCurveFilter(input: InputStream) : GlFilter() {
 
 
     init {
-        val defaultCurvePoints = arrayOf<PointF>(PointF(0.0f, 0.0f), PointF(0.5f, 0.5f), PointF(1.0f, 1.0f))
+        val defaultCurvePoints = arrayOf(PointF(0.0f, 0.0f), PointF(0.5f, 0.5f), PointF(1.0f, 1.0f))
         rgbCompositeControlPoints = defaultCurvePoints
         redControlPoints = defaultCurvePoints
         greenControlPoints = defaultCurvePoints

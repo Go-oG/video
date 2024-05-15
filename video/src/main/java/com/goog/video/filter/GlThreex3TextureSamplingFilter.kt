@@ -3,8 +3,8 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 
 open class GlThreex3TextureSamplingFilter : GlFilter() {
-    var texelWidth: Float = 0f
-    var texelHeight: Float = 0f
+    private var texelWidth: Float = 0f
+    private var texelHeight: Float = 0f
 
     override fun setFrameSize(width: Int, height: Int) {
         texelWidth = 1f / width

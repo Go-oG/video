@@ -7,12 +7,18 @@ import com.goog.video.utils.EGLUtil
 import com.goog.video.utils.EGLUtil.loadTexture
 import kotlin.properties.Delegates
 
-class GlLookUpTableFilter(private var lutTexture: Bitmap?) : GlFilter() {
-
+class GlLookUpTableFilter(lutTexture: Bitmap?) : GlFilter() {
+    private var lutTexture: Bitmap? = null
     private var hTex by Delegates.notNull<Int>()
 
     init {
         hTex = EGLUtil.NO_TEXTURE
+        setLutTexture(lutTexture)
+    }
+
+    fun setLutTexture(lutTexture: Bitmap?) {
+        releaseLutBitmap()
+        this.lutTexture = lutTexture
     }
 
     override fun setup() {
@@ -23,13 +29,13 @@ class GlLookUpTableFilter(private var lutTexture: Bitmap?) : GlFilter() {
     override fun onDraw(fbo: EFrameBufferObject?) {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE3)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, hTex)
-
         put("lutTexture",3)
     }
 
     private fun loadTexture() {
-        if (hTex == EGLUtil.NO_TEXTURE) {
-            hTex = loadTexture(lutTexture!!, EGLUtil.NO_TEXTURE, false)
+        val bitmap = lutTexture
+        if (hTex == EGLUtil.NO_TEXTURE && bitmap != null) {
+            hTex = loadTexture(bitmap, EGLUtil.NO_TEXTURE, false)
         }
     }
 
@@ -39,10 +45,12 @@ class GlLookUpTableFilter(private var lutTexture: Bitmap?) : GlFilter() {
     }
 
     private fun releaseLutBitmap() {
-        if (lutTexture != null && !lutTexture!!.isRecycled) {
-            lutTexture!!.recycle()
-            lutTexture = null
+        lutTexture?.let {
+            if (!it.isRecycled) {
+                it.recycle()
+            }
         }
+        lutTexture = null
     }
 
     fun reset() {

@@ -1,14 +1,19 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 /**
  * exposure: The adjusted exposure (-10.0 - 10.0, with 0.0 as the default)
  */
-class GlExposureFilter : GlFilter() {
+class GlExposureFilter(exposure: Float = 1f) : GlFilter() {
     private var exposure = 1f
 
+    init {
+        setExposure(exposure)
+    }
     fun setExposure(exposure: Float) {
+        checkArgs(exposure >= -10f && exposure <= 10f, "exposure must in [-10,10]")
         this.exposure = exposure
     }
 

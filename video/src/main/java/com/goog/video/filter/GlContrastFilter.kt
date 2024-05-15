@@ -1,18 +1,23 @@
 package com.goog.video.filter
 
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 
 /**
  * Changes the contrast of the image.
  * contrast value ranges from 0.0 to 4.0, with 1.0 as the normal level
  */
-class GlContrastFilter : GlFilter() {
+class GlContrastFilter(contrast: Float = 1.2F) : GlFilter() {
     private var contrast = 1.2f
 
-    fun setContrast(contrast: Float) {
-        this.contrast = contrast
+    init {
+        setContrast(contrast)
+    }
+
+    fun setContrast(value: Float) {
+        checkArgs(value in 0.0..4.0, "Contrast value should be between 0.0 and 4.0")
+        this.contrast = value
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

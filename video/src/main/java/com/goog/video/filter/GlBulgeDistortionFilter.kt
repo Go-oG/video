@@ -1,14 +1,49 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlBulgeDistortionFilter : GlFilter() {
-    var centerX: Float = 0.5f
-    var centerY: Float = 0.5f
-    var radius: Float = 0.25f
-    var scale: Float = 0.5f
+class GlBulgeDistortionFilter(cx: Float = 0.5f, cy: Float = 0.5f, r: Float = 0.25f, scale: Float = 0.5f) : GlFilter() {
+    private var centerX: Float = 0.5f
+    private var centerY: Float = 0.5f
+    private var radius: Float = 0.25f
+    private var scale: Float = 0.5f
+
+    init {
+        setCenter(cx, cy)
+        setRadius(r)
+        setScale(scale)
+    }
+
+    fun setCenter(cx: Float, cy: Float) {
+        setCenterX(cx)
+        setCenterY(cy)
+    }
+
+    fun setCenterX(cx: Float) {
+        checkArgs(cx in 0.0f..1.0f)
+        centerX = cx
+    }
+
+    fun setCenterY(cy: Float) {
+        checkArgs(cy in 0.0f..1.0f)
+        centerY = cy
+    }
+
+    fun setRadius(r: Float) {
+        checkArgs(r >= 0)
+        radius = r
+    }
+
+    fun setScale(s: Float) {
+        checkArgs(s >= 0)
+        scale = s
+    }
+
 
     override fun onDraw(fbo: EFrameBufferObject?) {
+
+
         putVec2("center", centerX, centerY)
         put("radius",radius)
         put("scale", scale)

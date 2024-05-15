@@ -1,18 +1,21 @@
 package com.goog.video.filter
 
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
 
-class GlPosterizeFilter : GlFilter() {
+class GlPosterizeFilter(colorLevels: Int = 10) : GlFilter() {
     private var colorLevels = 10
 
-    fun setColorLevels(colorLevels: Int) {
-        if (colorLevels < 0) {
+    init {
+        setColorLevels(colorLevels)
+    }
+
+    fun setColorLevels(v: Int) {
+        if (v < 0) {
             this.colorLevels = 0
         } else if (colorLevels > 256) {
             this.colorLevels = 256
         } else {
-            this.colorLevels = colorLevels
+            this.colorLevels = v
         }
     }
 

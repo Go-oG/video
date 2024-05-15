@@ -1,32 +1,47 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlSphereRefractionFilter : GlFilter() {
+class GlSphereRefractionFilter(cx: Float = 0.5f, cy: Float = 0.5f, radius: Float = 0.5f,
+    ratio: Float = 0.5f, refractiveIndex: Float = 0.71f) : GlFilter() {
     private var centerX = 0.5f
     private var centerY = 0.5f
     private var radius = 0.5f
     private var aspectRatio = 1.0f
     private var refractiveIndex = 0.71f
 
-    fun setCenterX(centerX: Float) {
-        this.centerX = centerX
+    init {
+        setCenterX(cx)
+        setCenterY(cy)
+        setRadius(radius)
+        setAspectRatio(ratio)
+        setRefractiveIndex(refractiveIndex)
     }
 
-    fun setCenterY(centerY: Float) {
-        this.centerY = centerY
+    fun setCenterX(v: Float) {
+        checkArgs(v in 0.0..1.0, "centerX must be in the range [0, 1]")
+        this.centerX = v
     }
 
-    fun setRadius(radius: Float) {
-        this.radius = radius
+    fun setCenterY(v: Float) {
+        checkArgs(v in 0.0..1.0, "centerY must be in the range [0, 1]")
+        this.centerY = v
     }
 
-    fun setAspectRatio(aspectRatio: Float) {
-        this.aspectRatio = aspectRatio
+    fun setRadius(v: Float) {
+        checkArgs(v in 0.0..1.0, "radius must be in the range [0, 1]")
+        this.radius = v
     }
 
-    fun setRefractiveIndex(refractiveIndex: Float) {
-        this.refractiveIndex = refractiveIndex
+    fun setAspectRatio(v: Float) {
+        checkArgs(v > 0.0, "aspectRatio must be greater than 0")
+        this.aspectRatio = v
+    }
+
+    fun setRefractiveIndex(v: Float) {
+        checkArgs(v > 0.0, "refractiveIndex must be greater than 0")
+        this.refractiveIndex = v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

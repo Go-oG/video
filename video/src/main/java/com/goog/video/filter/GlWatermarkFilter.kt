@@ -3,20 +3,10 @@ package com.goog.video.filter
 import android.graphics.Bitmap
 import android.graphics.Canvas
 
-class GlWatermarkFilter : GlOverlayFilter {
-    private val bitmap: Bitmap?
-    private var position = Position.LEFT_TOP
-
-    constructor(bitmap: Bitmap?) {
-        this.bitmap = bitmap
-    }
-
-    constructor(bitmap: Bitmap?, position: Position) {
-        this.bitmap = bitmap
-        this.position = position
-    }
+class GlWatermarkFilter(var bitmap: Bitmap?, var position: Position = Position.LEFT_TOP) : GlOverlayFilter() {
 
     override fun drawCanvas(canvas: Canvas) {
+        val bitmap = this.bitmap
         if (bitmap != null && !bitmap.isRecycled) {
             when (position) {
                 Position.LEFT_TOP -> canvas.drawBitmap(bitmap, 0f, 0f, null)

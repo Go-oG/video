@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 class GlBoxBlurFilter : GlFilter() {
     var texelWidthOffset: Float = 0.003f
@@ -8,6 +9,10 @@ class GlBoxBlurFilter : GlFilter() {
     var blurSize: Float = 1.0f
 
     override fun onDraw(fbo: EFrameBufferObject?) {
+        checkArgs(blurSize>=0)
+        checkArgs(texelWidthOffset>=0)
+        checkArgs(texelHeightOffset>=0)
+
         put("texelWidthOffset", texelWidthOffset)
         put("texelHeightOffset", texelHeightOffset)
         put("blurSize", blurSize)

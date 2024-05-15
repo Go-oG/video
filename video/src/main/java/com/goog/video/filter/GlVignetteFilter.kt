@@ -2,15 +2,42 @@ package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
 
-class GlVignetteFilter : GlFilter() {
-    private val vignetteCenterX = 0.5f
-    private val vignetteCenterY = 0.5f
-    var vignetteStart: Float = 0.2f
-    var vignetteEnd: Float = 0.85f
+class GlVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.2f, end: Float = 0.85f) : GlFilter() {
+    private var centerX = 0.5f
+    private var centerY = 0.5f
+    private var vignetteStart: Float = 0.2f
+    private var vignetteEnd: Float = 0.85f
+
+    init {
+        setCenter(cx, cy)
+        setVignetteStart(start)
+        setVignetteEnd(end)
+    }
+
+    fun setCenter(centerX: Float, centerY: Float) {
+        setCenterX(centerX)
+        setCenterY(centerY)
+    }
+
+    fun setCenterX(centerX: Float) {
+        this.centerX = centerX
+    }
+
+    fun setCenterY(centerY: Float) {
+        this.centerY = centerY
+    }
+
+    fun setVignetteStart(vignetteStart: Float) {
+        this.vignetteStart = vignetteStart
+    }
+
+    fun setVignetteEnd(v: Float) {
+        this.vignetteEnd = v
+    }
 
 
     override fun onDraw(fbo: EFrameBufferObject?) {
-        putVec2("vignetteCenter", vignetteCenterX, vignetteCenterY)
+        putVec2("vignetteCenter", centerX, centerY)
         put("vignetteStart", vignetteStart)
         put("vignetteEnd", vignetteEnd)
     }

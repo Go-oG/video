@@ -1,10 +1,27 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlHazeFilter : GlFilter() {
-    var distance: Float = 0.2f
-    var slope: Float = 0.0f
+class GlHazeFilter(distance: Float = 0.2f, slope: Float = 0f) : GlFilter() {
+    private var distance: Float = 0.2f
+    private var slope: Float = 0.0f
+
+    init {
+        setDistance(distance)
+        setSlope(slope)
+    }
+
+    fun setDistance(distance: Float) {
+        checkArgs(distance >= 0)
+        this.distance = distance
+    }
+
+    fun setSlope(slope: Float) {
+        checkArgs(slope >= 0)
+        this.slope = slope
+    }
+
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("distance",distance)

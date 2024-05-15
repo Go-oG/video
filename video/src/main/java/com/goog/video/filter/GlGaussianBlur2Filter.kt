@@ -6,14 +6,19 @@ import kotlin.math.max
 
 ///优化后的高斯模糊
 ///具有更好的模糊质量和可控的参数
-class GlGaussianBlur2Filter : GlFilter() {
-
+class GlGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = null) : GlFilter() {
     private var samplesSize = 25
-
     private var scaleFactory = 8
 
     ///允许采样率动态变化
     private var maxSize: Int? = null
+
+    init {
+        setSamplesSize(samples)
+        setMaxSize(maxSize)
+        setSampleFactor(scale)
+    }
+
 
     fun setSamplesSize(size: Int) {
         checkArgs(size > 0)

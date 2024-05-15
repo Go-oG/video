@@ -3,7 +3,7 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GlGaussianBlur3Filter() : GlFilterGroup(listOf()) {
+class GlGaussianBlur3Filter(blurSize: Int=3) : GlFilterGroup(listOf()) {
     private var blurSize: Int = 3
 
     init {
@@ -11,6 +11,7 @@ class GlGaussianBlur3Filter() : GlFilterGroup(listOf()) {
                 Blur3Inner(true, blurSize),
                 Blur3Inner(false, blurSize))
         filters = list
+        setBlurSize(blurSize)
     }
 
     fun setBlurSize(size: Int) {

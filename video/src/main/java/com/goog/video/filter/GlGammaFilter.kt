@@ -2,12 +2,7 @@ package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
 
-class GlGammaFilter : GlFilter() {
-    private var gamma = 1.2f
-
-    fun setGamma(gamma: Float) {
-        this.gamma = gamma
-    }
+class GlGammaFilter(var gamma: Float=1.2f) : GlFilter() {
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("gamma", gamma)

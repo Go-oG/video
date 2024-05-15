@@ -2,10 +2,33 @@ package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
 
-class GlPixelationFilter : GlFilter() {
-    private val pixel = 1f
+/**
+ * Applies a pixelation effect to the image.
+ */
+class GlPixelationFilter(pixel: Float = 1f, widthFactor: Float = 0.0014F, heightFactor: Float = 0.0014f) : GlFilter() {
+    private var pixel = 1f
     private var imageWidthFactor = 1f / 720
     private var imageHeightFactor = 1f / 720
+
+    //TODO 参数范围待确认
+    init {
+        setPixel(pixel)
+        setImageWidthFactor(widthFactor)
+        setImageHeightFactor(heightFactor)
+    }
+
+    fun setPixel(v: Float) {
+        pixel = v
+    }
+
+    fun setImageWidthFactor(v: Float) {
+        imageWidthFactor = v
+    }
+
+    fun setImageHeightFactor(v: Float) {
+        imageHeightFactor = v
+    }
+
 
     override fun setFrameSize(width: Int, height: Int) {
         super.setFrameSize(width, height)

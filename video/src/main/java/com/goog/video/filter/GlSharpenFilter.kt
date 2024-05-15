@@ -1,17 +1,27 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlSharpenFilter : GlFilter() {
+class GlSharpenFilter(sharpness: Float = 1f) : GlFilter() {
     private var imageWidthFactor = 0.004f
     private var imageHeightFactor = 0.004f
-    var sharpness: Float = 1f
+    private var sharpness: Float = 1f
 
+    init {
+        setsSharpness(sharpness)
+    }
+
+    fun setsSharpness(sharpness: Float) {
+        checkArgs(sharpness >=0, "sharpness must be >=0")
+        this.sharpness = sharpness
+    }
 
     override fun setFrameSize(width: Int, height: Int) {
         imageWidthFactor = 1f / width
         imageHeightFactor = 1f / height
     }
+
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("imageWidthFactor", imageWidthFactor)

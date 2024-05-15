@@ -1,18 +1,12 @@
 package com.goog.video.filter
 
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
 
 /**
  * Adjusts the alpha channel of the incoming image
  * opacity: The value to multiply the incoming alpha channel for each pixel by (0.0 - 1.0, with 1.0 as the default)
  */
-class GlOpacityFilter : GlFilter() {
-    private var opacity = 1f
-
-    fun setOpacity(opacity: Float) {
-        this.opacity = opacity
-    }
+class GlOpacityFilter(var opacity: Float = 1f) : GlFilter() {
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("opacity", opacity)

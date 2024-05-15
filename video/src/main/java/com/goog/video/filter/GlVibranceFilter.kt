@@ -1,11 +1,16 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlVibranceFilter : GlFilter() {
+class GlVibranceFilter(vibrance: Float = 0f) : GlFilter() {
     private var vibrance = 0f
 
+    init {
+        setVibrance(vibrance)
+    }
     fun setVibrance(vibrance: Float) {
+        checkArgs(vibrance >= 0)
         this.vibrance = vibrance
     }
 

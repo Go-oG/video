@@ -27,10 +27,10 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
     private var normalShader: GlFilter? = null
     private val runOnDraw: Queue<Runnable> = LinkedList()
 
-    protected var backgroundColor: Int = Color.BLACK
+    protected var mClearColor: Int = Color.BLACK
 
-    fun setBackgroundColor(color: Int) {
-        backgroundColor = color
+    fun setClearColor(color: Int) {
+        mClearColor = color
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -118,10 +118,10 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     }
 
     override fun onSurfaceCreated(config: EGLConfig?) {
-        val red = Color.red(backgroundColor) / 255f
-        val green = Color.green(backgroundColor) / 255f
-        val blue = Color.blue(backgroundColor) / 255f
-        val alpha = Color.alpha(backgroundColor) / 255F
+        val red = Color.red(mClearColor) / 255f
+        val green = Color.green(mClearColor) / 255f
+        val blue = Color.blue(mClearColor) / 255f
+        val alpha = Color.alpha(mClearColor) / 255F
         ///设置清屏背景色
         GLES20.glClearColor(red, green, blue, alpha)
 

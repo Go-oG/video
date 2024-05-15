@@ -1,12 +1,18 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GlSaturationFilter : GlFilter() {
+class GlSaturationFilter(saturation: Float = 1f) : GlFilter() {
     private var saturation = 1f
 
-    fun setSaturation(saturation: Float) {
-        this.saturation = saturation
+    init {
+        setSaturation(saturation)
+    }
+
+    fun setSaturation(v: Float) {
+        checkArgs(v in 0f..1f, "saturation must be in [0, 2]")
+        this.saturation = v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {
