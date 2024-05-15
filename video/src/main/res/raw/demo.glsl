@@ -4,22 +4,33 @@ precision mediump float;
 
 varying highp vec2 vTextureCoord;
 uniform sampler2D sTexture;
-uniform int blurSize;
-uniform vec2 mTexOffset;
-uniform int useHorizontal;
+
+uniform float topLeftRadius;
+uniform float topRightRadius;
+uniform float bottomLeftRadius;
+uniform float bottomRightRadius;
+uniform vec2 mResolution;
+
+const vec2 tl = vec2(0.0, 1.0);
+const vec2 tr = vec2(1.0, 1.0);
+const vec2 bl = vec2(0.0, 0.0);
+const vec2 br = vec2(1.0, 0.0);
 
 void main() {
-    vec4 color = vec4(0.0);
-    float totalWeight = 0.0;
-    int kernelSize = blurSize * 2 + 1;
-    float sizePow = 2.0 * blurSize * blurSize;
+    vec2 coord = gl_FragCoord.xy / mResolution;
+    vec4 color = texture2D(sTexture, vTextureCoord);
 
-    for (int i = -blurSize; i <= blurSize; ++i) {
-        float fi = float(i);
-        float weight = exp(-fi * fi / sizePow);
-        vec2 offset = (useHorizontal != 0) ? vec2(fi * mTexOffset.x, 0.0) : vec2(0.0, fi * mTexOffset.y);
-        color += texture(sTexture, vTextureCoord + offset) * weight;
-        totalWeight += weight;
+    float distTopLeft = distance(coord, tl) * mResolution.y;
+    float distTopRight = distance(coord, tr) * mResolution.y;
+    float distBottomLeft = distance(coord, bl) * mResolution.y;
+    float distBottomRight = distance(coord, br) * mResolution.y;
+
+    if (distTopLeft > topLeftRadius &&
+    distTopRight > topRightRadius &&
+    distBottomLeft > bottomLeftRadius &&
+    distBottomRight > bottomRightRadius) {
+        discard;
+    } else {
+        gl_FragColor = color;
     }
-    gl_FragColor = color / totalWeight;
 }

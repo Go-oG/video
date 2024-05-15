@@ -18,6 +18,8 @@ fun safeInterrupt(block: () -> Unit) {
     }
 }
 
-fun checkArgs(value: Boolean) {
-    require(value) { "Args check failed" }
+fun checkArgs(value: Boolean, error: String = "Args check failed") {
+    if (!value) {
+        throw IllegalArgumentException(error)
+    }
 }

@@ -9,7 +9,7 @@ class GlBulgeDistortionFilter : GlFilter() {
     var scale: Float = 0.5f
 
     override fun onDraw(fbo: EFrameBufferObject?) {
-        put("center", centerX, centerY)
+        putVec2("center", centerX, centerY)
         put("radius",radius)
         put("scale", scale)
     }

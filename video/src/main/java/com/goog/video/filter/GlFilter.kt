@@ -5,6 +5,7 @@ import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.EGLUtil.createBuffer
 import com.goog.video.utils.EGLUtil.createProgram
 import com.goog.video.utils.EGLUtil.loadShader
+import com.goog.video.utils.checkArgs
 
 
 open class GlFilter {
@@ -48,6 +49,7 @@ open class GlFilter {
         useProgram()
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferName)
+
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
@@ -86,30 +88,36 @@ open class GlFilter {
         return DEFAULT_FRAGMENT_SHADER
     }
 
-
-
-    protected fun put(name: String, v1: Float, v2: Float) {
-        GLES20.glUniform2f(getHandle(name), v1, v2)
-    }
-
-    protected fun put(name: String, v1: Float, v2: Float, v3: Float) {
-        GLES20.glUniform3f(getHandle(name), v1, v2, v3)
-    }
-
     protected fun put(name: String, value: Int) {
         GLES20.glUniform1i(getHandle(name), value)
     }
 
-    protected fun put(name: String, v1: Int, v2: Int) {
+    protected fun put(name: String, value: Float) {
+        GLES20.glUniform1f(getHandle(name), value)
+    }
+
+    protected fun putVec2(name: String, v1: Float, v2: Float) {
+        GLES20.glUniform2f(getHandle(name), v1, v2)
+    }
+
+    protected fun putVec2(name: String, v1: Int, v2: Int) {
         GLES20.glUniform2i(getHandle(name), v1, v2)
     }
 
-    protected fun put(name: String, v1: Int, v2: Int, v3: Int) {
+    protected fun putVec3(name: String, v1: Float, v2: Float, v3: Float) {
+        GLES20.glUniform3f(getHandle(name), v1, v2, v3)
+    }
+
+    protected fun putVec3(name: String, v1: Int, v2: Int, v3: Int) {
         GLES20.glUniform3i(getHandle(name), v1, v2, v3)
     }
 
-    protected fun put(name: String, value: Float) {
-        GLES20.glUniform1f(getHandle(name), value)
+    protected fun putVec4(name: String, v1: Float, v2: Float, v3: Float, v4: Float) {
+        GLES20.glUniform4f(getHandle(name), v1, v2, v3, v4)
+    }
+
+    protected fun putVec4(name: String, v1: Int, v2: Int, v3: Int, v4: Int) {
+        GLES20.glUniform4i(getHandle(name), v1, v2, v3, v4)
     }
 
     protected fun putArray(name: String, value: FloatArray, count: Int = 1) {
@@ -120,8 +128,64 @@ open class GlFilter {
         GLES20.glUniform1iv(getHandle(name), count, value, 0)
     }
 
-    protected fun putMatrix(name: String, value: FloatArray, offset: Int) {
+    protected fun putVec2Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 2, "value.size must be ${count * 2}")
+        GLES20.glUniform2fv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putVec2Array(name: String, value: IntArray, count: Int) {
+        checkArgs(value.size == count * 2, "value.size must be ${count * 2}")
+        GLES20.glUniform2iv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putVec3Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 3, "value.size must be ${count * 3}")
+        GLES20.glUniform3fv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putVec3Array(name: String, value: IntArray, count: Int) {
+        checkArgs(value.size == count * 3, "value.size must be ${count * 3}")
+        GLES20.glUniform3iv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putVec4Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 4, "value.size must be ${count * 4}")
+        GLES20.glUniform4fv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putVec4Array(name: String, value: IntArray, count: Int) {
+        checkArgs(value.size == count * 4, "value.size must be ${count * 4}")
+        GLES20.glUniform4iv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putMatrix4(name: String, value: FloatArray, offset: Int = 0) {
+        checkArgs(value.size == 16, "value.size must be 16")
         GLES20.glUniformMatrix4fv(getHandle(name), 1, false, value, offset)
+    }
+
+    protected fun putMatrix3(name: String, value: FloatArray, offset: Int = 0) {
+        checkArgs(value.size == 9, "value.size must be 9")
+        GLES20.glUniformMatrix3fv(getHandle(name), 1, false, value, offset)
+    }
+
+    protected fun putMatrix2(name: String, value: FloatArray, offset: Int = 0) {
+        checkArgs(value.size == 4, "value.size must be 4")
+        GLES20.glUniformMatrix4fv(getHandle(name), 1, false, value, offset)
+    }
+
+    protected fun putMatrix2Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 4, "value.size must be ${count * 4}")
+        GLES20.glUniformMatrix2fv(getHandle(name), count, false, value, 0)
+    }
+
+    protected fun putMatrix3Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 9, "value.size must be ${count * 9}")
+        GLES20.glUniformMatrix3fv(getHandle(name), count, false, value, 0)
+    }
+
+    protected fun putMatrix4Array(name: String, value: FloatArray, count: Int) {
+        checkArgs(value.size == count * 16, "value.size must be ${count * 16}")
+        GLES20.glUniformMatrix4fv(getHandle(name), count, false, value, 0)
     }
 
     protected fun getHandle(name: String): Int {

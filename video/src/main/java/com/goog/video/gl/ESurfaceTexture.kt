@@ -29,9 +29,7 @@ internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
     }
 
     override fun onFrameAvailable(surfaceTexture: SurfaceTexture) {
-        if (frameAvailableListener != null) {
-            frameAvailableListener!!.onFrameAvailable(this.texture)
-        }
+        frameAvailableListener?.onFrameAvailable(this.texture)
     }
 
     fun release() {

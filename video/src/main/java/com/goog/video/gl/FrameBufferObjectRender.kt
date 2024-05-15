@@ -1,5 +1,6 @@
 package com.goog.video.gl
 
+import android.graphics.Color
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
@@ -15,16 +16,22 @@ import com.goog.video.filter.GlPreviewFilter
 import com.goog.video.utils.EGLUtil
 import java.util.LinkedList
 import java.util.Queue
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 //FrameBufferObjectRenderer
 abstract class EFBORenderer : GLSurfaceView.Renderer {
+
     private var fbo = EFrameBufferObject()
-
     private var normalShader: GlFilter? = null
-
     private val runOnDraw: Queue<Runnable> = LinkedList()
+
+    protected var backgroundColor: Int = Color.BLACK
+
+    fun setBackgroundColor(color: Int) {
+        backgroundColor = color
+    }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         normalShader = GlFilter()
@@ -66,6 +73,8 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
     abstract fun onSurfaceChanged(width: Int, height: Int)
 
     abstract fun onDrawFrame(fbo: EFrameBufferObject?)
+
+
 }
 
 class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
@@ -75,7 +84,9 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     private var playSurface: Surface? = null
     private var previewTexture: ESurfaceTexture? = null
 
-    private var updateSurface = false
+    ///控制更新
+    private val updateSurfaceFlag = AtomicBoolean(false)
+
     private var texName = 0
 
     private val MVPMatrix = FloatArray(16)
@@ -86,9 +97,11 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     private var filterFramebufferObject: EFrameBufferObject? = null
     private var previewFilter: GlPreviewFilter? = null
-
     private var glFilter: GlFilter? = null
-    private var isNewFilter = false
+
+    ///标识是否设置了新的过滤器
+    private val newFilterFlag = AtomicBoolean(false)
+
     private var aspectRatio = 1f
 
     init {
@@ -99,16 +112,20 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         glSurfaceView.queueEvent {
             glFilter?.release()
             glFilter = filter
-            isNewFilter = true
+            newFilterFlag.set(true)
             glSurfaceView.requestRender()
         }
     }
 
     override fun onSurfaceCreated(config: EGLConfig?) {
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
+        val red = Color.red(backgroundColor) / 255f
+        val green = Color.green(backgroundColor) / 255f
+        val blue = Color.blue(backgroundColor) / 255f
+        val alpha = Color.alpha(backgroundColor) / 255F
+        ///设置清屏背景色
+        GLES20.glClearColor(red, green, blue, alpha)
 
         val args = IntArray(1)
-
         GLES20.glGenTextures(args.size, args, 0)
         texName = args[0]
 
@@ -134,12 +151,15 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
         Matrix.setLookAtM(VMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
-        synchronized(this) {
-            updateSurface = false
-        }
+//        synchronized(this) {
+//            updateSurface = false
+//        }
+        updateSurfaceFlag.set(false)
 
+
+        ///确保在绘制时被初始化
         if (glFilter != null) {
-            isNewFilter = true
+            newFilterFlag.set(true)
         }
 
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
@@ -159,17 +179,15 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     override fun onDrawFrame(fbo: EFrameBufferObject?) {
         synchronized(this) {
-            if (updateSurface) {
-                previewTexture!!.updateTexImage()
-                previewTexture!!.getTransformMatrix(STMatrix)
-                updateSurface = false
+            if (updateSurfaceFlag.compareAndSet(true, false)) {
+                previewTexture?.updateTexImage()
+                previewTexture?.getTransformMatrix(STMatrix)
             }
         }
 
-        if (isNewFilter) {
+        if (newFilterFlag.compareAndSet(true, false)) {
             glFilter?.setup()
             glFilter?.setFrameSize(fbo!!.width, fbo.height)
-            isNewFilter = false
         }
 
         if (glFilter != null) {
@@ -194,7 +212,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 
     @Synchronized
     override fun onFrameAvailable(previewTexture: SurfaceTexture) {
-        updateSurface = true
+        updateSurfaceFlag.set(true)
         glSurfaceView.requestRender()
     }
 

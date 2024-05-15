@@ -1,7 +1,6 @@
 package com.goog.video.filter
 
 import android.graphics.PointF
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
 
 class GlSwirlFilter : GlFilter() {
@@ -22,7 +21,7 @@ class GlSwirlFilter : GlFilter() {
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {
-        put("center", center.x,center.y)
+        putVec2("center", center.x,center.y)
         put("radius", radius)
         put("angle", angle)
     }

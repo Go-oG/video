@@ -32,7 +32,7 @@ private class Blur3Inner(val horizontalBlur: Boolean, var blurSize: Int = 3) : G
 
         val w = fbo?.width ?: 1
         val h = fbo?.height ?: 1
-        put("mTexOffset", 1.0f / w, 1.0f / h)
+        putVec2("mTexOffset", 1.0f / w, 1.0f / h)
 
     }
 

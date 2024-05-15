@@ -10,7 +10,7 @@ class GlVignetteFilter : GlFilter() {
 
 
     override fun onDraw(fbo: EFrameBufferObject?) {
-        put("vignetteCenter", vignetteCenterX, vignetteCenterY)
+        putVec2("vignetteCenter", vignetteCenterX, vignetteCenterY)
         put("vignetteStart", vignetteStart)
         put("vignetteEnd", vignetteEnd)
     }

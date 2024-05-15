@@ -30,7 +30,7 @@ class GlSphereRefractionFilter : GlFilter() {
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {
-        put("center", centerX, centerY)
+        putVec2("center", centerX, centerY)
         put("radius", radius)
         put("aspectRatio", aspectRatio)
         put("refractiveIndex", refractiveIndex)
