@@ -70,11 +70,7 @@ open class GlFilter {
     }
 
     protected open fun onDraw(fbo: EFrameBufferObject?) {
-        onDraw()
-    }
 
-    @Deprecated("")
-    protected open fun onDraw() {
     }
 
     protected open fun useProgram() {
@@ -90,9 +86,7 @@ open class GlFilter {
         return DEFAULT_FRAGMENT_SHADER
     }
 
-    protected fun put(name: String, value: FloatArray) {
-        GLES20.glUniform4fv(getHandle(name), 1, value, 0)
-    }
+
 
     protected fun put(name: String, v1: Float, v2: Float) {
         GLES20.glUniform2f(getHandle(name), v1, v2)
@@ -116,6 +110,14 @@ open class GlFilter {
 
     protected fun put(name: String, value: Float) {
         GLES20.glUniform1f(getHandle(name), value)
+    }
+
+    protected fun putArray(name: String, value: FloatArray, count: Int = 1) {
+        GLES20.glUniform1fv(getHandle(name), count, value, 0)
+    }
+
+    protected fun putArray(name: String, value: IntArray, count: Int = 1) {
+        GLES20.glUniform1iv(getHandle(name), count, value, 0)
     }
 
     protected fun putMatrix(name: String, value: FloatArray, offset: Int) {
@@ -152,14 +154,14 @@ const val K_VAR_TEXTURE_COORD = "vTextureCoord"
 const val K_UNIFORM_SAMPLER2D = "sTexture"
 
 const val DEFAULT_VERTEX_SHADER: String = """
-            attribute vec4 aPosition;
-                attribute vec4 aTextureCoord;
-                varying highp vec2 vTextureCoord;
-                void main() {
-                gl_Position = aPosition;
-                vTextureCoord = aTextureCoord.xy;
-                }
-        """
+    attribute vec4 aPosition;
+    attribute vec4 aTextureCoord;
+    varying highp vec2 vTextureCoord;
+         void main() {
+              gl_Position = aPosition;
+              vTextureCoord = aTextureCoord.xy;
+         }
+"""
 
 const val DEFAULT_FRAGMENT_SHADER: String = """
             precision mediump float;

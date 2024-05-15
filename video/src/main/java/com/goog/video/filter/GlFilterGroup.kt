@@ -5,14 +5,15 @@ import android.util.Pair
 import com.goog.video.gl.EFrameBufferObject
 import java.util.Arrays
 
-class GlFilterGroup(private val filters: Collection<GlFilter>) : GlFilter() {
-    private val list = ArrayList<Pair<GlFilter?, EFrameBufferObject?>>()
+open class GlFilterGroup(internal var filters: List<GlFilter>) : GlFilter() {
+    private var list = listOf<Pair<GlFilter?, EFrameBufferObject?>>()
 
     constructor(vararg glFilters: GlFilter) : this(listOf<GlFilter>(*glFilters))
 
     override fun setup() {
         super.setup()
         val max = filters.size
+        val list = mutableListOf<Pair<GlFilter?, EFrameBufferObject?>>()
         for ((count, shader) in filters.withIndex()) {
             shader.setup()
             val fbo = if ((count + 1) < max) {
@@ -22,6 +23,7 @@ class GlFilterGroup(private val filters: Collection<GlFilter>) : GlFilter() {
             }
             list.add(Pair.create(shader, fbo))
         }
+        this.list = list
 
     }
 
@@ -34,7 +36,7 @@ class GlFilterGroup(private val filters: Collection<GlFilter>) : GlFilter() {
                 pair.second!!.release()
             }
         }
-        list.clear()
+        list = listOf()
         super.release()
     }
 
@@ -71,4 +73,5 @@ class GlFilterGroup(private val filters: Collection<GlFilter>) : GlFilter() {
             }
         }
     }
+
 }

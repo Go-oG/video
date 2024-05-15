@@ -1,37 +1,25 @@
 #version 100
 
-varying highp vec2 vTextureCoord;
+precision mediump float;
 
-uniform lowp sampler2D sTexture;
-uniform int sSamples;
-uniform float sTextureSize;
+varying highp vec2 vTextureCoord;
+uniform sampler2D sTexture;
+uniform int blurSize;
+uniform vec2 mTexOffset;
+uniform int useHorizontal;
 
 void main() {
-    float mSigmaX = 5.0;
-    float mSigmaY = mSigmaX;
-    int halfSamples = sSamples / 2;
+    vec4 color = vec4(0.0);
+    float totalWeight = 0.0;
+    int kernelSize = blurSize * 2 + 1;
+    float sizePow = 2.0 * blurSize * blurSize;
 
-    float mSigmaX2 = 2.0 * mSigmaX * mSigmaX;
-    float mSigmaY2 = 2.0 * mSigmaY * mSigmaY;
-
-    float mPixelSize = 1.0 / sTextureSize;
-
-    float total = 0.0;
-    vec3 ret = vec3(0.0);
-
-    for (int iy = 0; iy < sSamples; ++iy) {
-        float offsetY = float(iy - halfSamples);
-        float fy = exp(-offsetY * offsetY / mSigmaY2);
-        offsetY = offsetY * mPixelSize;
-
-        for (int ix = 0; ix < sSamples; ++ix) {
-            float offsetX = float(ix - halfSamples);
-            float fx = exp(-offsetX * offsetX / mSigmaX2);
-
-            offsetX = offsetX * mPixelSize;
-            total += fx * fy;
-            ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * fx * fy;
-        }
+    for (int i = -blurSize; i <= blurSize; ++i) {
+        float fi = float(i);
+        float weight = exp(-fi * fi / sizePow);
+        vec2 offset = (useHorizontal != 0) ? vec2(fi * mTexOffset.x, 0.0) : vec2(0.0, fi * mTexOffset.y);
+        color += texture(sTexture, vTextureCoord + offset) * weight;
+        totalWeight += weight;
     }
-    gl_FragColor = vec4(ret / total, 1.0);
+    gl_FragColor = color / totalWeight;
 }
