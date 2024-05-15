@@ -1,7 +1,7 @@
 package com.goog.video.gl
 
 import android.opengl.GLES20
-import com.goog.video.surface.EGLUtil
+import com.goog.video.utils.EGLUtil
 
 class EFrameBufferObject {
     var width: Int = 0
@@ -17,26 +17,22 @@ class EFrameBufferObject {
 
     fun setup(width: Int, height: Int) {
         val args = IntArray(1)
-
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
         require(!(width > args[0] || height > args[0])) { "GL_MAX_TEXTURE_SIZE " + args[0] }
-
         GLES20.glGetIntegerv(GLES20.GL_MAX_RENDERBUFFER_SIZE, args, 0)
         require(!(width > args[0] || height > args[0])) { "GL_MAX_RENDERBUFFER_SIZE " + args[0] }
-
         GLES20.glGetIntegerv(GLES20.GL_FRAMEBUFFER_BINDING, args, 0)
-        val saveFramebuffer = args[0]
+        val saveFrameBuffer = args[0]
         GLES20.glGetIntegerv(GLES20.GL_RENDERBUFFER_BINDING, args, 0)
-        val saveRenderbuffer = args[0]
+        val saveRenderBuffer = args[0]
         GLES20.glGetIntegerv(GLES20.GL_TEXTURE_BINDING_2D, args, 0)
         val saveTexName = args[0]
 
         release()
 
+        this.width = width
+        this.height = height
         try {
-            this.width = width
-            this.height = height
-
             GLES20.glGenFramebuffers(args.size, args, 0)
             frameBufferName = args[0]
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
@@ -67,8 +63,8 @@ class EFrameBufferObject {
             release()
             throw e
         }
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, saveFramebuffer)
-        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, saveRenderbuffer)
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, saveFrameBuffer)
+        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, saveRenderBuffer)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, saveTexName)
     }
 

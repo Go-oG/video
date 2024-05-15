@@ -12,7 +12,7 @@ import com.goog.video.Player
 import com.goog.video.filter.GlFilter
 import com.goog.video.filter.GlLookUpTableFilter
 import com.goog.video.filter.GlPreviewFilter
-import com.goog.video.surface.EGLUtil
+import com.goog.video.utils.EGLUtil
 import java.util.LinkedList
 import java.util.Queue
 import javax.microedition.khronos.egl.EGLConfig
@@ -20,20 +20,19 @@ import javax.microedition.khronos.opengles.GL10
 
 //FrameBufferObjectRenderer
 abstract class EFBORenderer : GLSurfaceView.Renderer {
-    private var framebufferObject: EFrameBufferObject? = null
+    private var fbo = EFrameBufferObject()
     private var normalShader: GlFilter? = null
     private val runOnDraw: Queue<Runnable> = LinkedList()
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-        framebufferObject = EFrameBufferObject()
         normalShader = GlFilter()
-        normalShader!!.setup()
+        normalShader?.setup()
         onSurfaceCreated(config)
     }
 
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
-        framebufferObject!!.setup(width, height)
-        normalShader!!.setFrameSize(width, height)
+        fbo.setup(width, height)
+        normalShader?.setFrameSize(width, height)
         onSurfaceChanged(width, height)
     }
 
@@ -43,16 +42,16 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
                 runOnDraw.poll()?.run()
             }
         }
-        framebufferObject!!.enable()
-        GLES20.glViewport(0, 0, framebufferObject!!.width, framebufferObject!!.height)
+        fbo.enable()
+        GLES20.glViewport(0, 0, fbo.width, fbo.height)
 
-        onDrawFrame(framebufferObject)
+        onDrawFrame(fbo)
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-        GLES20.glViewport(0, 0, framebufferObject!!.width, framebufferObject!!.height)
+        GLES20.glViewport(0, 0, fbo.width, fbo.height)
 
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-        normalShader!!.draw(framebufferObject!!.texName, null)
+        normalShader?.draw(fbo.texName, null)
     }
 
     @Throws(Throwable::class)
@@ -65,7 +64,6 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
 
     abstract fun onDrawFrame(fbo: EFrameBufferObject?)
 }
-
 
 class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     SurfaceTexture.OnFrameAvailableListener {
@@ -117,7 +115,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         texName = args[0]
 
         previewTexture = ESurfaceTexture(texName)
-        previewTexture?.setOnFrameAvailableListener(this)
+        previewTexture?.setFrameAvailableListener(this)
 
         GLES20.glBindTexture(previewTexture!!.textureTarget, texName)
         // GL_TEXTURE_EXTERNAL_OES
@@ -129,7 +127,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         previewFilter = GlPreviewFilter(previewTexture!!.textureTarget)
         previewFilter!!.setup()
         Handler(Looper.getMainLooper()).post {
-            val surface = Surface(previewTexture!!.surfaceTexture)
+            val surface = Surface(previewTexture!!.texture)
             player!!.setVideoSurface(surface)
         }
 

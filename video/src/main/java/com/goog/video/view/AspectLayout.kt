@@ -56,7 +56,7 @@ class AspectLayout @JvmOverloads constructor(context: Context, attrs: AttributeS
         var height = measuredHeight
         val viewAspectRatio = width.toFloat() / height
         val aspectDeformation = videoRatio / viewAspectRatio - 1
-        if (abs(aspectDeformation.toDouble()) <= MAX_ASPECT_RATIO_DEFORMATION_FRACTION) {
+        if (abs(aspectDeformation.toDouble()) <= MAX_RATIO_DEFORMATION_FRACTION) {
             ratioUpdateDispatcher.scheduleUpdate(videoRatio, viewAspectRatio, false)
             return
         }
@@ -110,6 +110,6 @@ class AspectLayout @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     companion object {
-        private const val MAX_ASPECT_RATIO_DEFORMATION_FRACTION = 0.01f
+        private const val MAX_RATIO_DEFORMATION_FRACTION = 0.01f
     }
 }
