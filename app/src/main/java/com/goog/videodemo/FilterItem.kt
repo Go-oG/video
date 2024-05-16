@@ -2,66 +2,66 @@ package com.goog.videodemo
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import com.goog.video.filter.GlBilateralFilter
-import com.goog.video.filter.GlBoxBlurFilter
-import com.goog.video.filter.GlBrightnessFilter
-import com.goog.video.filter.GlBulgeDistortionFilter
-import com.goog.video.filter.GlCGAColorSpaceFilter
-import com.goog.video.filter.GlContrastFilter
-import com.goog.video.filter.GlCornerFilter
-import com.goog.video.filter.GlCrosshatchFilter
-import com.goog.video.filter.GlExposureFilter
-import com.goog.video.filter.GlFilter
-import com.goog.video.filter.GlGammaFilter
-import com.goog.video.filter.GlGaussianBlur2Filter
-import com.goog.video.filter.GlGaussianBlur3Filter
-import com.goog.video.filter.GlGaussianBlurFilter
-import com.goog.video.filter.GlGrayScaleFilter
-import com.goog.video.filter.GlHalftoneFilter
-import com.goog.video.filter.GlHazeFilter
-import com.goog.video.filter.GlHighlightShadowFilter
-import com.goog.video.filter.GlHueFilter
-import com.goog.video.filter.GlInvertFilter
-import com.goog.video.filter.GlLookUpTableFilter
-import com.goog.video.filter.GlLuminanceFilter
-import com.goog.video.filter.GlLuminanceThresholdFilter
-import com.goog.video.filter.GlMonochromeFilter
-import com.goog.video.filter.GlOpacityFilter
-import com.goog.video.filter.GlPixelationFilter
-import com.goog.video.filter.GlPosterizeFilter
-import com.goog.video.filter.GlRGBFilter
-import com.goog.video.filter.GlSaturationFilter
-import com.goog.video.filter.GlSepiaFilter
-import com.goog.video.filter.GlSharpenFilter
-import com.goog.video.filter.GlSolarizeFilter
-import com.goog.video.filter.GlSphereRefractionFilter
-import com.goog.video.filter.GlSwirlFilter
-import com.goog.video.filter.GlThreex3TextureSamplingFilter
-import com.goog.video.filter.GlToneCurveFilter
-import com.goog.video.filter.GlToneFilter
-import com.goog.video.filter.GlVibranceFilter
-import com.goog.video.filter.GlVignetteFilter
-import com.goog.video.filter.GlWatermarkFilter
-import com.goog.video.filter.GlWeakPixelInclusionFilter
-import com.goog.video.filter.GlWhiteBalanceFilter
-import com.goog.video.filter.GlZoomBlurFilter
+import com.goog.video.filter.GLAlphaFrameFilter
+import com.goog.video.filter.GLSuperResolutionFilter
+import com.goog.video.filter.GLBilateralFilter
+import com.goog.video.filter.GLBoxBlurFilter
+import com.goog.video.filter.GLBrightnessFilter
+import com.goog.video.filter.GLBulgeDistortionFilter
+import com.goog.video.filter.GLCGAColorSpaceFilter
+import com.goog.video.filter.GLContrastFilter
+import com.goog.video.filter.GLCornerFilter
+import com.goog.video.filter.GLCrosshatchFilter
+import com.goog.video.filter.GLExposureFilter
+import com.goog.video.filter.GLFilter
+import com.goog.video.filter.GLGammaFilter
+import com.goog.video.filter.GLGaussianBlur2Filter
+import com.goog.video.filter.GLGaussianBlur3Filter
+import com.goog.video.filter.GLGaussianBlurFilter
+import com.goog.video.filter.GLGrayScaleFilter
+import com.goog.video.filter.GLHalftoneFilter
+import com.goog.video.filter.GLHazeFilter
+import com.goog.video.filter.GLHighlightShadowFilter
+import com.goog.video.filter.GLHueFilter
+import com.goog.video.filter.GLInvertFilter
+import com.goog.video.filter.GLLookUpTableFilter
+import com.goog.video.filter.GLLuminanceFilter
+import com.goog.video.filter.GLLuminanceThresholdFilter
+import com.goog.video.filter.GLMonochromeFilter
+import com.goog.video.filter.GLOpacityFilter
+import com.goog.video.filter.GLPixelationFilter
+import com.goog.video.filter.GLPosterizeFilter
+import com.goog.video.filter.GLRGBFilter
+import com.goog.video.filter.GLSaturationFilter
+import com.goog.video.filter.GLSepiaFilter
+import com.goog.video.filter.GLSharpenFilter
+import com.goog.video.filter.GLSphereRefractionFilter
+import com.goog.video.filter.GLSwirlFilter
+import com.goog.video.filter.GLThreex3TextureSamplingFilter
+import com.goog.video.filter.GLToneFilter
+import com.goog.video.filter.GLVibranceFilter
+import com.goog.video.filter.GLVignetteFilter
+import com.goog.video.filter.GLWatermarkFilter
+import com.goog.video.filter.GLWeakPixelInclusionFilter
+import com.goog.video.filter.GLWhiteBalanceFilter
+import com.goog.video.filter.GLZoomBlurFilter
 
 class Parameter(val name: String, val index: Int, val minValue: Float, val maxValue: Float, val step: Float,
     var curValue: Float)
 
 interface FilterBuilder {
 
-    fun build(): GlFilter
+    fun build(): GLFilter
 
     fun getParameters(): List<Parameter>
 
-    fun changeParameter(filter: GlFilter, index: Int, value: Float)
+    fun changeParameter(filter: GLFilter, index: Int, value: Float)
 
 }
 
 class FilterItem(val name: String, val builder: FilterBuilder) {
 
-    var filter: GlFilter? = null
+    var filter: GLFilter? = null
 
     var select = false
 
@@ -78,6 +78,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
     companion object {
         fun loadFiltersData(context: Context): List<FilterItem> {
             val list = mutableListOf<FilterItem>()
+            list.add(alphaFrameFilter())
+
             list.add(bilateralFilter())
             list.add(boxBlurFilter())
             list.add(brightnessFilter())
@@ -120,6 +122,7 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
             list.add(sepiaFilter())
             list.add(sharpenFilter())
             list.add(sphereRefractionFilter())
+            list.add(superResolutionFilter())
             list.add(swirlFilter())
 
             list.add(threeX3SamplingFilter())
@@ -137,10 +140,26 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
             return list
         }
 
+        private fun alphaFrameFilter(): FilterItem {
+            val builder = object : FilterBuilder {
+                override fun build(): GLFilter {
+                    return GLAlphaFrameFilter()
+                }
+
+                override fun getParameters(): List<Parameter> {
+                    return listOf()
+                }
+
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                }
+            }
+            return FilterItem("AlphaFrame", builder)
+        }
+
         private fun bilateralFilter(): FilterItem {
             val builder1 = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlBilateralFilter()
+                override fun build(): GLFilter {
+                    return GLBilateralFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -151,8 +170,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlBilateralFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLBilateralFilter
                     when (index) {
                         0 -> bf.texelWidthOffset = value
                         1 -> bf.texelHeightOffset = value
@@ -165,8 +184,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun boxBlurFilter(): FilterItem {
             val builder2 = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlBoxBlurFilter()
+                override fun build(): GLFilter {
+                    return GLBoxBlurFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -177,8 +196,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlBoxBlurFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLBoxBlurFilter
                     when (index) {
                         0 -> bf.texelWidthOffset = value
                         1 -> bf.texelHeightOffset = value
@@ -193,16 +212,16 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun brightnessFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlBrightnessFilter()
+                override fun build(): GLFilter {
+                    return GLBrightnessFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf(Parameter("brightness", 0, -1f, 1f, 0.01f, 0f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlBrightnessFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLBrightnessFilter
                     bf.setBrightness(value)
                 }
             }
@@ -213,8 +232,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun bulgeDistortionFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlBulgeDistortionFilter()
+                override fun build(): GLFilter {
+                    return GLBulgeDistortionFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -226,8 +245,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlBulgeDistortionFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLBulgeDistortionFilter
                     when (index) {
                         0 -> bf.setCenterX(value)
                         1 -> bf.setCenterY(value)
@@ -244,15 +263,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
         //=========================================================
         private fun cgaColorSpaceFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlCGAColorSpaceFilter()
+                override fun build(): GLFilter {
+                    return GLCGAColorSpaceFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
 
@@ -262,8 +281,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun contrastFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlContrastFilter()
+                override fun build(): GLFilter {
+                    return GLContrastFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -272,8 +291,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlContrastFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLContrastFilter
                     bf.setContrast(value)
                 }
             }
@@ -284,8 +303,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun cornerFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlCornerFilter()
+                override fun build(): GLFilter {
+                    return GLCornerFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -297,8 +316,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlCornerFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLCornerFilter
                     when (index) {
                         0 -> bf.setTopLeftCorner(value)
                         1 -> bf.setTopRightCorner(value)
@@ -314,8 +333,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun crosshatchFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlCrosshatchFilter()
+                override fun build(): GLFilter {
+                    return GLCrosshatchFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -325,8 +344,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlCrosshatchFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLCrosshatchFilter
                     when (index) {
                         0 -> bf.setCrossHatchSpacing(value)
                         1 -> bf.setLineWidth(value)
@@ -341,8 +360,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
         //=========================================================
         private fun exposureFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlExposureFilter()
+                override fun build(): GLFilter {
+                    return GLExposureFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -351,8 +370,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlExposureFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLExposureFilter
                     bf.setExposure(value)
                 }
             }
@@ -364,16 +383,16 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
         //=========================================================
         private fun gammaFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlGammaFilter()
+                override fun build(): GLFilter {
+                    return GLGammaFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf(Parameter("gamma", 0, 0f, 20f, 0.01f, 1.2f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlGammaFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLGammaFilter
                     bf.gamma = value
                 }
             }
@@ -382,8 +401,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun gaussianBlurFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlGaussianBlurFilter()
+                override fun build(): GLFilter {
+                    return GLGaussianBlurFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -394,8 +413,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlGaussianBlurFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLGaussianBlurFilter
                     when (index) {
                         0 -> bf.setTexelWidthOffset(value)
                         1 -> bf.setTexelWidthOffset(value)
@@ -408,8 +427,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun gaussianBlur2Filter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlGaussianBlur2Filter()
+                override fun build(): GLFilter {
+                    return GLGaussianBlur2Filter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -419,8 +438,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlGaussianBlur2Filter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLGaussianBlur2Filter
                     when (index) {
                         0 -> bf.setSamplesSize(value.toInt())
                         1 -> bf.setScaleFactor(value.toInt())
@@ -432,8 +451,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun gaussianBlur3Filter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlGaussianBlur3Filter()
+                override fun build(): GLFilter {
+                    return GLGaussianBlur3Filter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -442,8 +461,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlGaussianBlur3Filter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLGaussianBlur3Filter
                     bf.setBlurSize(value.toInt())
                 }
             }
@@ -452,15 +471,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun grayScaleFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlGrayScaleFilter()
+                override fun build(): GLFilter {
+                    return GLGrayScaleFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("GrayScale", builder)
@@ -470,8 +489,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun halfToneFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlHalftoneFilter()
+                override fun build(): GLFilter {
+                    return GLHalftoneFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -481,8 +500,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlHalftoneFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLHalftoneFilter
                     when (index) {
                         0 -> bf.setFractionalWidthOfAPixel(value)
                         1 -> bf.setAspectRatio(value)
@@ -494,8 +513,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun hazeFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlHazeFilter()
+                override fun build(): GLFilter {
+                    return GLHazeFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -505,8 +524,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlHazeFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLHazeFilter
                     when (index) {
                         0 -> bf.setDistance(value)
                         1 -> bf.setSlope(value)
@@ -518,8 +537,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun highlightShadowFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlHighlightShadowFilter()
+                override fun build(): GLFilter {
+                    return GLHighlightShadowFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -529,8 +548,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlHighlightShadowFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLHighlightShadowFilter
                     when (index) {
                         0 -> bf.setShadows(value)
                         1 -> bf.setHighlights(value)
@@ -542,8 +561,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun hueFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlHueFilter()
+                override fun build(): GLFilter {
+                    return GLHueFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -551,8 +570,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                             Parameter("hue", 0, 0f, 360f, 1f, 90f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlHueFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLHueFilter
                     bf.setHue(value)
                 }
             }
@@ -563,15 +582,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun invertFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlInvertFilter()
+                override fun build(): GLFilter {
+                    return GLInvertFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("Invert", builder)
@@ -579,16 +598,16 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun lookUpTableFilter(context: Context): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
+                override fun build(): GLFilter {
                     val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher_round)
-                    return GlLookUpTableFilter(bitmap)
+                    return GLLookUpTableFilter(bitmap)
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("LookUpTable", builder)
@@ -596,15 +615,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun luminanceFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlLuminanceFilter()
+                override fun build(): GLFilter {
+                    return GLLuminanceFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("Luminance", builder)
@@ -612,8 +631,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun luminanceThresholdFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlLuminanceThresholdFilter()
+                override fun build(): GLFilter {
+                    return GLLuminanceThresholdFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -622,8 +641,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlLuminanceThresholdFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLLuminanceThresholdFilter
                     bf.setThreshold(value)
                 }
             }
@@ -632,8 +651,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun monochromeFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlMonochromeFilter()
+                override fun build(): GLFilter {
+                    return GLMonochromeFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -642,8 +661,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlMonochromeFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLMonochromeFilter
                     bf.setIntensity(value)
                 }
             }
@@ -652,8 +671,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun opacityFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlOpacityFilter()
+                override fun build(): GLFilter {
+                    return GLOpacityFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -662,8 +681,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlOpacityFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLOpacityFilter
                     bf.opacity = (value)
                 }
             }
@@ -672,8 +691,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun pixelationFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlPixelationFilter()
+                override fun build(): GLFilter {
+                    return GLPixelationFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -684,8 +703,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlPixelationFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLPixelationFilter
                     bf.setPixel(value)
                     when (index) {
                         0 -> bf.setPixel(value)
@@ -699,8 +718,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun posterizeFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlPosterizeFilter()
+                override fun build(): GLFilter {
+                    return GLPosterizeFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -709,8 +728,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlPosterizeFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLPosterizeFilter
                     bf.setColorLevels(value.toInt())
                 }
             }
@@ -719,8 +738,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun rgbFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlRGBFilter()
+                override fun build(): GLFilter {
+                    return GLRGBFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -734,8 +753,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlRGBFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLRGBFilter
                     when (index) {
                         0 -> bf.setRed(value)
                         1 -> bf.setGreen(value)
@@ -751,8 +770,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun saturationFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlSaturationFilter()
+                override fun build(): GLFilter {
+                    return GLSaturationFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -760,8 +779,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                             Parameter("saturation", 0, 0f, 2f, 0.01f, 1f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlSaturationFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLSaturationFilter
                     bf.setSaturation(value)
                 }
             }
@@ -770,15 +789,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun sepiaFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlSepiaFilter()
+                override fun build(): GLFilter {
+                    return GLSepiaFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("Sepia", builder)
@@ -786,8 +805,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun sharpenFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlSharpenFilter()
+                override fun build(): GLFilter {
+                    return GLSharpenFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -796,8 +815,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlSharpenFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLSharpenFilter
                     bf.setsSharpness(value)
                 }
             }
@@ -806,8 +825,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun sphereRefractionFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlSphereRefractionFilter()
+                override fun build(): GLFilter {
+                    return GLSphereRefractionFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -820,8 +839,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlSphereRefractionFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLSphereRefractionFilter
                     when (index) {
                         0 -> bf.setCenterX(value)
                         1 -> bf.setCenterY(value)
@@ -834,10 +853,34 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
             return FilterItem("SphereRefraction", builder)
         }
 
+        private fun superResolutionFilter(): FilterItem {
+            val builder = object : FilterBuilder {
+                override fun build(): GLFilter {
+                    return GLSuperResolutionFilter()
+                }
+
+                override fun getParameters(): List<Parameter> {
+                    return listOf(
+                            Parameter("edgeThreshold", 0, 0.01f, 1f, 0.01f, 0.031372f),
+                            Parameter("edgeSharpness", 1, 0.1f, 10f, 0.1f, 2f)
+                    )
+                }
+
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLSuperResolutionFilter
+                    when (index) {
+                        0 -> bf.setEdgeThreshold(value)
+                        1 -> bf.setEdgeSharpness(value)
+                    }
+                }
+            }
+            return FilterItem("SuperResolution", builder)
+        }
+
         private fun swirlFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlSwirlFilter()
+                override fun build(): GLFilter {
+                    return GLSwirlFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -849,8 +892,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlSwirlFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLSwirlFilter
                     when (index) {
                         0 -> bf.setCenterX(value)
                         1 -> bf.setCenterY(value)
@@ -864,15 +907,15 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun threeX3SamplingFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlThreex3TextureSamplingFilter()
+                override fun build(): GLFilter {
+                    return GLThreex3TextureSamplingFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                 }
             }
             return FilterItem("ThreeX3Sampling", builder)
@@ -880,8 +923,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun toneFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlToneFilter()
+                override fun build(): GLFilter {
+                    return GLToneFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -891,8 +934,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlToneFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLToneFilter
                     when (index) {
                         0 -> bf.setThreshold(value)
                         1 -> bf.setQuantizationLevels(value)
@@ -904,8 +947,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun vibranceFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlVibranceFilter()
+                override fun build(): GLFilter {
+                    return GLVibranceFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -914,8 +957,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlVibranceFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLVibranceFilter
                     bf.setVibrance(value)
                 }
             }
@@ -924,8 +967,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun vignetterFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlVignetteFilter()
+                override fun build(): GLFilter {
+                    return GLVignetteFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -936,8 +979,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                             Parameter("vignetteEnd", 3, 0f, 1f, 0.01f, 0.85f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlVignetteFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLVignetteFilter
                     when (index) {
                         0 -> bf.setCenterX(value)
                         1 -> bf.setCenterY(value)
@@ -951,9 +994,9 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun waterMarkFilter(context: Context): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
+                override fun build(): GLFilter {
                     val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher_round)
-                    return GlWatermarkFilter(bitmap)
+                    return GLWatermarkFilter(bitmap)
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -962,13 +1005,13 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                     )
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlWatermarkFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLWatermarkFilter
                     when (value.toInt()) {
-                        0 -> bf.position = GlWatermarkFilter.Position.LEFT_TOP
-                        1 -> bf.position = GlWatermarkFilter.Position.RIGHT_TOP
-                        2 -> bf.position = GlWatermarkFilter.Position.LEFT_BOTTOM
-                        3 -> bf.position = GlWatermarkFilter.Position.RIGHT_BOTTOM
+                        0 -> bf.position = GLWatermarkFilter.Position.LEFT_TOP
+                        1 -> bf.position = GLWatermarkFilter.Position.RIGHT_TOP
+                        2 -> bf.position = GLWatermarkFilter.Position.LEFT_BOTTOM
+                        3 -> bf.position = GLWatermarkFilter.Position.RIGHT_BOTTOM
                     }
                 }
             }
@@ -977,23 +1020,23 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun weakPixelInclusionFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlWeakPixelInclusionFilter()
+                override fun build(): GLFilter {
+                    return GLWeakPixelInclusionFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
                     return listOf()
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {}
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {}
             }
             return FilterItem("WeakPixelInclusion", builder)
         }
 
         private fun whiteBalanceFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlWhiteBalanceFilter()
+                override fun build(): GLFilter {
+                    return GLWhiteBalanceFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -1002,8 +1045,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                             Parameter("tint", 1, -100f, 100f, 1f, 0f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlWhiteBalanceFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLWhiteBalanceFilter
                     when (index) {
                         0 -> bf.setTemperature(value)
                         1 -> bf.setTint(value)
@@ -1015,8 +1058,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
         private fun zoomBlurFilter(): FilterItem {
             val builder = object : FilterBuilder {
-                override fun build(): GlFilter {
-                    return GlZoomBlurFilter()
+                override fun build(): GLFilter {
+                    return GLZoomBlurFilter()
                 }
 
                 override fun getParameters(): List<Parameter> {
@@ -1026,8 +1069,8 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                             Parameter("blurSize", 2, 1f, 25f, 1f, 1f))
                 }
 
-                override fun changeParameter(filter: GlFilter, index: Int, value: Float) {
-                    val bf = filter as GlZoomBlurFilter
+                override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
+                    val bf = filter as GLZoomBlurFilter
                     when (index) {
                         0 -> bf.setCenterX(value)
                         1 -> bf.setCenterY(value)

@@ -1,29 +1,24 @@
 package com.goog.video.gl
 
+import android.graphics.PixelFormat
 import android.opengl.GLSurfaceView.EGLConfigChooser
+import com.goog.video.utils.checkArgs
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLDisplay
 
-class SimpleConfigChooser(val redSize: Int = 8,
+///默认为RGBA_8888 8，8，8，8，16，0
+///RGB_565 对应为 5，6，5，0，0，0
+class SimpleConfigChooser(
+    val redSize: Int = 8,
     val greenSize: Int = 8,
     val blueSize: Int = 8,
-    val alphaSize: Int = 0,
-    val depthSize: Int = 0,
+    val alphaSize: Int = 8,
+    val depthSize: Int = 16,
     val stencilSize: Int = 0,
     val version: Int = 2) : EGLConfigChooser {
 
     private val configSpec: IntArray
-
-    constructor(useRGB888: Boolean = true) : this(
-            if (useRGB888) 8 else 5,
-            if (useRGB888) 8 else 6,
-            if (useRGB888) 8 else 5,
-            0,
-            0,
-            0,
-            2
-    )
 
     init {
         configSpec = filterConfigSpec(intArrayOf(EGL10.EGL_RED_SIZE, redSize,
@@ -49,7 +44,6 @@ class SimpleConfigChooser(val redSize: Int = 8,
         newConfigSpec[len + 1] = EGL10.EGL_NONE
         return newConfigSpec
     }
-
 
     override fun chooseConfig(egl: EGL10, display: EGLDisplay): EGLConfig {
         val numConfig = IntArray(1)
@@ -87,6 +81,26 @@ class SimpleConfigChooser(val redSize: Int = 8,
             return value[0]
         }
         return defaultValue
+    }
+
+    ///only support RGB_565 and RGBA_8888 or RGB_888
+    fun getPixelFormat(): Int {
+        val b1 = redSize == greenSize && redSize == blueSize
+        if (b1) {
+            checkArgs(redSize == 8)
+            if (alphaSize == 8) {
+                return PixelFormat.RGBA_8888
+            }
+            if (alphaSize == 0) {
+                return PixelFormat.RGB_888
+            }
+            throw IllegalArgumentException("违法参数")
+        }
+
+        if (redSize == 5 && greenSize == 6 && blueSize == 5 && alphaSize == 0) {
+            return PixelFormat.RGB_565
+        }
+        throw IllegalArgumentException("违法参数")
     }
 
     companion object {

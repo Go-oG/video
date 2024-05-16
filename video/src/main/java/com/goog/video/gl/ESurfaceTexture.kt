@@ -2,7 +2,7 @@ package com.goog.video.gl
 
 import android.graphics.SurfaceTexture
 import android.graphics.SurfaceTexture.OnFrameAvailableListener
-import com.goog.video.filter.GlPreviewFilter
+import com.goog.video.filter.GLPreviewFilter
 
 internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
     val texture: SurfaceTexture = SurfaceTexture(texName)
@@ -18,7 +18,7 @@ internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
     }
 
     val textureTarget: Int
-        get() = GlPreviewFilter.GL_TEXTURE_EXTERNAL_OES
+        get() = GLPreviewFilter.GL_TEXTURE_EXTERNAL_OES
 
     fun updateTexImage() {
         texture.updateTexImage()

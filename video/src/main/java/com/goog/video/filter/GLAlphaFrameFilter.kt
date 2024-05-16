@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-class GLAlphaFrameFilter : GlFilter() {
+class GLAlphaFrameFilter : GLFilter() {
 
     override fun getVertexShader(): String {
         return """

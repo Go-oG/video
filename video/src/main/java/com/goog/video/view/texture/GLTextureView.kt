@@ -80,7 +80,7 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
     fun setRenderer(renderer: Renderer?) {
         checkRenderThreadState()
         if (mConfigChooser == null) {
-            mConfigChooser = SimpleConfigChooser(true)
+            mConfigChooser = SimpleConfigChooser()
         }
         if (mContextFactory == null) {
             mContextFactory = SimpleContextFactory(mGLContextVersion)

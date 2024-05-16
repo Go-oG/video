@@ -10,9 +10,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import com.goog.video.Player
-import com.goog.video.filter.GlFilter
-import com.goog.video.filter.GlLookUpTableFilter
-import com.goog.video.filter.GlPreviewFilter
+import com.goog.video.filter.GLFilter
+import com.goog.video.filter.GLPreviewFilter
 import com.goog.video.utils.EGLUtil
 import java.util.LinkedList
 import java.util.Queue
@@ -24,7 +23,7 @@ import javax.microedition.khronos.opengles.GL10
 abstract class EFBORenderer : GLSurfaceView.Renderer {
 
     private var fbo = EFrameBufferObject()
-    private var normalShader: GlFilter? = null
+    private var normalShader: GLFilter? = null
     private val runOnDraw: Queue<Runnable> = LinkedList()
 
     protected var mClearColor: Int = Color.BLACK
@@ -34,7 +33,7 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-        normalShader = GlFilter()
+        normalShader = GLFilter()
         normalShader?.setup()
         onSurfaceCreated(config)
     }
@@ -96,8 +95,8 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     private val STMatrix = FloatArray(16)
 
     private var filterFramebufferObject: EFrameBufferObject? = null
-    private var previewFilter: GlPreviewFilter? = null
-    private var glFilter: GlFilter? = null
+    private var previewFilter: GLPreviewFilter? = null
+    private var glFilter: GLFilter? = null
 
     ///标识是否设置了新的过滤器
     private val newFilterFlag = AtomicBoolean(false)
@@ -108,7 +107,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         Matrix.setIdentityM(STMatrix, 0)
     }
 
-    fun setGlFilter(filter: GlFilter?) {
+    fun setGlFilter(filter: GLFilter?) {
         glSurfaceView.queueEvent {
             glFilter?.release()
             glFilter = filter
@@ -141,7 +140,7 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         filterFramebufferObject = EFrameBufferObject()
 
         // GL_TEXTURE_EXTERNAL_OES
-        previewFilter = GlPreviewFilter(previewTexture!!.textureTarget)
+        previewFilter = GLPreviewFilter(previewTexture!!.textureTarget)
         previewFilter!!.setup()
 
         val surface = Surface(previewTexture!!.texture)
@@ -178,6 +177,10 @@ class SimpleRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     }
 
     override fun onDrawFrame(fbo: EFrameBufferObject?) {
+        GLES20.glEnable(GLES20.GL_BLEND)
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+
+
         synchronized(this) {
             if (updateSurfaceFlag.compareAndSet(true, false)) {
                 previewTexture?.updateTexImage()
