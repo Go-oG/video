@@ -16,7 +16,7 @@ class GlGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
     init {
         setSamplesSize(samples)
         setMaxSize(maxSize)
-        setSampleFactor(scale)
+        setScaleFactor(scale)
     }
 
 
@@ -29,7 +29,7 @@ class GlGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
         }
     }
 
-    fun setSampleFactor(factor: Int) {
+    fun setScaleFactor(factor: Int) {
         checkArgs(factor >= 1)
         this.scaleFactory = factor
     }

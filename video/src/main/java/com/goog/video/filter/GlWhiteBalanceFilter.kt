@@ -1,6 +1,5 @@
 package com.goog.video.filter
 
-import android.opengl.GLES20
 import com.goog.video.gl.EFrameBufferObject
 
 class GlWhiteBalanceFilter : GlFilter() {

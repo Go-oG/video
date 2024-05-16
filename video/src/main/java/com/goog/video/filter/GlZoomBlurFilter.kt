@@ -11,6 +11,15 @@ class GlZoomBlurFilter : GlFilter() {
         this.blurCenter = blurCenter
     }
 
+    fun setCenterX(v: Float) {
+        this.blurCenter = PointF(v, this.blurCenter.y)
+    }
+
+    fun setCenterY(v: Float) {
+        this.blurCenter = PointF(this.blurCenter.x, v)
+    }
+
+
     fun setBlurSize(blurSize: Float) {
         this.blurSize = blurSize
     }

@@ -11,7 +11,7 @@ class GlSaturationFilter(saturation: Float = 1f) : GlFilter() {
     }
 
     fun setSaturation(v: Float) {
-        checkArgs(v in 0f..1f, "saturation must be in [0, 2]")
+        checkArgs(v in 0f..2f, "saturation must be in [0, 2]")
         this.saturation = v
     }
 

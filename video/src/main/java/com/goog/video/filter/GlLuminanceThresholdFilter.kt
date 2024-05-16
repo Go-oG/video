@@ -5,6 +5,9 @@ import com.goog.video.gl.EFrameBufferObject
 class GlLuminanceThresholdFilter(threshold: Float = 0.5f) : GlFilter() {
     private var threshold = 0.5f
 
+    init {
+        setThreshold(threshold)
+    }
     //TODO 参数范围待确认
     fun setThreshold(threshold: Float) {
         this.threshold = threshold

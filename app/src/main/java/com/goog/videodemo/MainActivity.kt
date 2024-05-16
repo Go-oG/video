@@ -1,44 +1,44 @@
 package com.goog.videodemo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.goog.video.view.surface.GLSurfaceView2
 
+@SuppressLint("NotifyDataSetChanged")
 class MainActivity : AppCompatActivity() {
     private lateinit var listView: RecyclerView
     private lateinit var videoView: GLSurfaceView2
+
     private lateinit var player: PlayerWrapper
-    private lateinit var adapter: RVAdapter
+    private lateinit var adapter: FilterAdapter
+    private lateinit var seekAdapter: SeekAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
         listView = findViewById(R.id.listView)
         videoView = findViewById(R.id.videoView)
 
-        findViewById<View>(R.id.playBTN).setOnClickListener {
+        findViewById<View>(R.id.playBtn).setOnClickListener {
             play()
         }
-        findViewById<View>(R.id.pauseBTN).setOnClickListener {
+        findViewById<View>(R.id.pauseBtn).setOnClickListener {
             pause()
         }
-
+        findViewById<View>(R.id.resetBtn).setOnClickListener {
+            clearFilter()
+        }
         initPlayer()
         initListView()
     }
@@ -50,10 +50,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListView() {
-        adapter = RVAdapter(this)
+        seekAdapter = SeekAdapter(this, null)
+        val seekList = findViewById<RecyclerView>(R.id.seekList)
+        seekList.adapter = seekAdapter
+        seekList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        adapter = FilterAdapter(this)
         adapter.clickListener = {
             val data = adapter.dataList[it]
-            videoView.setGlFilter(data.builder.invoke())
+            if (!data.select) {
+                var selectData: FilterItem? = null
+                for ((index, item) in adapter.dataList.withIndex()) {
+                    item.unselect()
+                    if (index == it) {
+                        selectData = item
+                    }
+                }
+                selectData?.select()
+                seekAdapter.changeFilter(selectData)
+                adapter.notifyDataSetChanged()
+                videoView.setGlFilter(selectData?.filter)
+            }
         }
         adapter.dataList.addAll(FilterItem.loadFiltersData(this))
         listView.adapter = adapter
@@ -84,4 +101,14 @@ class MainActivity : AppCompatActivity() {
     private fun pause() {
         player.player.stop()
     }
+
+    private fun clearFilter() {
+        videoView.setGlFilter(null)
+        seekAdapter.changeFilter(null)
+        for (item in adapter.dataList) {
+            item.unselect()
+        }
+        adapter.notifyDataSetChanged()
+    }
+
 }
