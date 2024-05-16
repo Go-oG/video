@@ -15,6 +15,7 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
+
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_TEXTURE_COORD))
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_TEXTURE_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)

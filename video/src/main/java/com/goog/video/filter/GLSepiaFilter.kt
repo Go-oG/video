@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
 class GLSepiaFilter : GLFilter() {
+    ///TODO 参数待实现
     override fun getFragmentShader(): String {
         return """
             precision mediump float;

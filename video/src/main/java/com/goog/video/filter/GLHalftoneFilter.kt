@@ -19,7 +19,7 @@ class GLHalftoneFilter(fraction: Float = 0.01f, aspectRatio: Float = 1f) : GLFil
     }
 
     fun setFractionalWidthOfAPixel(v: Float) {
-        checkArgs(v > 0, "fractional width of a pixel must be greater than 0")
+        checkArgs(v in 0.0..1.0, "fractionalWidthOfPixel must in [0,1]")
         this.fractionalWidthOfPixel = v
     }
 

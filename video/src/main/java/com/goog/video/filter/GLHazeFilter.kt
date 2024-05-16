@@ -3,7 +3,7 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f) : GLFilter() {
+class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f,var checkArgs:Boolean=true ) : GLFilter() {
     private var distance: Float = 0.2f
     private var slope: Float = 0.0f
 
@@ -12,14 +12,18 @@ class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f) : GLFilter() {
         setSlope(slope)
     }
 
-    fun setDistance(distance: Float) {
-        checkArgs(distance >= 0)
-        this.distance = distance
+    fun setDistance(v: Float) {
+        if(checkArgs){
+            checkArgs(v >= -0.3 && v <= 0.3)
+        }
+        this.distance = v
     }
 
-    fun setSlope(slope: Float) {
-        checkArgs(slope >= 0)
-        this.slope = slope
+    fun setSlope(v: Float) {
+        if(checkArgs){
+            checkArgs(v >= -0.3 && v <= 0.3)
+        }
+        this.slope = v
     }
 
 

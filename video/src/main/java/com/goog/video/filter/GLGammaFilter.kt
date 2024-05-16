@@ -1,8 +1,16 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GLGammaFilter(var gamma: Float=1.2f) : GLFilter() {
+class GLGammaFilter(gamma: Float = 1f) : GLFilter() {
+    private var gamma: Float = 1f
+
+    fun setGamma(v: Float) {
+        checkArgs(v in 0.0..3.0)
+        this.gamma = v
+    }
+
 
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("gamma", gamma)

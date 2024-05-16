@@ -15,11 +15,14 @@ class GLSwirlFilter(angle: Float = 1f, radius: Float = 0.5f, cx: Float = 0.5f, c
         setCenterX(cx)
         setCenterY(cy)
     }
-    fun setAngle(angle: Float) {
-        this.angle = angle
+
+    fun setAngle(v: Float) {
+        checkArgs(v>=0)
+        this.angle = v
     }
 
     fun setRadius(radius: Float) {
+        checkArgs(radius>=0)
         this.radius = radius
     }
 

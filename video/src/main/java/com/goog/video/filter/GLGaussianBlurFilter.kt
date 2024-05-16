@@ -3,16 +3,15 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GLGaussianBlurFilter(widthOffset: Float = 0.01f, heightOffset: Float = 0.01f, blurSize: Float = 0.2f) :
+class GLGaussianBlurFilter(wOffset: Float = 0.01f, hOffset: Float = 0.01f, blurSize: Float = 0.2f) :
     GLFilter() {
-
     private var texelWidthOffset: Float = 0.01f
     private var texelHeightOffset: Float = 0.01f
     private var blurSize: Float = 0.2f
 
     init {
-        setTexelWidthOffset(widthOffset)
-        setTexelHeightOffset(heightOffset)
+        setTexelWidthOffset(wOffset)
+        setTexelHeightOffset(hOffset)
         setBlurSize(blurSize)
     }
 

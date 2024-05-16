@@ -1,17 +1,20 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 class GLWhiteBalanceFilter : GLFilter() {
     private var temperature = 5000f
     private var tint = 0f
 
-    fun setTemperature(temperature: Float) {
-        this.temperature =
-            if (temperature < 5000) (0.0004 * (temperature - 5000.0)).toFloat() else (0.00006 * (temperature - 5000.0)).toFloat()
+    fun setTemperature(v: Float) {
+        checkArgs(v > 0, "Temperature must be >0")
+        this.temperature = v
+        // if (temperature < 5000) (0.0004 * (temperature - 5000.0)).toFloat() else (0.00006 * (temperature - 5000.0)).toFloat()
     }
 
     fun setTint(tint: Float) {
+        checkArgs(tint in -200.0..200.0, "Tint must be in [-220,200]")
         this.tint = (tint / 100.0).toFloat()
     }
     

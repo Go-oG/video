@@ -2,7 +2,7 @@ package com.goog.video.filter
 
 
 class GLGrayScaleFilter : GLFilter() {
-    ///TODO: 未实现
+    ///TODO: 参数未实现
     override fun getFragmentShader(): String {
         return """
             precision mediump float;

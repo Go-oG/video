@@ -7,16 +7,17 @@ import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.model.Resolution
+import com.goog.video.utils.checkArgs
 
 abstract class GLOverlayFilter : GLFilter() {
     private val textures = IntArray(1)
     private var bitmap: Bitmap? = null
-
     protected var inputResolution: Resolution = Resolution(1280, 720)
 
-    //TODO 参数范围待确认
-    fun setResolution(resolution: Resolution) {
-        this.inputResolution = resolution
+    fun setResolution(v: Resolution) {
+        checkArgs(v.width > 0)
+        checkArgs(v.height > 0)
+        this.inputResolution = v
     }
 
     override fun setFrameSize(width: Int, height: Int) {

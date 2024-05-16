@@ -15,7 +15,7 @@ class GLGaussianBlur3Filter(blurSize: Int=3) : GLFilterGroup(listOf()) {
     }
 
     fun setBlurSize(size: Int) {
-        checkArgs(size > 0)
+        checkArgs(size >0)
         this.blurSize = size
         for (filter in filters) {
             if (filter is Blur3Inner) {

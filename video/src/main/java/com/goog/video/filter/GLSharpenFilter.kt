@@ -3,7 +3,7 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GLSharpenFilter(sharpness: Float = 1f) : GLFilter() {
+class GLSharpenFilter(sharpness: Float = 0f) : GLFilter() {
     private var imageWidthFactor = 0.004f
     private var imageHeightFactor = 0.004f
     private var sharpness: Float = 1f
@@ -12,9 +12,9 @@ class GLSharpenFilter(sharpness: Float = 1f) : GLFilter() {
         setsSharpness(sharpness)
     }
 
-    fun setsSharpness(sharpness: Float) {
-        checkArgs(sharpness >=0, "sharpness must be >=0")
-        this.sharpness = sharpness
+    fun setsSharpness(v: Float) {
+        checkArgs(v >= -4 && v <= 4, "sharpness must in [-4,4]")
+        this.sharpness = v
     }
 
     override fun setFrameSize(width: Int, height: Int) {

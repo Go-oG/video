@@ -11,6 +11,7 @@ class GLCrosshatchFilter(space: Float = 0.03f, lineWidth: Float = 0.003f) : GLFi
         setCrossHatchSpacing(space)
         setLineWidth(lineWidth)
     }
+
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("crossHatchSpacing", crossHatchSpacing)
         put("lineWidth", lineWidth)

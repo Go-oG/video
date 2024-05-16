@@ -3,15 +3,18 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
-class GLVibranceFilter(vibrance: Float = 0f) : GLFilter() {
+class GLVibranceFilter(vibrance: Float = 0f, var checkArgs: Boolean = true) : GLFilter() {
     private var vibrance = 0f
 
     init {
         setVibrance(vibrance)
     }
-    fun setVibrance(vibrance: Float) {
-        checkArgs(vibrance >= 0)
-        this.vibrance = vibrance
+
+    fun setVibrance(v: Float) {
+        if (checkArgs) {
+            checkArgs(v >= -1.2 && v <= 1.2f)
+        }
+        this.vibrance = v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

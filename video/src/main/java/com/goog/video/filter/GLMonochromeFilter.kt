@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 class GLMonochromeFilter(intensity: Float = 1f) : GLFilter() {
     private var intensity: Float = 1.0f
@@ -9,13 +10,14 @@ class GLMonochromeFilter(intensity: Float = 1f) : GLFilter() {
         setIntensity(intensity)
     }
 
-    //TODO 参数范围待确认
-    fun setIntensity(intensity: Float) {
-        this.intensity = intensity
+    fun setIntensity(v: Float) {
+        checkArgs(v in 0f..1f, "intensity must be in [0, 1]")
+        this.intensity = v
     }
     override fun onDraw(fbo: EFrameBufferObject?) {
         put("intensity", intensity)
     }
+
     //TODO 其它参数范围待确认
     override fun getFragmentShader(): String {
         return """

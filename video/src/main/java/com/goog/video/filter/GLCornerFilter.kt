@@ -3,6 +3,7 @@ package com.goog.video.filter
 import com.goog.video.gl.EFrameBufferObject
 import com.goog.video.utils.checkArgs
 
+///TODO 待校验
 class GLCornerFilter(corner: Float = 0f) : GLFilter() {
     private var topLeftRadius = 0.0f
     private var topRightRadius = 0.0f

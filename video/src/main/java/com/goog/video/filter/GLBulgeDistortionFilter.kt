@@ -31,12 +31,12 @@ class GLBulgeDistortionFilter(cx: Float = 0.5f, cy: Float = 0.5f, r: Float = 0.2
     }
 
     fun setRadius(r: Float) {
-        checkArgs(r >= 0)
+        checkArgs(r in 0f..1f)
         radius = r
     }
 
     fun setScale(s: Float) {
-        checkArgs(s >= 0)
+        checkArgs(s >= -1 && s <= 1)
         scale = s
     }
 

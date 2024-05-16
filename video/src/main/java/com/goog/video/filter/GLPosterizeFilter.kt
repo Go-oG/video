@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
 class GLPosterizeFilter(colorLevels: Int = 10) : GLFilter() {
     private var colorLevels = 10
@@ -10,13 +11,8 @@ class GLPosterizeFilter(colorLevels: Int = 10) : GLFilter() {
     }
 
     fun setColorLevels(v: Int) {
-        if (v < 0) {
-            this.colorLevels = 0
-        } else if (colorLevels > 256) {
-            this.colorLevels = 256
-        } else {
-            this.colorLevels = v
-        }
+        checkArgs(v in 1..256)
+        this.colorLevels=v
     }
 
     override fun onDraw(fbo: EFrameBufferObject?) {

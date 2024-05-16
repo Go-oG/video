@@ -1,12 +1,13 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.utils.checkArgs
 
-class GLVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.2f, end: Float = 0.85f) : GLFilter() {
+class GLVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.5f, end: Float = 0.75f) : GLFilter() {
     private var centerX = 0.5f
     private var centerY = 0.5f
-    private var vignetteStart: Float = 0.2f
-    private var vignetteEnd: Float = 0.85f
+    private var vignetteStart: Float = 0.5f
+    private var vignetteEnd: Float = 0.75f
 
     init {
         setCenter(cx, cy)
@@ -19,19 +20,23 @@ class GLVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.2f, 
         setCenterY(centerY)
     }
 
-    fun setCenterX(centerX: Float) {
-        this.centerX = centerX
+    fun setCenterX(v: Float) {
+        checkArgs(v in 0f..1f)
+        this.centerX = v
     }
 
-    fun setCenterY(centerY: Float) {
-        this.centerY = centerY
+    fun setCenterY(v: Float) {
+        checkArgs(v in 0f..1f)
+        this.centerY = v
     }
 
-    fun setVignetteStart(vignetteStart: Float) {
-        this.vignetteStart = vignetteStart
+    fun setVignetteStart(v: Float) {
+        checkArgs(v >= 0)
+        this.vignetteStart = v
     }
 
     fun setVignetteEnd(v: Float) {
+        checkArgs(v >= 0)
         this.vignetteEnd = v
     }
 

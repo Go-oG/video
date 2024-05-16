@@ -13,12 +13,12 @@ class GLHighlightShadowFilter(shadows: Float = 1f, highlights: Float = 0f) : GLF
     }
 
     fun setShadows(v: Float) {
-        checkArgs(v >= 0)
+        checkArgs(v in 0.0..1.0)
         shadows = v
     }
 
     fun setHighlights(v: Float) {
-        checkArgs(v >= 0)
+        checkArgs(v in 0.0..1.0)
         highlights = v
     }
 

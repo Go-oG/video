@@ -42,7 +42,7 @@ class GLRGBFilter(r: Float = 1f, g: Float = 1f, b: Float = 1f, brightness: Float
     }
 
     fun setSaturation(saturation: Float) {
-        checkArgs(saturation in 0f..1f, "saturation must be >= 0 and <=1")
+        checkArgs(saturation in 0f..2f, "saturation must be >= 0 and <=2")
         this.saturation = saturation
     }
 
