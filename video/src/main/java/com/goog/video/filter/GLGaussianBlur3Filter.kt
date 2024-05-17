@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLGaussianBlur3Filter(blurSize: Int=3) : GLFilterGroup(listOf()) {
@@ -27,7 +27,7 @@ class GLGaussianBlur3Filter(blurSize: Int=3) : GLFilterGroup(listOf()) {
 
 private class Blur3Inner(val horizontalBlur: Boolean, var blurSize: Int = 3) : GLFilter() {
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("useHorizontal", if (horizontalBlur) 1 else 0)
         put("blurSize", blurSize)
 

@@ -1,28 +1,18 @@
 package com.goog.video.gl
 
 import android.graphics.Color
-import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import android.opengl.Matrix
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.Surface
-import com.goog.video.Player
 import com.goog.video.filter.GLFilter
-import com.goog.video.filter.GLPreviewFilter
-import com.goog.video.utils.EGLUtil
 import java.util.LinkedList
 import java.util.Queue
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 //FrameBufferObjectRenderer
-abstract class EFBORenderer : GLSurfaceView.Renderer {
+abstract class FBORenderer : GLSurfaceView.Renderer {
 
-    private val fbo = EFrameBufferObject()
+    private val fbo = FrameBufferObject()
     private var normalShader: GLFilter? = null
 
     private val runOnDraw: Queue<Runnable> = LinkedList()
@@ -72,6 +62,6 @@ abstract class EFBORenderer : GLSurfaceView.Renderer {
 
     abstract fun onSurfaceChanged(width: Int, height: Int)
 
-    abstract fun onDrawFrame(fbo: EFrameBufferObject?)
+    abstract fun onDrawFrame(fbo: FrameBufferObject)
 
 }

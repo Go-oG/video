@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLGaussianBlurFilter(wOffset: Float = 0.01f, hOffset: Float = 0.01f, blurSize: Float = 0.2f) :
@@ -30,7 +30,7 @@ class GLGaussianBlurFilter(wOffset: Float = 0.01f, hOffset: Float = 0.01f, blurS
         blurSize = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("texelWidthOffset", texelWidthOffset)
         put("texelHeightOffset", texelHeightOffset)
         put("blurSize", blurSize)

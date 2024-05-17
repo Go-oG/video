@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLBulgeDistortionFilter(cx: Float = 0.5f, cy: Float = 0.5f, r: Float = 0.25f, scale: Float = 0.5f) : GLFilter() {
@@ -41,7 +41,7 @@ class GLBulgeDistortionFilter(cx: Float = 0.5f, cy: Float = 0.5f, r: Float = 0.2
     }
 
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
 
 
         putVec2("center", centerX, centerY)

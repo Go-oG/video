@@ -2,7 +2,7 @@ package com.goog.video.filter
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.EGLUtil
 import com.goog.video.utils.EGLUtil.loadTexture
 import kotlin.properties.Delegates
@@ -26,7 +26,7 @@ class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
         loadTexture()
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE3)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, hTex)
         put("lutTexture",3)

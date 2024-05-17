@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLSharpenFilter(sharpness: Float = 0f) : GLFilter() {
@@ -23,7 +23,7 @@ class GLSharpenFilter(sharpness: Float = 0f) : GLFilter() {
     }
 
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("imageWidthFactor", imageWidthFactor)
         put("imageHeightFactor", imageHeightFactor)
         put("sharpness", sharpness)

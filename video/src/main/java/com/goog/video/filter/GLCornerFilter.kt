@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 ///TODO 待校验
@@ -42,7 +42,7 @@ class GLCornerFilter(corner: Float = 0f) : GLFilter() {
         this.bottomRightRadius = corner
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("topLeftRadius", topLeftRadius)
         put("topRightRadius", topRightRadius)
         put("bottomLeftRadius", bottomLeftRadius)

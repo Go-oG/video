@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.microedition.khronos.egl.EGLConfig
 
 ///自定义Render
-class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
+class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
     SurfaceTexture.OnFrameAvailableListener {
     private val handler = Handler(Looper.getMainLooper())
     private var player: Player? = null
@@ -42,7 +42,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
     private val STMatrix = FloatArray(16)
 
     ///fbo
-    private var filterFBO: EFrameBufferObject? = null
+    private var filterFBO: FrameBufferObject? = null
 
     private var previewFilter: GLPreviewFilter? = null
 
@@ -85,10 +85,10 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         GLES20.glBindTexture(previewTexture!!.textureTarget, texName)
 
         // GL_TEXTURE_EXTERNAL_OES
-        EGLUtil.setupTexture(previewTexture!!.textureTarget, GLES20.GL_LINEAR, GLES20.GL_NEAREST)
+        EGLUtil.setupTexture(previewTexture!!.textureTarget, magUseUseLinear = true, minUseLinear = false)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
 
-        filterFBO = EFrameBufferObject()
+        filterFBO = FrameBufferObject()
 
         // GL_TEXTURE_EXTERNAL_OES
         previewFilter = GLPreviewFilter(previewTexture!!.textureTarget)
@@ -105,7 +105,6 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
 //            updateSurface = false
 //        }
         updateSurfaceFlag.set(false)
-
 
         ///确保在绘制时被初始化
         if (glFilter != null) {
@@ -127,10 +126,9 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         Matrix.setIdentityM(MMatrix, 0)
     }
 
-    override fun onDrawFrame(fbo: EFrameBufferObject?) {
+    override fun onDrawFrame(fbo: FrameBufferObject) {
         GLES20.glEnable(GLES20.GL_BLEND)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-
 
         synchronized(this) {
             if (updateSurfaceFlag.compareAndSet(true, false)) {
@@ -158,7 +156,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : EFBORenderer(),
         previewFilter?.draw(texName, MVPMatrix, STMatrix, aspectRatio)
 
         if (glFilter != null) {
-            fbo?.enable()
+            fbo.enable()
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
             glFilter?.draw(filterFBO!!.texName, fbo)
         }

@@ -9,12 +9,14 @@ import com.goog.video.gl.ISurfaceView
 import com.goog.video.gl.SimpleConfigChooser
 import com.goog.video.gl.SimpleContextFactory
 import com.goog.video.gl.FilterRenderer
+import com.goog.video.utils.ContextUtil
 
 open class GLSurfaceView2 @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
     GLSurfaceView(context, attrs), ISurfaceView {
     private val renderer: FilterRenderer
 
     init {
+        ContextUtil.initContext(context)
         setEGLContextFactory(SimpleContextFactory())
         val chooser=SimpleConfigChooser()
         setEGLConfigChooser(chooser)

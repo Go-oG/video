@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 
 open class GLThreex3TextureSamplingFilter : GLFilter() {
     private var texelWidth: Float = 0f
@@ -11,7 +11,7 @@ open class GLThreex3TextureSamplingFilter : GLFilter() {
         texelHeight = 1f / height
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("texelWidth", texelWidth)
         put("texelHeight", texelHeight)
     }

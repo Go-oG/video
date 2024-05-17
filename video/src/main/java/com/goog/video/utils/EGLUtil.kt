@@ -71,6 +71,7 @@ object EGLUtil {
 
     /**
      * 初始化 texture(sampler2D) 相关参数
+     * 主要是填充模式和过滤模式
      */
     fun setupTexture(target: Int, magUseUseLinear: Boolean = true, minUseLinear: Boolean = true,
         wrapUseToEdge: Boolean = true) {

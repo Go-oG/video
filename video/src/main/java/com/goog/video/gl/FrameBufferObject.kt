@@ -1,9 +1,12 @@
 package com.goog.video.gl
 
 import android.opengl.GLES20
+import android.util.Log
 import com.goog.video.utils.EGLUtil
 
-class EFrameBufferObject {
+class FrameBufferObject {
+    private val TAG="FrameBufferObject"
+
     var width: Int = 0
         private set
 
@@ -16,9 +19,8 @@ class EFrameBufferObject {
     var texName: Int = 0
         private set
 
-
+    ///创建texture 并绑定到FBO
     fun setup(width: Int, height: Int) {
-
         val args = IntArray(1)
 
         ///校验纹理大小
@@ -58,38 +60,45 @@ class EFrameBufferObject {
             GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderBufferName)
             ///为深度缓冲区分配存储空间
             GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, width, height)
-            ///将深度缓冲区和 texture 绑定到帧缓冲区对象(frameBuffer)
+            ///将深度缓冲区绑定到帧缓冲区对象(frameBuffer)
             GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, renderBufferName)
 
-            GLES20.glGenTextures(args.size, args, 0)
+            ///创建纹理
+            GLES20.glGenTextures(1, args, 0)
+            if(args[0]==0){
+                Log.e(TAG,"create texture fail")
+            }
             texName = args[0]
+            ///绑定纹理到上下文
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
-
-            ///设置纹理相关的参数
+            ///初始化纹理相关的参数
             EGLUtil.setupTexture(GLES20.GL_TEXTURE_2D, magUseUseLinear = true, minUseLinear = false)
 
-
+            ///创建一个未初始化的纹理
+            ///并将texture(纹理)attach到帧缓冲区对象上(FBO)
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0, GLES20.GL_RGBA,
                     GLES20.GL_UNSIGNED_BYTE, null)
-
-            ///将texture(纹理) 绑定到帧缓冲区对象(frameBuffer)
             GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
                     texName, 0)
-
             ///校验FBO是否设置成功
             val status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
             if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
                 throw RuntimeException("Failed to initialize framebuffer object $status")
             }
-
         } catch (e: RuntimeException) {
             release()
             throw e
         }
 
         ///绑定FBO 和renderBuffer 以及texture
+        //恢复先前绑定的帧缓冲区、渲染缓冲区和纹理对象。
+        //这通常是在操作完成后，清理并恢复原来的OpenGL状态，以便不会影响后续的渲染操作
+        //======================================================================================================
+        //OpenGL将saveFrameBuffer作为当前环境的 帧缓冲区。所有后续的渲染操作将定向到这个帧缓冲区。
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, saveFrameBuffer)
+        //OpenGL将saveRenderBuffer作为当前环境的 渲染缓冲区。渲染缓冲区通常用于深度或模板缓冲区，或颜色缓冲区
         GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, saveRenderBuffer)
+        //OpenGL将saveTexName作为当前活动的纹理对象。所有后续的纹理操作将应用于这个纹理对象。
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, saveTexName)
 
     }
@@ -113,6 +122,5 @@ class EFrameBufferObject {
     fun enable() {
         ///启用离屏渲染
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
-
     }
 }

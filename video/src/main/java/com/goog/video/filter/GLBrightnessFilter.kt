@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 /**
@@ -17,7 +17,7 @@ class GLBrightnessFilter(value: Float = 0f) : GLFilter() {
         this.brightness = brightness
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("brightness", brightness)
     }
 

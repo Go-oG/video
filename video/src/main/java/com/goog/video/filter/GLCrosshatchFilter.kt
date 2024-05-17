@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLCrosshatchFilter(space: Float = 0.03f, lineWidth: Float = 0.003f) : GLFilter() {
@@ -12,7 +12,7 @@ class GLCrosshatchFilter(space: Float = 0.03f, lineWidth: Float = 0.003f) : GLFi
         setLineWidth(lineWidth)
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("crossHatchSpacing", crossHatchSpacing)
         put("lineWidth", lineWidth)
     }

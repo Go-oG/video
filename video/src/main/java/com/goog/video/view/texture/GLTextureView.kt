@@ -12,6 +12,7 @@ import com.goog.video.gl.ISurfaceView
 import com.goog.video.gl.SimpleConfigChooser
 import com.goog.video.gl.SimpleContextFactory
 import com.goog.video.gl.FilterRenderer
+import com.goog.video.utils.ContextUtil
 import com.goog.video.utils.safeInterrupt
 import com.goog.video.utils.safeRun
 import java.lang.ref.WeakReference
@@ -61,6 +62,7 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     init {
+        ContextUtil.initContext(context)
         surfaceTextureListener = this
         setRenderer(FilterRenderer(this))
     }

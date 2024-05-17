@@ -1,7 +1,7 @@
 package com.goog.video.filter
 
 import android.opengl.GLES20
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.EGLUtil.createBuffer
 import com.goog.video.utils.EGLUtil.createProgram
 import com.goog.video.utils.EGLUtil.loadShader
@@ -40,11 +40,10 @@ open class GLFilter {
         fragmentShader = 0
         GLES20.glDeleteBuffers(1, intArrayOf(vertexBufferName), 0)
         vertexBufferName = 0
-
         handleMap.clear()
     }
 
-    open fun draw(texName: Int, fbo: EFrameBufferObject?) {
+    open fun draw(texName: Int, fbo: FrameBufferObject?) {
         useProgram()
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferName)
@@ -57,20 +56,26 @@ open class GLFilter {
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_TEXTURE_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
 
+        //激活并绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
+        //设置纹理单元(sampler2D)
         GLES20.glUniform1i(getHandle(K_UNIFORM_SAMPLER2D), 0)
 
         onDraw(fbo)
 
+        ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+
+        ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_TEXTURE_COORD))
+        //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
     }
 
-    protected open fun onDraw(fbo: EFrameBufferObject?) {
+    protected open fun onDraw(fbo: FrameBufferObject?) {
 
     }
 

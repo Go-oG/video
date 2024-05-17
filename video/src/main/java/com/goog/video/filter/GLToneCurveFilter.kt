@@ -3,7 +3,7 @@ package com.goog.video.filter
 import android.graphics.Point
 import android.graphics.PointF
 import android.opengl.GLES20
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -63,7 +63,7 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
         }
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE3)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])

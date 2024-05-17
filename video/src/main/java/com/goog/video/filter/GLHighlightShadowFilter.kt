@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLHighlightShadowFilter(shadows: Float = 1f, highlights: Float = 0f) : GLFilter() {
@@ -22,7 +22,7 @@ class GLHighlightShadowFilter(shadows: Float = 1f, highlights: Float = 0f) : GLF
         highlights = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("shadows", shadows)
         put("highlights", highlights)
     }

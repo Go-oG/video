@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 
@@ -15,7 +15,7 @@ class GLExposureFilter(exposure: Float = 1f) : GLFilter() {
         this.exposure = exposure
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("exposure", exposure)
     }
 

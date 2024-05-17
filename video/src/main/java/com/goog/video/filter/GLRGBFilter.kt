@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLRGBFilter(r: Float = 1f, g: Float = 1f, b: Float = 1f, brightness: Float = 0f,
@@ -51,7 +51,7 @@ class GLRGBFilter(r: Float = 1f, g: Float = 1f, b: Float = 1f, brightness: Float
         this.contrast = contrast
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("red",red)
         put("green",green)
         put("blue",blue)

@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLSaturationFilter(saturation: Float = 1f) : GLFilter() {
@@ -15,7 +15,7 @@ class GLSaturationFilter(saturation: Float = 1f) : GLFilter() {
         this.saturation = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("saturation", saturation)
     }
 

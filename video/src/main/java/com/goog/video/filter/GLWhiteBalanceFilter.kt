@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLWhiteBalanceFilter : GLFilter() {
@@ -18,7 +18,7 @@ class GLWhiteBalanceFilter : GLFilter() {
         this.tint = (tint / 100.0).toFloat()
     }
     
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
         put("temperature", temperature)
         put("tint", tint)

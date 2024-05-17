@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 ///半色调滤镜
@@ -29,7 +29,7 @@ class GLHalftoneFilter(fraction: Float = 0.01f, aspectRatio: Float = 1f) : GLFil
         aspectRatio = height.toFloat() / width.toFloat()
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("fractionalWidthOfPixel", fractionalWidthOfPixel)
         put("aspectRatio", aspectRatio)
     }

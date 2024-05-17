@@ -1,6 +1,6 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLMonochromeFilter(intensity: Float = 1f) : GLFilter() {
@@ -14,7 +14,7 @@ class GLMonochromeFilter(intensity: Float = 1f) : GLFilter() {
         checkArgs(v in 0f..1f, "intensity must be in [0, 1]")
         this.intensity = v
     }
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("intensity", intensity)
     }
 
