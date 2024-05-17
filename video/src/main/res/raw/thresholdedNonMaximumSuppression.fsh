@@ -1,6 +1,6 @@
- uniform sampler2D inputImageTexture;
+ uniform sampler2D sTexture;
  
- varying highp vec2 textureCoordinate;
+ varying highp vec2 vTextureCoord;
  varying highp vec2 leftTextureCoordinate;
  varying highp vec2 rightTextureCoordinate;
  
@@ -14,17 +14,16 @@
  
  uniform lowp float threshold;
  
- void main()
- {
-     lowp float bottomColor = texture2D(inputImageTexture, bottomTextureCoordinate).r;
-     lowp float bottomLeftColor = texture2D(inputImageTexture, bottomLeftTextureCoordinate).r;
-     lowp float bottomRightColor = texture2D(inputImageTexture, bottomRightTextureCoordinate).r;
-     lowp vec4 centerColor = texture2D(inputImageTexture, textureCoordinate);
-     lowp float leftColor = texture2D(inputImageTexture, leftTextureCoordinate).r;
-     lowp float rightColor = texture2D(inputImageTexture, rightTextureCoordinate).r;
-     lowp float topColor = texture2D(inputImageTexture, topTextureCoordinate).r;
-     lowp float topRightColor = texture2D(inputImageTexture, topRightTextureCoordinate).r;
-     lowp float topLeftColor = texture2D(inputImageTexture, topLeftTextureCoordinate).r;
+ void main() {
+     lowp float bottomColor = texture2D(sTexture, bottomTextureCoordinate).r;
+     lowp float bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoordinate).r;
+     lowp float bottomRightColor = texture2D(sTexture, bottomRightTextureCoordinate).r;
+     lowp vec4 centerColor = texture2D(sTexture, vTextureCoord);
+     lowp float leftColor = texture2D(sTexture, leftTextureCoordinate).r;
+     lowp float rightColor = texture2D(sTexture, rightTextureCoordinate).r;
+     lowp float topColor = texture2D(sTexture, topTextureCoordinate).r;
+     lowp float topRightColor = texture2D(sTexture, topRightTextureCoordinate).r;
+     lowp float topLeftColor = texture2D(sTexture, topLeftTextureCoordinate).r;
      
      // Use a tiebreaker for pixels to the left and immediately above this one
      lowp float multiplier = 1.0 - step(centerColor.r, topColor);

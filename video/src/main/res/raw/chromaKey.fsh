@@ -1,5 +1,3 @@
-#version 100
-
 // Shader code based on Apple's CIChromaKeyFilter example: https://developer.apple.com/library/mac/#samplecode/CIChromaKeyFilter/Introduction/Intro.html
 
 precision highp float;

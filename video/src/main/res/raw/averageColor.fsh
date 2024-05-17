@@ -1,5 +1,3 @@
-#version 100
-
 precision highp float;
 
 uniform sampler2D sTexture;

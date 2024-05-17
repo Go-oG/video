@@ -1,13 +1,12 @@
-attribute vec4 position;
-attribute vec4 inputTextureCoordinate;
+attribute vec4 aPosition;
+attribute vec4 aTextureCoord;
 
 uniform mat4 transformMatrix;
 uniform mat4 orthographicMatrix;
 
-varying vec2 textureCoordinate;
+varying vec2 vTextureCoord;
 
-void main()
-{
-    gl_Position = transformMatrix * vec4(position.xyz, 1.0) * orthographicMatrix;
-    textureCoordinate = inputTextureCoordinate.xy;
+void main() {
+    gl_Position = transformMatrix * vec4(aPosition.xyz, 1.0) * orthographicMatrix;
+    vTextureCoord = aTextureCoord.xy;
 }

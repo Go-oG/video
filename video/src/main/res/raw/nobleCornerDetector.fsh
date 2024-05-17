@@ -1,11 +1,10 @@
- varying highp vec2 textureCoordinate;
+ varying highp vec2 vTextureCoord;
  
- uniform sampler2D inputImageTexture;
+ uniform sampler2D sTexture;
  uniform lowp float sensitivity;
  
- void main()
- {
-     mediump vec3 derivativeElements = texture2D(inputImageTexture, textureCoordinate).rgb;
+ void main() {
+     mediump vec3 derivativeElements = texture2D(sTexture, vTextureCoord).rgb;
      
      mediump float derivativeSum = derivativeElements.x + derivativeElements.y;
      

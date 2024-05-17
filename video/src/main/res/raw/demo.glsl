@@ -1,5 +1,3 @@
-#version 100
-
 precision mediump float;
 precision highp int;
 

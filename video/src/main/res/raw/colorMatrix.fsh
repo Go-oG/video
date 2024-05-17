@@ -1,5 +1,3 @@
-#version 100
-
 varying highp vec2 vTextureCoord;
 
 uniform sampler2D sTexture;

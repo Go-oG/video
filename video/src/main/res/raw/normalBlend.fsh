@@ -13,31 +13,23 @@
  D = C1 + C2 * C2a * (1 - C1a)
  */
 
-varying highp vec2 textureCoordinate;
-varying highp vec2 textureCoordinate2;
+varying highp vec2 vTextureCoord;
+varying highp vec2 vTextureCoord2;
 
-uniform sampler2D inputImageTexture;
-uniform sampler2D inputImageTexture2;
+uniform sampler2D sTexture;
+uniform sampler2D sTexture2;
 
-void main()
-{
- lowp vec4 c2 = texture2D(inputImageTexture, textureCoordinate);
- lowp vec4 c1 = texture2D(inputImageTexture2, textureCoordinate2);
- 
- lowp vec4 outputColor;
- 
-//     outputColor.r = c1.r + c2.r * c2.a * (1.0 - c1.a);
-//     outputColor.g = c1.g + c2.g * c2.a * (1.0 - c1.a);
-//     outputColor.b = c1.b + c2.b * c2.a * (1.0 - c1.a);
-//     outputColor.a = c1.a + c2.a * (1.0 - c1.a);
- 
- lowp float a = c1.a + c2.a * (1.0 - c1.a);
- lowp float alphaDivisor = a + step(a, 0.0); // Protect against a divide-by-zero blacking out things in the output
+void main() {
+ vec4 c2 = texture2D(sTexture, vTextureCoord);
+ vec4 c1 = texture2D(sTexture2, vTextureCoord2);
+
+ vec4 outputColor;
+ float a = c1.a + c2.a * (1.0 - c1.a);
+ float alphaDivisor = a + step(a, 0.0);
 
  outputColor.r = (c1.r * c1.a + c2.r * c2.a * (1.0 - c1.a))/alphaDivisor;
  outputColor.g = (c1.g * c1.a + c2.g * c2.a * (1.0 - c1.a))/alphaDivisor;
  outputColor.b = (c1.b * c1.a + c2.b * c2.a * (1.0 - c1.a))/alphaDivisor;
  outputColor.a = a;
-
  gl_FragColor = outputColor;
 }

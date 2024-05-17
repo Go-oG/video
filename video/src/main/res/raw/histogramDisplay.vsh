@@ -1,12 +1,11 @@
-attribute vec4 position;
-attribute vec4 inputTextureCoordinate;
+attribute vec4 aPosition;
+attribute vec4 aTextureCoord;
 
-varying vec2 textureCoordinate;
+varying vec2 vTextureCoord;
 varying float height;
 
-void main()
-{
-    gl_Position = position;
-    textureCoordinate = vec2(inputTextureCoordinate.x, 0.5);
-    height = 1.0 - inputTextureCoordinate.y;
+void main() {
+    gl_Position = aPosition;
+    vTextureCoord = vec2(aTextureCoord.x, 0.5);
+    height = 1.0 - aTextureCoord.y;
 }

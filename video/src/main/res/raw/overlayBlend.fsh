@@ -1,13 +1,12 @@
-varying highp vec2 textureCoordinate;
-varying highp vec2 textureCoordinate2;
+varying highp vec2 vTextureCoord;
+varying highp vec2 vTextureCoord2;
 
-uniform sampler2D inputImageTexture;
-uniform sampler2D inputImageTexture2;
+uniform sampler2D sTexture;
+uniform sampler2D sTexture2;
 
-void main()
-{
-    mediump vec4 base = texture2D(inputImageTexture, textureCoordinate);
-    mediump vec4 overlay = texture2D(inputImageTexture2, textureCoordinate2);
+void main() {
+    mediump vec4 base = texture2D(sTexture, vTextureCoord);
+    mediump vec4 overlay = texture2D(sTexture2, vTextureCoord2);
     
     mediump float ra;
     if (2.0 * base.r < base.a) {

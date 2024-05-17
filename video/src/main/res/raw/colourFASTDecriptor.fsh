@@ -14,8 +14,7 @@ uniform sampler2D sTexture;
 uniform sampler2D sTexture2;
 const float PITwo = 6.2832;
 const float PI = 3.1416;
-void main()
-{
+void main() {
     vec3 centerColor = texture2D(sTexture, vTextureCoord).rgb;
     
     vec3 pointAColor = texture2D(sTexture2, pointATextureCoordinate).rgb;

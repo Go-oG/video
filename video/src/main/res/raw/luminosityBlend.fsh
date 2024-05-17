@@ -1,10 +1,10 @@
 // Luminosity blend mode based upon pseudo code from the PDF specification.
 
-varying highp vec2 textureCoordinate;
-varying highp vec2 textureCoordinate2;
+varying highp vec2 vTextureCoord;
+varying highp vec2 vTextureCoord2;
 
-uniform sampler2D inputImageTexture;
-uniform sampler2D inputImageTexture2;
+uniform sampler2D sTexture;
+uniform sampler2D sTexture2;
 
 highp float lum(lowp vec3 c) {
     return dot(c, vec3(0.3, 0.59, 0.11));
@@ -35,10 +35,9 @@ lowp vec3 setlum(lowp vec3 c, highp float l) {
     return clipcolor(c);
 }
 
-void main()
-{
- highp vec4 baseColor = texture2D(inputImageTexture, textureCoordinate);
- highp vec4 overlayColor = texture2D(inputImageTexture2, textureCoordinate2);
+void main() {
+    vec4 baseColor = texture2D(sTexture, vTextureCoord);
+    vec4 overlayColor = texture2D(sTexture2, vTextureCoord2);
     
     gl_FragColor = vec4(baseColor.rgb * (1.0 - overlayColor.a) + setlum(baseColor.rgb, lum(overlayColor.rgb)) * overlayColor.a, baseColor.a);
 }

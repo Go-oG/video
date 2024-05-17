@@ -9,8 +9,7 @@ uniform vec3 secondColor;
 
 const mediump vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
 
-void main()
-{
+void main() {
     lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
     float luminance = dot(textureColor.rgb, luminanceWeighting);
     

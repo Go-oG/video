@@ -1,14 +1,12 @@
-varying highp vec2 textureCoordinate;
+varying highp vec2 vTextureCoord;
 
-uniform sampler2D inputImageTexture;
+uniform sampler2D sTexture;
 
 uniform highp vec2 center;
 uniform highp vec2 pixelSize;
 
-
-void main()
-{
-    highp vec2 normCoord = 2.0 * textureCoordinate - 1.0;
+void main() {
+    highp vec2 normCoord = 2.0 * vTextureCoord - 1.0;
     highp vec2 normCenter = 2.0 * center - 1.0;
     
     normCoord -= normCenter;
@@ -26,6 +24,6 @@ void main()
     
     mediump vec2 textureCoordinateToUse = normCoord / 2.0 + 0.5;
     
-    gl_FragColor = texture2D(inputImageTexture, textureCoordinateToUse );
+    gl_FragColor = texture2D(sTexture, textureCoordinateToUse );
     
 }

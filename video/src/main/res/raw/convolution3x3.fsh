@@ -1,10 +1,10 @@
 precision highp float;
 
 uniform sampler2D sTexture;
+varying vec2 vTextureCoord;
 
 uniform mediump mat3 convolutionMatrix;
 
-varying vec2 textureCoordinate;
 varying vec2 leftTextureCoordinate;
 varying vec2 rightTextureCoordinate;
 
@@ -20,7 +20,7 @@ void main() {
     mediump vec3 bottomColor = texture2D(sTexture, bottomTextureCoordinate).rgb;
     mediump vec3 bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoordinate).rgb;
     mediump vec3 bottomRightColor = texture2D(sTexture, bottomRightTextureCoordinate).rgb;
-    mediump vec4 centerColor = texture2D(sTexture, textureCoordinate);
+    mediump vec4 centerColor = texture2D(sTexture, vTextureCoord);
     mediump vec3 leftColor = texture2D(sTexture, leftTextureCoordinate).rgb;
     mediump vec3 rightColor = texture2D(sTexture, rightTextureCoordinate).rgb;
     mediump vec3 topColor = texture2D(sTexture, topTextureCoordinate).rgb;

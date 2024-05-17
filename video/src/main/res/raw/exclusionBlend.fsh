@@ -1,11 +1,10 @@
 varying highp vec2 vTextureCoord;
 varying highp vec2 vTextureCoord2;
 
-uniform sampler2D inputImageTexture;
-uniform sampler2D inputImageTexture2;
+uniform sampler2D sTexture;
+uniform sampler2D sTexture2;
 
-void main()
-{
+void main() {
     mediump vec4 base = texture2D(sTexture, vTextureCoord);
     mediump vec4 overlay = texture2D(sTexture2, vTextureCoord2);
     

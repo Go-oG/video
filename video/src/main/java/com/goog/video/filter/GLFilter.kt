@@ -21,8 +21,8 @@ open class GLFilter {
 
     open fun setup() {
         release()
-        vertexShader = loadShader(getVertexShader(), GLES20.GL_VERTEX_SHADER)
-        fragmentShader = loadShader(getFragmentShader(), GLES20.GL_FRAGMENT_SHADER)
+        vertexShader = loadShader(getVertexShader(), false)
+        fragmentShader = loadShader(getFragmentShader(), true)
         program = createProgram(vertexShader, fragmentShader)
         vertexBufferName = createBuffer(VERTICES_DATA)
     }

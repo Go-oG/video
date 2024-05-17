@@ -1,5 +1,3 @@
-#version 100
-
 // Color blend mode based upon pseudo code from the PDF specification.
 
 varying highp vec2 vTextureCoord;

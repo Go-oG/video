@@ -5,8 +5,8 @@
 // Anisotropic Kuwahara Filtering on the GPU
 // by Jan Eric Kyprianidis <www.kyprianidis.com>
 
-varying highp vec2 textureCoordinate;
-uniform sampler2D inputImageTexture;
+varying highp vec2 vTextureCoord;
+uniform sampler2D sTexture;
 
 precision highp float;
 
@@ -14,80 +14,80 @@ const vec2 src_size = vec2 (1.0 / 768.0, 1.0 / 1024.0);
 
 void main (void)
 {
-    vec2 uv = textureCoordinate;
+    vec2 uv = vTextureCoord;
     float n = float(16); // radius is assumed to be 3
     vec3 m0 = vec3(0.0); vec3 m1 = vec3(0.0); vec3 m2 = vec3(0.0); vec3 m3 = vec3(0.0);
     vec3 s0 = vec3(0.0); vec3 s1 = vec3(0.0); vec3 s2 = vec3(0.0); vec3 s3 = vec3(0.0);
     vec3 c;
     vec3 cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(-3,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,-3) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-3,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,-2) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-3,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,-1) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-3,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,0) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m1 += c;
     s1 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(-2,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,-3) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-2,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,-2) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-2,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,-1) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-2,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,0) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m1 += c;
     s1 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(-1,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-1,-3) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-1,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-1,-2) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-1,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-1,-1) * src_size).rgb;
     m0 += c;
     s0 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-1,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-1,0) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m1 += c;
     s1 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(0,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,-3) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m3 += c;
     s3 += cSq;
-    c = texture2D(inputImageTexture, uv + vec2(0,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,-2) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m3 += c;
     s3 += cSq;
-    c = texture2D(inputImageTexture, uv + vec2(0,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,-1) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
     m3 += c;
     s3 += cSq;
-    c = texture2D(inputImageTexture, uv + vec2(0,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,0) * src_size).rgb;
     cSq = c * c;
     m0 += c;
     s0 += cSq;
@@ -98,130 +98,130 @@ void main (void)
     m3 += c;
     s3 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(-3,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,3) * src_size).rgb;
     m1 += c;
     s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-3,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,2) * src_size).rgb;
     m1 += c;
     s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-3,1) * src_size).rgb;
-    m1 += c;
-    s1 += c * c;
-
-    c = texture2D(inputImageTexture, uv + vec2(-2,3) * src_size).rgb;
-    m1 += c;
-    s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-2,2) * src_size).rgb;
-    m1 += c;
-    s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-2,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-3,1) * src_size).rgb;
     m1 += c;
     s1 += c * c;
 
-    c = texture2D(inputImageTexture, uv + vec2(-1,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,3) * src_size).rgb;
     m1 += c;
     s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-1,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,2) * src_size).rgb;
     m1 += c;
     s1 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(-1,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-2,1) * src_size).rgb;
     m1 += c;
     s1 += c * c;
 
-    c = texture2D(inputImageTexture, uv + vec2(0,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(-1,3) * src_size).rgb;
+    m1 += c;
+    s1 += c * c;
+    c = texture2D(sTexture, uv + vec2(-1,2) * src_size).rgb;
+    m1 += c;
+    s1 += c * c;
+    c = texture2D(sTexture, uv + vec2(-1,1) * src_size).rgb;
+    m1 += c;
+    s1 += c * c;
+
+    c = texture2D(sTexture, uv + vec2(0,3) * src_size).rgb;
     cSq = c * c;
     m1 += c;
     s1 += cSq;
     m2 += c;
     s2 += cSq;
-    c = texture2D(inputImageTexture, uv + vec2(0,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,2) * src_size).rgb;
     cSq = c * c;
     m1 += c;
     s1 += cSq;
     m2 += c;
     s2 += cSq;
-    c = texture2D(inputImageTexture, uv + vec2(0,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(0,1) * src_size).rgb;
     cSq = c * c;
     m1 += c;
     s1 += cSq;
     m2 += c;
     s2 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(3,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,3) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(3,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,2) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(3,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,1) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(3,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,0) * src_size).rgb;
     cSq = c * c;
     m2 += c;
     s2 += cSq;
     m3 += c;
     s3 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(2,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,3) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(2,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,2) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(2,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,1) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(2,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,0) * src_size).rgb;
     cSq = c * c;
     m2 += c;
     s2 += cSq;
     m3 += c;
     s3 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(1,3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(1,3) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(1,2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(1,2) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(1,1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(1,1) * src_size).rgb;
     m2 += c;
     s2 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(1,0) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(1,0) * src_size).rgb;
     cSq = c * c;
     m2 += c;
     s2 += cSq;
     m3 += c;
     s3 += cSq;
 
-    c = texture2D(inputImageTexture, uv + vec2(3,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,-3) * src_size).rgb;
     m3 += c;
     s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(3,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,-2) * src_size).rgb;
     m3 += c;
     s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(3,-1) * src_size).rgb;
-    m3 += c;
-    s3 += c * c;
-
-    c = texture2D(inputImageTexture, uv + vec2(2,-3) * src_size).rgb;
-    m3 += c;
-    s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(2,-2) * src_size).rgb;
-    m3 += c;
-    s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(2,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(3,-1) * src_size).rgb;
     m3 += c;
     s3 += c * c;
 
-    c = texture2D(inputImageTexture, uv + vec2(1,-3) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,-3) * src_size).rgb;
     m3 += c;
     s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(1,-2) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,-2) * src_size).rgb;
     m3 += c;
     s3 += c * c;
-    c = texture2D(inputImageTexture, uv + vec2(1,-1) * src_size).rgb;
+    c = texture2D(sTexture, uv + vec2(2,-1) * src_size).rgb;
+    m3 += c;
+    s3 += c * c;
+
+    c = texture2D(sTexture, uv + vec2(1,-3) * src_size).rgb;
+    m3 += c;
+    s3 += c * c;
+    c = texture2D(sTexture, uv + vec2(1,-2) * src_size).rgb;
+    m3 += c;
+    s3 += c * c;
+    c = texture2D(sTexture, uv + vec2(1,-1) * src_size).rgb;
     m3 += c;
     s3 += c * c;
 

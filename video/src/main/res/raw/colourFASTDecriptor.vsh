@@ -17,7 +17,7 @@ varying vec2 pointGTextureCoordinate;
 varying vec2 pointHTextureCoordinate;
 
 void main() {
-    gl_Position = position;
+    gl_Position = aPosition;
     
     float tripleTexelWidth = 3.0 * texelWidth;
     float tripleTexelHeight = 3.0 * texelHeight;

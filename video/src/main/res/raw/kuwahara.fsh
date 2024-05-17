@@ -5,17 +5,16 @@
 // Anisotropic Kuwahara Filtering on the GPU
 // by Jan Eric Kyprianidis <www.kyprianidis.com>
 
-varying highp vec2 textureCoordinate;
-uniform sampler2D inputImageTexture;
+varying highp vec2 vTextureCoord;
+uniform sampler2D sTexture;
 uniform int radius;
 
 precision highp float;
 
 const vec2 src_size = vec2 (1.0 / 768.0, 1.0 / 1024.0);
 
-void main (void) 
-{
-    vec2 uv = textureCoordinate;
+void main () {
+    vec2 uv = vTextureCoord;
     float n = float((radius + 1) * (radius + 1));
     int i; int j;
     vec3 m0 = vec3(0.0); vec3 m1 = vec3(0.0); vec3 m2 = vec3(0.0); vec3 m3 = vec3(0.0);
@@ -24,7 +23,7 @@ void main (void)
 
     for (j = -radius; j <= 0; ++j)  {
         for (i = -radius; i <= 0; ++i)  {
-            c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+            c = texture2D(sTexture, uv + vec2(i,j) * src_size).rgb;
             m0 += c;
             s0 += c * c;
         }
@@ -32,7 +31,7 @@ void main (void)
 
     for (j = -radius; j <= 0; ++j)  {
         for (i = 0; i <= radius; ++i)  {
-            c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+            c = texture2D(sTexture, uv + vec2(i,j) * src_size).rgb;
             m1 += c;
             s1 += c * c;
         }
@@ -40,7 +39,7 @@ void main (void)
 
     for (j = 0; j <= radius; ++j)  {
         for (i = 0; i <= radius; ++i)  {
-            c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+            c = texture2D(sTexture, uv + vec2(i,j) * src_size).rgb;
             m2 += c;
             s2 += c * c;
         }
@@ -48,7 +47,7 @@ void main (void)
 
     for (j = 0; j <= radius; ++j)  {
         for (i = -radius; i <= 0; ++i)  {
-            c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+            c = texture2D(sTexture, uv + vec2(i,j) * src_size).rgb;
             m3 += c;
             s3 += c * c;
         }

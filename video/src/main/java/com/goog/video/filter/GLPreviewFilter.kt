@@ -4,7 +4,7 @@ import android.opengl.GLES20
 
 class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
 
-    fun draw(texName: Int, mvpMatrix: FloatArray?, stMatrix: FloatArray?, aspectRatio: Float) {
+    fun draw(texName: Int, mvpMatrix: FloatArray, stMatrix: FloatArray, aspectRatio: Float) {
         useProgram()
 
         GLES20.glUniformMatrix4fv(getHandle("uMVPMatrix"), 1, false, mvpMatrix, 0)
@@ -29,7 +29,11 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_TEXTURE_COORD))
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+
+        ///替换
+        //GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+        GLES20.glBindTexture(texTarget, 0)
+
     }
 
     override fun getVertexShader(): String {

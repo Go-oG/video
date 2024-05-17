@@ -1,17 +1,16 @@
-varying highp vec2 textureCoordinate;
+varying highp vec2 vTextureCoord;
 
-uniform sampler2D inputImageTexture;
+uniform sampler2D sTexture;
 
 uniform highp float aspectRatio;
 uniform highp vec2 center;
 uniform highp float radius;
 uniform highp float scale;
 
-void main()
-{
-    highp vec2 textureCoordinateToUse = vec2(textureCoordinate.x, (textureCoordinate.y * aspectRatio + 0.5 - 0.5 * aspectRatio));
+void main() {
+    highp vec2 textureCoordinateToUse = vec2(vTextureCoord.x, (vTextureCoord.y * aspectRatio + 0.5 - 0.5 * aspectRatio));
     highp float dist = distance(center, textureCoordinateToUse);
-    textureCoordinateToUse = textureCoordinate;
+    textureCoordinateToUse = vTextureCoord;
     
     if (dist < radius)
     {
@@ -20,10 +19,10 @@ void main()
         textureCoordinateToUse = textureCoordinateToUse * percent;
         textureCoordinateToUse += center;
         
-        gl_FragColor = texture2D(inputImageTexture, textureCoordinateToUse );
+        gl_FragColor = texture2D(sTexture, textureCoordinateToUse );
     }
     else
     {
-        gl_FragColor = texture2D(inputImageTexture, textureCoordinate );
+        gl_FragColor = texture2D(sTexture, vTextureCoord );
     }
 }

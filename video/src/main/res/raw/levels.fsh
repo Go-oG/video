@@ -15,18 +15,17 @@
 #define LevelsControlOutputRange(color, minOutput, maxOutput)   mix(minOutput, maxOutput, color)
 #define LevelsControl(color, minInput, gamma, maxInput, minOutput, maxOutput)  LevelsControlOutputRange(LevelsControlInput(color, minInput, gamma, maxInput), minOutput, maxOutput)
 
-varying highp vec2 textureCoordinate;
+varying highp vec2 vTextureCoord;
 
-uniform sampler2D inputImageTexture;
+uniform sampler2D sTexture;
 uniform mediump vec3 levelMinimum;
 uniform mediump vec3 levelMiddle;
 uniform mediump vec3 levelMaximum;
 uniform mediump vec3 minOutput;
 uniform mediump vec3 maxOutput;
 
-void main()
-{
-    mediump vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+void main() {
+    mediump vec4 textureColor = texture2D(sTexture, vTextureCoord);
     
     gl_FragColor = vec4(LevelsControl(textureColor.rgb, levelMinimum, levelMiddle, levelMaximum, minOutput, maxOutput), textureColor.a);
 }

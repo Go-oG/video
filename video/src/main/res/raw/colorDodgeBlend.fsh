@@ -1,5 +1,3 @@
-#version 100
-
 precision mediump float;
 
 varying highp vec2 vTextureCoord;

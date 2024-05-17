@@ -12,7 +12,6 @@ varying vec2 vTextureCoord4;
 varying vec2 vTextureCoord5;
 
 void main() {
-
     gl_Position = aPosition;
     vTextureCoord = aTextureCoord.xy;
     vTextureCoord2 = aTextureCoord2.xy;

@@ -9,11 +9,10 @@ varying vec2 vTextureCoord2;
 varying vec2 vTextureCoord3;
 varying vec2 vTextureCoord4;
 
-void main()
-{
+void main() {
     gl_Position = aPosition;
-    textureCoordinate = aTextureCoord.xy;
-    textureCoordinate2 = aTextureCoord2.xy;
-    textureCoordinate3 = aTextureCoord3.xy;
-    textureCoordinate4 = aTextureCoord4.xy;
+    vTextureCoord = aTextureCoord.xy;
+    vTextureCoord2 = aTextureCoord2.xy;
+    vTextureCoord3 = aTextureCoord3.xy;
+    vTextureCoord4 = aTextureCoord4.xy;
 }

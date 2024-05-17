@@ -1,15 +1,14 @@
-varying highp vec2 textureCoordinate;
-varying highp vec2 textureCoordinate2;
+varying highp vec2 vTextureCoord;
+varying highp vec2 vTextureCoord2;
 
-uniform sampler2D inputImageTexture;
-uniform sampler2D inputImageTexture2;
+uniform sampler2D sTexture;
+uniform sampler2D sTexture2;
 
 uniform highp float intensity;
 
-void main()
-{
-    lowp vec3 currentImageColor = texture2D(inputImageTexture, textureCoordinate).rgb;
-    lowp vec3 lowPassImageColor = texture2D(inputImageTexture2, textureCoordinate2).rgb;
+void main() {
+    lowp vec3 currentImageColor = texture2D(sTexture, vTextureCoord).rgb;
+    lowp vec3 lowPassImageColor = texture2D(sTexture2, vTextureCoord2).rgb;
     
     mediump float colorDistance = distance(currentImageColor, lowPassImageColor); // * 0.57735
     lowp float movementThreshold = step(0.2, colorDistance);

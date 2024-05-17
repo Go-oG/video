@@ -1,4 +1,3 @@
-
 attribute vec4 aPosition;
 varying vec2 currentPosition;
 uniform float aspectRatio;
