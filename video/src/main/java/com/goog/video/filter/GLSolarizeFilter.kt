@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLSolarizeFilter(threshold: Float = 0.5f) : GLFilter() {
@@ -15,7 +16,7 @@ class GLSolarizeFilter(threshold: Float = 0.5f) : GLFilter() {
         this.threshold = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("threshold", threshold)
     }
 

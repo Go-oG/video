@@ -1,5 +1,7 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+
 class GLCGAColorSpaceFilter : GLFilter() {
 
     ///TODO: 参数未实现

@@ -13,7 +13,7 @@ import com.goog.video.filter.GLContrastFilter
 import com.goog.video.filter.GLCornerFilter
 import com.goog.video.filter.GLCrosshatchFilter
 import com.goog.video.filter.GLExposureFilter
-import com.goog.video.filter.GLFilter
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.filter.GLGammaFilter
 import com.goog.video.filter.GLGaussianBlur2Filter
 import com.goog.video.filter.GLGaussianBlur3Filter
@@ -173,9 +173,9 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                 override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                     val bf = filter as GLBilateralFilter
                     when (index) {
-                        0 -> bf.texelWidthOffset = value
-                        1 -> bf.texelHeightOffset = value
-                        2 -> bf.blurSize = value
+                        0 -> bf.setTexelWidthOffset(value)
+                        1 -> bf.setTexelHeightOffset(value)
+                        2 -> bf.setBlurSize(value)
                     }
                 }
             }
@@ -199,9 +199,9 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
                 override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                     val bf = filter as GLBoxBlurFilter
                     when (index) {
-                        0 -> bf.texelWidthOffset = value
-                        1 -> bf.texelHeightOffset = value
-                        2 -> bf.blurSize = value
+                        0 -> bf.setTexelWidthOffset(value)
+                        1 -> bf.setTexelHeightOffset(value)
+                        2 -> bf.setBlurSize(value)
                     }
                 }
             }
@@ -393,7 +393,7 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
                 override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                     val bf = filter as GLGammaFilter
-                    bf.gamma = value
+                    bf.setGamma(value)
                 }
             }
             return FilterItem("Gamma", builder)
@@ -683,7 +683,7 @@ class FilterItem(val name: String, val builder: FilterBuilder) {
 
                 override fun changeParameter(filter: GLFilter, index: Int, value: Float) {
                     val bf = filter as GLOpacityFilter
-                    bf.opacity = (value)
+                    bf.setOpacity(value)
                 }
             }
             return FilterItem("Opacity", builder)

@@ -1,5 +1,7 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+
 
 class GLGrayScaleFilter : GLFilter() {
     ///TODO: 参数未实现

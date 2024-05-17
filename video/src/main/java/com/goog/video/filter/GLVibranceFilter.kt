@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLVibranceFilter(vibrance: Float = 0f, var checkArgs: Boolean = true) : GLFilter() {
@@ -17,7 +18,7 @@ class GLVibranceFilter(vibrance: Float = 0f, var checkArgs: Boolean = true) : GL
         this.vibrance = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("vibrance", vibrance)
     }
 

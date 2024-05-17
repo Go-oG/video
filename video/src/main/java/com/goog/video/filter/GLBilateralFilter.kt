@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLBilateralFilter(wOffset: Float = 0.003f, hOffset: Float = 0.003f, blurSize: Float = 1f) : GLFilter() {
@@ -29,7 +30,7 @@ class GLBilateralFilter(wOffset: Float = 0.003f, hOffset: Float = 0.003f, blurSi
         blurSize = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("texelWidthOffset", texelWidthOffset)
         put("texelHeightOffset", texelHeightOffset)
         put("blurSize", blurSize)

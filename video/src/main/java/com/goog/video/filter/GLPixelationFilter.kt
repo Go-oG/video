@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 /**
@@ -38,7 +39,7 @@ class GLPixelationFilter(pixel: Float = 1f, wFactor: Float = 0.0014F, hFactor: F
         imageHeightFactor = 1f / height
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("imageWidthFactor", imageWidthFactor)
         put("imageHeightFactor", imageHeightFactor)
         put("pixel", pixel)

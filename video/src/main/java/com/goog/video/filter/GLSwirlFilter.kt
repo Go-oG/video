@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLSwirlFilter(angle: Float = 1f, radius: Float = 0.5f, cx: Float = 0.5f, cy: Float = 0.5f) : GLFilter() {
@@ -37,7 +38,7 @@ class GLSwirlFilter(angle: Float = 1f, radius: Float = 0.5f, cx: Float = 0.5f, c
     }
 
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("center", centerX, centerY)
         put("radius", radius)
         put("angle", angle)

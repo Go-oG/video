@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f,var checkArgs:Boolean=true ) : GLFilter() {
@@ -27,7 +28,7 @@ class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f,var checkArgs:Boole
     }
 
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         put("distance",distance)
         put("slope",slope)
     }

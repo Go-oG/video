@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 import kotlin.math.max
 
@@ -39,7 +40,7 @@ class GLGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
         this.maxSize = maxSize
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         val w = fbo?.width ?: 0
         val h = fbo?.height ?: 0
         val frameMaxSize = max(w, h).toFloat()

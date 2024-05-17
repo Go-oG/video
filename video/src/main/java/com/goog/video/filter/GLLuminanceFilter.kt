@@ -1,5 +1,7 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+
 class GLLuminanceFilter : GLFilter() {
 
     //TODO 待实现参数？

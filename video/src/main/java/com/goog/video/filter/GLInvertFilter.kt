@@ -1,5 +1,7 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+
 class GLInvertFilter : GLFilter() {
     override fun getFragmentShader(): String {
         return """

@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.5f, end: Float = 0.75f) : GLFilter() {
@@ -41,7 +42,7 @@ class GLVignetteFilter(cx: Float = 0.5f, cy: Float = 0.5f, start: Float = 0.5f, 
     }
 
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("vignetteCenter", centerX, centerY)
         put("vignetteStart", vignetteStart)
         put("vignetteEnd", vignetteEnd)

@@ -1,7 +1,8 @@
 package com.goog.video.filter
 
 import android.graphics.PointF
-import com.goog.video.gl.EFrameBufferObject
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
 class GLZoomBlurFilter : GLFilter() {
@@ -28,7 +29,7 @@ class GLZoomBlurFilter : GLFilter() {
         this.blurSize = v
     }
 
-    override fun onDraw(fbo: EFrameBufferObject?) {
+    override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("blurCenter", blurCenter.x, blurCenter.y)
         put("blurSize", blurSize)
     }
