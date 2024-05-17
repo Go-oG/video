@@ -1,5 +1,6 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 
 open class GLThreex3TextureSamplingFilter : GLFilter() {

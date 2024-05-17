@@ -1,4 +1,4 @@
-package com.goog.video.filter
+package com.goog.video.filter.core
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

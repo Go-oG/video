@@ -2,6 +2,7 @@ package com.goog.video.filter
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.EGLUtil
 import com.goog.video.utils.EGLUtil.loadTexture

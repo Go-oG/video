@@ -4,7 +4,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import com.goog.video.Player
-import com.goog.video.filter.GLFilter
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.ISurfaceView
 import com.goog.video.gl.SimpleConfigChooser
 import com.goog.video.gl.SimpleContextFactory

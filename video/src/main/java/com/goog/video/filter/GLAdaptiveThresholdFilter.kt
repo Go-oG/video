@@ -1,5 +1,8 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.filter.core.GLFilterGroup
+
 ///TODO 暂时不可用
 class GLAdaptiveThresholdFilter(blurSize: Float = 4f) : GLFilterGroup() {
     init {

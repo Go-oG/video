@@ -4,12 +4,16 @@ attribute vec4 aTextureCoord2;
 attribute vec4 aTextureCoord3;
 attribute vec4 aTextureCoord4;
 attribute vec4 aTextureCoord5;
+attribute vec4 aTextureCoord6;
+attribute vec4 aTextureCoord7;
 
-varying vec2 vTextureCoord;
-varying vec2 vTextureCoord2;
-varying vec2 vTextureCoord3;
-varying vec2 vTextureCoord4;
-varying vec2 vTextureCoord5;
+varying highp vec2 vTextureCoord;
+varying highp vec2 vTextureCoord2;
+varying highp vec2 vTextureCoord3;
+varying highp vec2 vTextureCoord4;
+varying highp vec2 vTextureCoord5;
+varying highp vec2 vTextureCoord6;
+varying highp vec2 vTextureCoord7;
 
 void main() {
     gl_Position = aPosition;
@@ -18,4 +22,7 @@ void main() {
     vTextureCoord3 = aTextureCoord3.xy;
     vTextureCoord4 = aTextureCoord4.xy;
     vTextureCoord5 = aTextureCoord5.xy;
+    vTextureCoord6 = aTextureCoord6.xy;
+    vTextureCoord7 = aTextureCoord7.xy;
+
 }

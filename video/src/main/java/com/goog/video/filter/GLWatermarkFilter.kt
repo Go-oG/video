@@ -2,6 +2,7 @@ package com.goog.video.filter
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import com.goog.video.filter.core.GLOverlayFilter
 
 class GLWatermarkFilter(var bitmap: Bitmap?, var position: Position = Position.LEFT_TOP) : GLOverlayFilter() {
 

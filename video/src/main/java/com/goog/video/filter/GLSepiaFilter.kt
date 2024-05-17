@@ -1,5 +1,7 @@
 package com.goog.video.filter
 
+import com.goog.video.filter.core.GLFilter
+
 class GLSepiaFilter : GLFilter() {
     ///TODO 参数待实现
     override fun getFragmentShader(): String {

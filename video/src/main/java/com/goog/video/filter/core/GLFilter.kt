@@ -1,7 +1,12 @@
-package com.goog.video.filter
+package com.goog.video.filter.core
 
 import android.opengl.GLES20
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.gl.GLConstant.DEF_FRAGMENT_SHADER
+import com.goog.video.gl.GLConstant.DEF_VERTEX_SHADER
+import com.goog.video.gl.GLConstant.K_ATTR_COORD
+import com.goog.video.gl.GLConstant.K_ATTR_POSITION
+import com.goog.video.gl.GLConstant.K_UNIFORM_TEX
 import com.goog.video.utils.EGLUtil.createBuffer
 import com.goog.video.utils.EGLUtil.createProgram
 import com.goog.video.utils.EGLUtil.loadShader
@@ -52,15 +57,15 @@ open class GLFilter {
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
 
-        GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_TEXTURE_COORD))
-        GLES20.glVertexAttribPointer(getHandle(K_ATTR_TEXTURE_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
+        GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_COORD))
+        GLES20.glVertexAttribPointer(getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
 
         //激活并绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
         //设置纹理单元(sampler2D)
-        GLES20.glUniform1i(getHandle(K_UNIFORM_SAMPLER2D), 0)
+        GLES20.glUniform1i(getHandle(K_UNIFORM_TEX), 0)
 
         onDraw(fbo)
 
@@ -69,7 +74,7 @@ open class GLFilter {
 
         ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
-        GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_TEXTURE_COORD))
+        GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_COORD))
         //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
@@ -85,11 +90,11 @@ open class GLFilter {
 
     ///subclass overwrite this
     protected open fun getVertexShader(): String {
-        return DEFAULT_VERTEX_SHADER
+        return DEF_VERTEX_SHADER
     }
 
     protected open fun getFragmentShader(): String {
-        return DEFAULT_FRAGMENT_SHADER
+        return DEF_FRAGMENT_SHADER
     }
 
     protected fun put(name: String, value: Int) {
@@ -209,36 +214,6 @@ open class GLFilter {
 
 }
 
-//attribute vec4 aPosition
-const val K_ATTR_POSITION = "aPosition"
-
-//attribute vec4 aTextureCoord
-const val K_ATTR_TEXTURE_COORD = "aTextureCoord"
-
-//varying highp vec2 vTextureCoord
-const val K_VAR_TEXTURE_COORD = "vTextureCoord"
-
-//uniform lowp sampler2D sTexture
-const val K_UNIFORM_SAMPLER2D = "sTexture"
-
-const val DEFAULT_VERTEX_SHADER: String = """
-    attribute vec4 aPosition;
-    attribute vec4 aTextureCoord;
-    varying highp vec2 vTextureCoord;
-         void main() {
-              gl_Position = aPosition;
-              vTextureCoord = aTextureCoord.xy;
-         }
-"""
-
-const val DEFAULT_FRAGMENT_SHADER: String = """
-            precision mediump float;
-                varying highp vec2 vTextureCoord;
-                uniform lowp sampler2D sTexture;
-                void main() {
-                  gl_FragColor = texture2D(sTexture, vTextureCoord);
-                }
-        """
 private val VERTICES_DATA = floatArrayOf( // X, Y, Z, U, V
         -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,

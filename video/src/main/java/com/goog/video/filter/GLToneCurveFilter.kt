@@ -3,6 +3,7 @@ package com.goog.video.filter
 import android.graphics.Point
 import android.graphics.PointF
 import android.opengl.GLES20
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import java.io.IOException
 import java.io.InputStream

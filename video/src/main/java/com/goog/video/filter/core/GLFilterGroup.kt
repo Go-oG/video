@@ -1,4 +1,4 @@
-package com.goog.video.filter
+package com.goog.video.filter.core
 
 import android.opengl.GLES20
 import android.util.Pair

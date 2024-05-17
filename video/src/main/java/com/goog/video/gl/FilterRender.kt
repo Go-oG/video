@@ -9,8 +9,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import com.goog.video.Player
-import com.goog.video.filter.GLFilter
-import com.goog.video.filter.GLPreviewFilter
+import com.goog.video.filter.core.GLFilter
+import com.goog.video.filter.core.GLPreviewFilter
 import com.goog.video.utils.EGLUtil
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.microedition.khronos.egl.EGLConfig

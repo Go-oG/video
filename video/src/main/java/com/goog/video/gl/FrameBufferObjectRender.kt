@@ -3,7 +3,7 @@ package com.goog.video.gl
 import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import com.goog.video.filter.GLFilter
+import com.goog.video.filter.core.GLFilter
 import java.util.LinkedList
 import java.util.Queue
 import javax.microedition.khronos.egl.EGLConfig

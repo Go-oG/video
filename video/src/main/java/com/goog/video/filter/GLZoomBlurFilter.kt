@@ -1,6 +1,7 @@
 package com.goog.video.filter
 
 import android.graphics.PointF
+import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
 
