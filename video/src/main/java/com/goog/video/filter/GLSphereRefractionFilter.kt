@@ -2,50 +2,19 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLSphereRefractionFilter(cx: Float = 0.5f, cy: Float = 0.5f, radius: Float = 0.5f,
-    ratio: Float = 0.5f, refractiveIndex: Float = 0.71f) : GLFilter() {
-    private var centerX = 0.5f
-    private var centerY = 0.5f
-    private var radius = 0.5f
-    private var aspectRatio = 1.0f
-    private var refractiveIndex = 0.71f
+class GLSphereRefractionFilter : GLFilter() {
 
-    init {
-        setCenterX(cx)
-        setCenterY(cy)
-        setRadius(radius)
-        setAspectRatio(ratio)
-        setRefractiveIndex(refractiveIndex)
-    }
-
-    fun setCenterX(v: Float) {
-        checkArgs(v in 0.0..1.0, "centerX must be in the range [0, 1]")
-        this.centerX = v
-    }
-
-    fun setCenterY(v: Float) {
-        checkArgs(v in 0.0..1.0, "centerY must be in the range [0, 1]")
-        this.centerY = v
-    }
-
-    fun setRadius(v: Float) {
-        checkArgs(v in 0.0..1.0, "radius must be in the range [0, 1]")
-        this.radius = v
-    }
-
-    fun setAspectRatio(v: Float) {
-        checkArgs(v > 0.0, "aspectRatio must be greater than 0")
-        this.aspectRatio = v
-    }
-
-    fun setRefractiveIndex(v: Float) {
-        checkArgs(v > 0.0, "refractiveIndex must be greater than 0")
-        this.refractiveIndex = v
-    }
+    var centerX by FloatDelegate(0.5f, 0f, 1f)
+    var centerY by FloatDelegate(0.5f, 0f, 1f)
+    var radius by FloatDelegate(0.5f, 0f, 1f)
+    var aspectRatio by FloatDelegate(1f, 0f, 1f, includeMin = false)
+    var refractiveIndex by FloatDelegate(0.71f, 0f, 1f, includeMin = false)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         putVec2("center", centerX, centerY)
         put("radius", radius)
         put("aspectRatio", aspectRatio)

@@ -1,19 +1,27 @@
 package com.goog.video.filter
 
-import com.goog.video.filter.core.GLFilter
+import com.goog.video.filter.blur.GLBoxBlurFilter
 import com.goog.video.filter.core.GLFilterGroup
+import com.goog.video.filter.core.GLMultiTextureFilter
+import com.goog.video.gl.FrameBufferObject
 
 ///TODO 暂时不可用
 class GLAdaptiveThresholdFilter(blurSize: Float = 4f) : GLFilterGroup() {
+
     init {
         val luminance = GLLuminanceFilter()
-        val boxBlur = GLBoxBlurFilter(blurSize = blurSize)
+        val boxBlur = GLBoxBlurFilter()
+        boxBlur.blurSize = blurSize
         val adaptiveThreshold = AdaptiveThresholdInner()
         filters = listOf(luminance, boxBlur, adaptiveThreshold)
     }
 }
 
-private class AdaptiveThresholdInner : GLFilter() {
+private class AdaptiveThresholdInner : GLMultiTextureFilter(2) {
+    override fun onDraw2(fbo: FrameBufferObject?) {
+
+    }
+
     ///TODO 暂不可用
     override fun getFragmentShader(): String {
         return """

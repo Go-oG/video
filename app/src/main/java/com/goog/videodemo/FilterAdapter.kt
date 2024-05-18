@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.RadioButton
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
-
 
 class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
     val dataList = mutableListOf<FilterItem>()
@@ -29,16 +30,15 @@ class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
         val data = dataList[position]
         holder.nameTv.text = dataList[position].name
         if (data.select) {
-            holder.root.setBackgroundColor(0x2196F3)
+            holder.root.setBackgroundColor(0xFF2196F3.toInt())
         } else {
-            holder.root.setBackgroundColor(0xFFFFFF)
+            holder.root.setBackgroundColor(0xFFFFFFFF.toInt())
         }
     }
-
 }
 
 class FilterHolder(view: View) : RecyclerView.ViewHolder(view) {
     internal val nameTv: TextView = view.findViewById(R.id.nameTV)
-    internal val root: FrameLayout = view.findViewById(R.id.itemRoot)
+    internal val root: CardView = view.findViewById(R.id.itemRoot)
 
 }

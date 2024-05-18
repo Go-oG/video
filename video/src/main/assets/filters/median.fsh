@@ -43,16 +43,16 @@
  varying vec2 vTextureCoord;
  uniform sampler2D sTexture;
 
- varying vec2 leftTextureCoordinate;
- varying vec2 rightTextureCoordinate;
+ varying vec2 leftTextureCoord;
+ varying vec2 rightTextureCoord;
  
- varying vec2 topTextureCoordinate;
- varying vec2 topLeftTextureCoordinate;
- varying vec2 topRightTextureCoordinate;
+ varying vec2 topTextureCoord;
+ varying vec2 topLeftTextureCoord;
+ varying vec2 topRightTextureCoord;
  
- varying vec2 bottomTextureCoordinate;
- varying vec2 bottomLeftTextureCoordinate;
- varying vec2 bottomRightTextureCoordinate;
+ varying vec2 bottomTextureCoord;
+ varying vec2 bottomLeftTextureCoord;
+ varying vec2 bottomRightTextureCoord;
 
 #define s2(a, b)                temp = a; a = min(a, b); b = max(temp, b);
 #define mn3(a, b, c)            s2(a, b); s2(a, c);
@@ -66,23 +66,23 @@
  void main(){
      vec3 v[6];
 
-     v[0] = texture2D(inputImageTexture, bottomLeftTextureCoordinate).rgb;
-     v[1] = texture2D(inputImageTexture, topRightTextureCoordinate).rgb;
-     v[2] = texture2D(inputImageTexture, topLeftTextureCoordinate).rgb;
-     v[3] = texture2D(inputImageTexture, bottomRightTextureCoordinate).rgb;
-     v[4] = texture2D(inputImageTexture, leftTextureCoordinate).rgb;
-     v[5] = texture2D(inputImageTexture, rightTextureCoordinate).rgb;
-//     v[6] = texture2D(inputImageTexture, bottomTextureCoordinate).rgb;
-//     v[7] = texture2D(inputImageTexture, topTextureCoordinate).rgb;
+     v[0] = texture2D(inputImageTexture, bottomLeftTextureCoord).rgb;
+     v[1] = texture2D(inputImageTexture, topRightTextureCoord).rgb;
+     v[2] = texture2D(inputImageTexture, topLeftTextureCoord).rgb;
+     v[3] = texture2D(inputImageTexture, bottomRightTextureCoord).rgb;
+     v[4] = texture2D(inputImageTexture, leftTextureCoord).rgb;
+     v[5] = texture2D(inputImageTexture, rightTextureCoord).rgb;
+//     v[6] = texture2D(inputImageTexture, bottomTextureCoord).rgb;
+//     v[7] = texture2D(inputImageTexture, topTextureCoord).rgb;
      vec3 temp;
 
      mnmx6(v[0], v[1], v[2], v[3], v[4], v[5]);
      
-     v[5] = texture2D(sTexture, bottomTextureCoordinate).rgb;
+     v[5] = texture2D(sTexture, bottomTextureCoord).rgb;
                   
      mnmx5(v[1], v[2], v[3], v[4], v[5]);
                   
-     v[5] = texture2D(sTexture, topTextureCoordinate).rgb;
+     v[5] = texture2D(sTexture, topTextureCoord).rgb;
                                
      mnmx4(v[2], v[3], v[4], v[5]);
                                

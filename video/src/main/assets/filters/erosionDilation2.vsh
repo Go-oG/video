@@ -4,20 +4,20 @@ attribute vec2 aTextureCoord;
 uniform float texelWidth;
 uniform float texelHeight;
 
-varying vec2 centerTextureCoordinate;
-varying vec2 oneStepPositiveTextureCoordinate;
-varying vec2 oneStepNegativeTextureCoordinate;
-varying vec2 twoStepsPositiveTextureCoordinate;
-varying vec2 twoStepsNegativeTextureCoordinate;
+varying vec2 centerTextureCoord;
+varying vec2 oneStepPositiveTextureCoord;
+varying vec2 oneStepNegativeTextureCoord;
+varying vec2 twoStepsPositiveTextureCoord;
+varying vec2 twoStepsNegativeTextureCoord;
 
 void main() {
     gl_Position = aPosition;
     
     vec2 offset = vec2(texelWidth, texelHeight);
     
-    centerTextureCoordinate = aTextureCoord;
-    oneStepNegativeTextureCoordinate = aTextureCoord - offset;
-    oneStepPositiveTextureCoordinate = aTextureCoord + offset;
-    twoStepsNegativeTextureCoordinate = aTextureCoord - (offset * 2.0);
-    twoStepsPositiveTextureCoordinate = aTextureCoord + (offset * 2.0);
+    centerTextureCoord = aTextureCoord;
+    oneStepNegativeTextureCoord = aTextureCoord - offset;
+    oneStepPositiveTextureCoord = aTextureCoord + offset;
+    twoStepsNegativeTextureCoord = aTextureCoord - (offset * 2.0);
+    twoStepsPositiveTextureCoord = aTextureCoord + (offset * 2.0);
 }

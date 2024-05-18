@@ -2,22 +2,15 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
+import com.goog.video.model.IntDelegate
 import com.goog.video.utils.checkArgs
 
-class GLPosterizeFilter(colorLevels: Int = 10) : GLFilter() {
-    private var colorLevels = 10
-
-    init {
-        setColorLevels(colorLevels)
-    }
-
-    fun setColorLevels(v: Int) {
-        checkArgs(v in 1..256)
-        this.colorLevels=v
-    }
+class GLPosterizeFilter : GLFilter() {
+    var colorLevels by FloatDelegate(10f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("colorLevels", colorLevels.toFloat())
+        put("colorLevels", colorLevels)
     }
 
     override fun getFragmentShader(): String {

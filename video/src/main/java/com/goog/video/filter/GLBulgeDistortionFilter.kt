@@ -2,51 +2,19 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLBulgeDistortionFilter(cx: Float = 0.5f, cy: Float = 0.5f, r: Float = 0.25f, scale: Float = 0.5f) : GLFilter() {
-    private var centerX: Float = 0.5f
-    private var centerY: Float = 0.5f
-    private var radius: Float = 0.25f
-    private var scale: Float = 0.5f
+class GLBulgeDistortionFilter : GLFilter() {
 
-    init {
-        setCenter(cx, cy)
-        setRadius(r)
-        setScale(scale)
-    }
-
-    fun setCenter(cx: Float, cy: Float) {
-        setCenterX(cx)
-        setCenterY(cy)
-    }
-
-    fun setCenterX(cx: Float) {
-        checkArgs(cx in 0.0f..1.0f)
-        centerX = cx
-    }
-
-    fun setCenterY(cy: Float) {
-        checkArgs(cy in 0.0f..1.0f)
-        centerY = cy
-    }
-
-    fun setRadius(r: Float) {
-        checkArgs(r in 0f..1f)
-        radius = r
-    }
-
-    fun setScale(s: Float) {
-        checkArgs(s >= -1 && s <= 1)
-        scale = s
-    }
-
+    var centerX by FloatDelegate(0.5f, 0f, 1f)
+    var centerY by FloatDelegate(0.5f, 0f, 1f)
+    var radius by FloatDelegate(0.5f, 0f, 1f)
+    var scale by FloatDelegate(0.5f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-
-
         putVec2("center", centerX, centerY)
-        put("radius",radius)
+        put("radius", radius)
         put("scale", scale)
     }
 

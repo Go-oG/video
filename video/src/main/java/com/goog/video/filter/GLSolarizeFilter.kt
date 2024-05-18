@@ -2,19 +2,11 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLSolarizeFilter(threshold: Float = 0.5f) : GLFilter() {
-    private var threshold = 0.5f
-
-    init {
-        setThreshold(threshold)
-    }
-
-    fun setThreshold(v: Float) {
-        checkArgs(v in 0f..1f, "threshold must be in [0, 1]")
-        this.threshold = v
-    }
+class GLSolarizeFilter : GLFilter() {
+    var threshold by FloatDelegate(0.5f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("threshold", threshold)

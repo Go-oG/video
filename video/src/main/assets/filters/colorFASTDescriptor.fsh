@@ -1,30 +1,31 @@
 precision highp float;
 
 varying vec2 vTextureCoord;
-varying vec2 pointATextureCoordinate;
-varying vec2 pointBTextureCoordinate;
-varying vec2 pointCTextureCoordinate;
-varying vec2 pointDTextureCoordinate;
-varying vec2 pointETextureCoordinate;
-varying vec2 pointFTextureCoordinate;
-varying vec2 pointGTextureCoordinate;
-varying vec2 pointHTextureCoordinate;
-
 uniform sampler2D sTexture;
 uniform sampler2D sTexture2;
+
+varying vec2 pointATexCoord;
+varying vec2 pointBTexCoord;
+varying vec2 pointCTexCoord;
+varying vec2 pointDTexCoord;
+varying vec2 pointETexCoord;
+varying vec2 pointFTexCoord;
+varying vec2 pointGTexCoord;
+varying vec2 pointHTexCoord;
+
 const float PITwo = 6.2832;
 const float PI = 3.1416;
+
 void main() {
     vec3 centerColor = texture2D(sTexture, vTextureCoord).rgb;
-    
-    vec3 pointAColor = texture2D(sTexture2, pointATextureCoordinate).rgb;
-    vec3 pointBColor = texture2D(sTexture2, pointBTextureCoordinate).rgb;
-    vec3 pointCColor = texture2D(sTexture2, pointCTextureCoordinate).rgb;
-    vec3 pointDColor = texture2D(sTexture2, pointDTextureCoordinate).rgb;
-    vec3 pointEColor = texture2D(sTexture2, pointETextureCoordinate).rgb;
-    vec3 pointFColor = texture2D(sTexture2, pointFTextureCoordinate).rgb;
-    vec3 pointGColor = texture2D(sTexture2, pointGTextureCoordinate).rgb;
-    vec3 pointHColor = texture2D(sTexture2, pointHTextureCoordinate).rgb;
+    vec3 pointAColor = texture2D(sTexture2, pointATexCoord).rgb;
+    vec3 pointBColor = texture2D(sTexture2, pointBTexCoord).rgb;
+    vec3 pointCColor = texture2D(sTexture2, pointCTexCoord).rgb;
+    vec3 pointDColor = texture2D(sTexture2, pointDTexCoord).rgb;
+    vec3 pointEColor = texture2D(sTexture2, pointETexCoord).rgb;
+    vec3 pointFColor = texture2D(sTexture2, pointFTexCoord).rgb;
+    vec3 pointGColor = texture2D(sTexture2, pointGTexCoord).rgb;
+    vec3 pointHColor = texture2D(sTexture2, pointHTexCoord).rgb;
 
     vec3 colorComparison = ((pointAColor + pointBColor + pointCColor + pointDColor + pointEColor + pointFColor + pointGColor + pointHColor) * 0.125) - centerColor;
 

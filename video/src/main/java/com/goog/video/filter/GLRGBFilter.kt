@@ -2,63 +2,26 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLRGBFilter(r: Float = 1f, g: Float = 1f, b: Float = 1f, brightness: Float = 0f,
-    saturation: Float = 1f, contrast: Float = 1.2f) : GLFilter() {
-    private var red = 1f
-    private var green = 1f
-    private var blue = 1f
-    private var brightness = 0f
-    private var saturation = 1f
-    private var contrast = 1.2f
+class GLRGBFilter : GLFilter() {
 
-    init {
-        setRed(r)
-        setGreen(g)
-        setBlue(b)
-        setBrightness(brightness)
-        setSaturation(saturation)
-        setContrast(contrast)
-    }
-
-    fun setRed(v: Float) {
-        checkArgs(v in 0f..1f, "red must be >= 0 and <=1")
-        this.red = v
-    }
-
-    fun setGreen(v: Float) {
-        checkArgs(v in 0f..1f, "green must be >= 0 and <=1")
-        this.green = v
-    }
-
-    fun setBlue(blue: Float) {
-        checkArgs(blue in 0f..1f, "blue must be >= 0 and <=1")
-        this.blue = blue
-    }
-
-    fun setBrightness(brightness: Float) {
-        checkArgs(brightness in 0f..1f, "brightness must be >= 0 and <=1")
-        this.brightness = brightness
-    }
-
-    fun setSaturation(saturation: Float) {
-        checkArgs(saturation in 0f..2f, "saturation must be >= 0 and <=2")
-        this.saturation = saturation
-    }
-
-    fun setContrast(contrast: Float) {
-        checkArgs(contrast >= 0f, "contrast must be >= 0")
-        this.contrast = contrast
-    }
+    var red by FloatDelegate(1f, 0f, 1f)
+    var green by FloatDelegate(1f, 0f, 1f)
+    var blue by FloatDelegate(1f, 0f, 1f)
+    var brightness by FloatDelegate(1f, 0f, 1f)
+    var saturation by FloatDelegate(1f, 0f, 1f)
+    var contrast by FloatDelegate(1f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("red",red)
-        put("green",green)
-        put("blue",blue)
-        put("brightness",brightness)
-        put("saturation",saturation)
-        put("contrast",contrast)
+        super.onDraw(fbo)
+        put("red", red)
+        put("green", green)
+        put("blue", blue)
+        put("brightness", brightness)
+        put("saturation", saturation)
+        put("contrast", contrast)
     }
 
     override fun getFragmentShader(): String {

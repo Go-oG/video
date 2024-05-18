@@ -1,15 +1,15 @@
 precision highp float;
 
-varying vec2 centerTextureCoordinate;
-varying vec2 oneStepPositiveTextureCoordinate;
-varying vec2 oneStepNegativeTextureCoordinate;
+varying vec2 centerTextureCoord;
+varying vec2 oneStepPositiveTextureCoord;
+varying vec2 oneStepNegativeTextureCoord;
 
 uniform sampler2D sTexture;
 
 void main() {
-    lowp vec4 centerIntensity = texture2D(sTexture, centerTextureCoordinate);
-    lowp vec4 oneStepPositiveIntensity = texture2D(sTexture, oneStepPositiveTextureCoordinate);
-    lowp vec4 oneStepNegativeIntensity = texture2D(sTexture, oneStepNegativeTextureCoordinate);
+    lowp vec4 centerIntensity = texture2D(sTexture, centerTextureCoord);
+    lowp vec4 oneStepPositiveIntensity = texture2D(sTexture, oneStepPositiveTextureCoord);
+    lowp vec4 oneStepNegativeIntensity = texture2D(sTexture, oneStepNegativeTextureCoord);
     
     lowp vec4 maxValue = max(centerIntensity, oneStepPositiveIntensity);
     

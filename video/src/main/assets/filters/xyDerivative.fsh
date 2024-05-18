@@ -5,28 +5,29 @@
 precision highp float;
 
 varying vec2 vTextureCoord;
-varying vec2 leftTextureCoordinate;
-varying vec2 rightTextureCoordinate;
 
-varying vec2 topTextureCoordinate;
-varying vec2 topLeftTextureCoordinate;
-varying vec2 topRightTextureCoordinate;
+varying vec2 leftTextureCoord;
+varying vec2 rightTextureCoord;
 
-varying vec2 bottomTextureCoordinate;
-varying vec2 bottomLeftTextureCoordinate;
-varying vec2 bottomRightTextureCoordinate;
+varying vec2 topTextureCoord;
+varying vec2 topLeftTextureCoord;
+varying vec2 topRightTextureCoord;
+
+varying vec2 bottomTextureCoord;
+varying vec2 bottomLeftTextureCoord;
+varying vec2 bottomRightTextureCoord;
 
 uniform sampler2D sTexture;
 
 void main() {
-    float topIntensity = texture2D(sTexture, topTextureCoordinate).r;
-    float topRightIntensity = texture2D(sTexture, topRightTextureCoordinate).r;
-    float topLeftIntensity = texture2D(sTexture, topLeftTextureCoordinate).r;
-    float bottomIntensity = texture2D(sTexture, bottomTextureCoordinate).r;
-    float bottomLeftIntensity = texture2D(sTexture, bottomLeftTextureCoordinate).r;
-    float bottomRightIntensity = texture2D(sTexture, bottomRightTextureCoordinate).r;
-    float leftIntensity = texture2D(sTexture, leftTextureCoordinate).r;
-    float rightIntensity = texture2D(sTexture, rightTextureCoordinate).r;
+    float topIntensity = texture2D(sTexture, topTextureCoord).r;
+    float topRightIntensity = texture2D(sTexture, topRightTextureCoord).r;
+    float topLeftIntensity = texture2D(sTexture, topLeftTextureCoord).r;
+    float bottomIntensity = texture2D(sTexture, bottomTextureCoord).r;
+    float bottomLeftIntensity = texture2D(sTexture, bottomLeftTextureCoord).r;
+    float bottomRightIntensity = texture2D(sTexture, bottomRightTextureCoord).r;
+    float leftIntensity = texture2D(sTexture, leftTextureCoord).r;
+    float rightIntensity = texture2D(sTexture, rightTextureCoord).r;
     
     float verticalDerivative = -topLeftIntensity - topIntensity - topRightIntensity + bottomLeftIntensity + bottomIntensity + bottomRightIntensity;
     float horizontalDerivative = -bottomLeftIntensity - leftIntensity - topLeftIntensity + bottomRightIntensity + rightIntensity + topRightIntensity;

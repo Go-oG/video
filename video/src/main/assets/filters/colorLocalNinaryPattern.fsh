@@ -4,27 +4,27 @@ uniform sampler2D sTexture;
 
 varying vec2 vTextureCoord;
 
-varying vec2 leftTextureCoordinate;
-varying vec2 rightTextureCoordinate;
+varying vec2 leftTextureCoord;
+varying vec2 rightTextureCoord;
 
-varying vec2 topTextureCoordinate;
-varying vec2 topLeftTextureCoordinate;
-varying vec2 topRightTextureCoordinate;
+varying vec2 topTextureCoord;
+varying vec2 topLeftTextureCoord;
+varying vec2 topRightTextureCoord;
 
-varying vec2 bottomTextureCoordinate;
-varying vec2 bottomLeftTextureCoordinate;
-varying vec2 bottomRightTextureCoordinate;
+varying vec2 bottomTextureCoord;
+varying vec2 bottomLeftTextureCoord;
+varying vec2 bottomRightTextureCoord;
 
 void main() {
     lowp vec3 centerColor = texture2D(sTexture, vTextureCoord).rgb;
-    lowp vec3 bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoordinate).rgb;
-    lowp vec3 topRightColor = texture2D(sTexture, topRightTextureCoordinate).rgb;
-    lowp vec3 topLeftColor = texture2D(sTexture, topLeftTextureCoordinate).rgb;
-    lowp vec3 bottomRightColor = texture2D(sTexture, bottomRightTextureCoordinate).rgb;
-    lowp vec3 leftColor = texture2D(sTexture, leftTextureCoordinate).rgb;
-    lowp vec3 rightColor = texture2D(sTexture, rightTextureCoordinate).rgb;
-    lowp vec3 bottomColor = texture2D(sTexture, bottomTextureCoordinate).rgb;
-    lowp vec3 topColor = texture2D(sTexture, topTextureCoordinate).rgb;
+    lowp vec3 bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoord).rgb;
+    lowp vec3 topRightColor = texture2D(sTexture, topRightTextureCoord).rgb;
+    lowp vec3 topLeftColor = texture2D(sTexture, topLeftTextureCoord).rgb;
+    lowp vec3 bottomRightColor = texture2D(sTexture, bottomRightTextureCoord).rgb;
+    lowp vec3 leftColor = texture2D(sTexture, leftTextureCoord).rgb;
+    lowp vec3 rightColor = texture2D(sTexture, rightTextureCoord).rgb;
+    lowp vec3 bottomColor = texture2D(sTexture, bottomTextureCoord).rgb;
+    lowp vec3 topColor = texture2D(sTexture, topTextureCoord).rgb;
 
     lowp float redByteTally = 1.0 / 255.0 * step(centerColor.r, topRightColor.r);
     redByteTally += 2.0 / 255.0 * step(centerColor.r, topColor.r);

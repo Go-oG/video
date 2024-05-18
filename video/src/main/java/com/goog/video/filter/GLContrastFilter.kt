@@ -2,6 +2,7 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 
@@ -9,17 +10,9 @@ import com.goog.video.utils.checkArgs
  * Changes the contrast of the image.
  * contrast value ranges from 0.0 to 4.0, with 1.0 as the normal level
  */
-class GLContrastFilter(contrast: Float = 1.2F) : GLFilter() {
-    private var contrast = 1.2f
+class GLContrastFilter: GLFilter() {
 
-    init {
-        setContrast(contrast)
-    }
-
-    fun setContrast(value: Float) {
-        checkArgs(value in 0.0..4.0, "Contrast value should be between 0.0 and 4.0")
-        this.contrast = value
-    }
+    var contrast by FloatDelegate(1f, 0f, 4f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("contrast", contrast)

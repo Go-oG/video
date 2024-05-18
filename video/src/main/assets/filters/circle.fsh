@@ -1,5 +1,6 @@
 uniform lowp vec4 circleColor;
 uniform lowp vec4 backgroundColor;
+
 uniform highp vec2 center;
 uniform highp float radius;
 

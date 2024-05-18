@@ -1,24 +1,20 @@
-package com.goog.video.filter
+package com.goog.video.filter.blur
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 import kotlin.math.max
 
 ///优化后的高斯模糊
 ///具有更好的模糊质量和可控的参数
-class GLGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = null) : GLFilter() {
+class GLGaussianBlur2Filter() : GLFilter() {
+
     private var samplesSize = 25
-    private var scaleFactory = 8
+    var scaleFactory by FloatDelegate(8f, 1f)
 
     ///允许采样率动态变化
     private var maxSize: Int? = null
-
-    init {
-        setSamplesSize(samples)
-        setMaxSize(maxSize)
-        setScaleFactor(scale)
-    }
 
 
     fun setSamplesSize(size: Int) {
@@ -30,11 +26,6 @@ class GLGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
         }
     }
 
-    fun setScaleFactor(factor: Int) {
-        checkArgs(factor >= 1)
-        this.scaleFactory = factor
-    }
-
     fun setMaxSize(maxSize: Int?) {
         checkArgs(maxSize == null || maxSize > 0)
         this.maxSize = maxSize
@@ -44,7 +35,7 @@ class GLGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
         val w = fbo?.width ?: 0
         val h = fbo?.height ?: 0
         val frameMaxSize = max(w, h).toFloat()
-        var scale = scaleFactory.toFloat()
+        var scale = scaleFactory
         val ms = maxSize
         if (ms != null && frameMaxSize > ms) {
             val s = frameMaxSize / ms
@@ -56,18 +47,6 @@ class GLGaussianBlur2Filter(samples: Int = 25, scale: Int = 8, maxSize: Int? = n
 
         put("sTextureSize", size)
         put("sSamples", samplesSize)
-    }
-
-    override fun getVertexShader(): String {
-        return """
-            attribute vec4 aPosition;
-            attribute vec4 aTextureCoord;
-            varying highp vec2 vTextureCoord;
-            void main() {
-                gl_Position = aPosition;
-                vTextureCoord = aTextureCoord.xy;
-            }
-        """.trimIndent()
     }
 
     override fun getFragmentShader(): String {

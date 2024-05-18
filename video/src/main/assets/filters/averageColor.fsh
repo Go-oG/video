@@ -3,16 +3,17 @@ precision highp float;
 uniform sampler2D sTexture;
 varying highp vec2 vTextureCoord;
 
-varying highp vec2 upperLeftInputTextureCoordinate;
-varying highp vec2 upperRightInputTextureCoordinate;
-varying highp vec2 lowerLeftInputTextureCoordinate;
-varying highp vec2 lowerRightInputTextureCoordinate;
+
+varying highp vec2 upperLeftInputTextureCoord;
+varying highp vec2 upperRightInputTextureCoord;
+varying highp vec2 lowerLeftInputTextureCoord;
+varying highp vec2 lowerRightInputTextureCoord;
 
 void main() {
-    highp vec4 upperLeftColor = texture2D(sTexture, upperLeftInputTextureCoordinate);
-    highp vec4 upperRightColor = texture2D(sTexture, upperRightInputTextureCoordinate);
-    highp vec4 lowerLeftColor = texture2D(sTexture, lowerLeftInputTextureCoordinate);
-    highp vec4 lowerRightColor = texture2D(sTexture, lowerRightInputTextureCoordinate);
+    highp vec4 upperLeftColor = texture2D(sTexture, upperLeftInputTextureCoord);
+    highp vec4 upperRightColor = texture2D(sTexture, upperRightInputTextureCoord);
+    highp vec4 lowerLeftColor = texture2D(sTexture, lowerLeftInputTextureCoord);
+    highp vec4 lowerRightColor = texture2D(sTexture, lowerRightInputTextureCoord);
 
     gl_FragColor = 0.25 * (upperLeftColor + upperRightColor + lowerLeftColor + lowerRightColor);
 }

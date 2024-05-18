@@ -2,23 +2,16 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 class GLWhiteBalanceFilter : GLFilter() {
-    private var temperature = 5000f
-    private var tint = 0f
 
-    fun setTemperature(v: Float) {
-        checkArgs(v > 0, "Temperature must be >0")
-        this.temperature = v
-        // if (temperature < 5000) (0.0004 * (temperature - 5000.0)).toFloat() else (0.00006 * (temperature - 5000.0)).toFloat()
-    }
+    var temperature by FloatDelegate(5000f, 0f,  includeMin = false)
 
-    fun setTint(tint: Float) {
-        checkArgs(tint in -200.0..200.0, "Tint must be in [-220,200]")
-        this.tint = (tint / 100.0).toFloat()
-    }
-    
+    /// map -200 ->200
+    var tint by FloatDelegate(0f, -2f, 2f)
+
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
         put("temperature", temperature)

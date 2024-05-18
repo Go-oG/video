@@ -46,5 +46,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.v100)
 
     implementation("com.github.Jay-Goo:RangeSeekBar:3.0.0")
+    implementation(kotlin("reflect"))
 
 }

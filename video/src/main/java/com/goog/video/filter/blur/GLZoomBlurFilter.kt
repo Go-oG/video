@@ -1,36 +1,17 @@
-package com.goog.video.filter
+package com.goog.video.filter.blur
 
-import android.graphics.PointF
+
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
-import com.goog.video.utils.checkArgs
+import com.goog.video.model.FloatDelegate
 
 class GLZoomBlurFilter : GLFilter() {
-    private var blurCenter = PointF(0.5f, 0.5f)
-    private var blurSize = 1f
-
-    fun setBlurCenter(blurCenter: PointF) {
-        this.blurCenter = blurCenter
-    }
-
-    fun setCenterX(v: Float) {
-        checkArgs(v in 0f..1f)
-        this.blurCenter = PointF(v, this.blurCenter.y)
-    }
-
-    fun setCenterY(v: Float) {
-        checkArgs(v in 0f..1f)
-        this.blurCenter = PointF(this.blurCenter.x, v)
-    }
-
-
-    fun setBlurSize(v: Float) {
-        checkArgs(v >= 0)
-        this.blurSize = v
-    }
+    var centerX by FloatDelegate(0.5f, 0f, 1f)
+    var centerY by FloatDelegate(0.5f, 0f, 1f)
+    var blurSize by FloatDelegate(1f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        putVec2("blurCenter", blurCenter.x, blurCenter.y)
+        putVec2("blurCenter", centerX, centerY)
         put("blurSize", blurSize)
     }
 

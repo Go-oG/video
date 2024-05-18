@@ -2,19 +2,12 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 
-class GLExposureFilter(exposure: Float = 1f) : GLFilter() {
-    private var exposure = 1f
-
-    init {
-        setExposure(exposure)
-    }
-    fun setExposure(exposure: Float) {
-        checkArgs(exposure >= -10f && exposure <= 10f, "exposure must in [-10,10]")
-        this.exposure = exposure
-    }
+class GLExposureFilter : GLFilter() {
+    var exposure by FloatDelegate(1f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("exposure", exposure)

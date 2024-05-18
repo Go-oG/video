@@ -1,36 +1,17 @@
-package com.goog.video.filter
+package com.goog.video.filter.blur
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLGaussianBlurFilter(wOffset: Float = 0.01f, hOffset: Float = 0.01f, blurSize: Float = 0.2f) :
+class GLGaussianBlurFilter :
     GLFilter() {
-    private var texelWidthOffset: Float = 0.01f
-    private var texelHeightOffset: Float = 0.01f
-    private var blurSize: Float = 0.2f
 
-    init {
-        setTexelWidthOffset(wOffset)
-        setTexelHeightOffset(hOffset)
-        setBlurSize(blurSize)
-    }
-
-    fun setTexelWidthOffset(v: Float) {
-        checkArgs(v >= 0.0f, "texelWidthOffset must be >= 0")
-        texelWidthOffset = v
-    }
-
-    fun setTexelHeightOffset(v: Float) {
-        checkArgs(v >= 0.0f, "texelHeightOffset must be >= 0")
-        texelHeightOffset = v
-    }
-
-    fun setBlurSize(v: Float) {
-        checkArgs(v >= 0.0f, "blurSize must be >= 0")
-        blurSize = v
-    }
-
+    var texelWidthOffset by FloatDelegate(0.01f, 0f, 1f)
+    var texelHeightOffset by FloatDelegate(0.01f, 0f, 1f)
+    var blurSize by FloatDelegate(3f, 1f)
+    
     override fun onDraw(fbo: FrameBufferObject?) {
         put("texelWidthOffset", texelWidthOffset)
         put("texelHeightOffset", texelHeightOffset)

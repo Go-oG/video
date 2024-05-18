@@ -2,46 +2,18 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 /**
  * Applies a pixelation effect to the image.
  */
-class GLPixelationFilter(pixel: Float = 1f, wFactor: Float = 0.0014F, hFactor: Float = 0.0014f) : GLFilter() {
-    private var pixel = 1f
-    private var imageWidthFactor = 1f / 720
-    private var imageHeightFactor = 1f / 720
-
-    //TODO 参数范围待确认
-    init {
-        setPixel(pixel)
-        setImageWidthFactor(wFactor)
-        setImageHeightFactor(hFactor)
-    }
-
-    fun setPixel(v: Float) {
-        pixel = v
-    }
-
-    fun setImageWidthFactor(v: Float) {
-        checkArgs(v > 0f)
-        imageWidthFactor = v
-    }
-
-    fun setImageHeightFactor(v: Float) {
-        checkArgs(v > 0f)
-        imageHeightFactor = v
-    }
-
-    override fun setFrameSize(width: Int, height: Int) {
-        super.setFrameSize(width, height)
-        imageWidthFactor = 1f / width
-        imageHeightFactor = 1f / height
-    }
+class GLPixelationFilter : GLFilter() {
+    var pixel by FloatDelegate(1f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("imageWidthFactor", imageWidthFactor)
-        put("imageHeightFactor", imageHeightFactor)
+        put("imageWidthFactor", 1f / width.toFloat())
+        put("imageHeightFactor", 1f / height.toFloat())
         put("pixel", pixel)
     }
 

@@ -2,25 +2,18 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 /**
  * Adjusts the alpha channel of the incoming image
  * opacity: The value to multiply the incoming alpha channel for each pixel by (0.0 - 1.0, with 1.0 as the default)
  */
-class GLOpacityFilter(opacity: Float = 1f) : GLFilter() {
-    private var opacity: Float = 1f
-
-    init {
-        setOpacity(opacity)
-    }
-
-    fun setOpacity(v: Float) {
-        checkArgs(v in 0f..1f, "opacity must be in [0, 1]")
-        this.opacity = v
-    }
+class GLOpacityFilter : GLFilter() {
+    var opacity by FloatDelegate(1f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("opacity", opacity)
     }
 

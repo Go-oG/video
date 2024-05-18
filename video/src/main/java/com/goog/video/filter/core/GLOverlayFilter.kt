@@ -12,38 +12,35 @@ import com.goog.video.utils.checkArgs
 abstract class GLOverlayFilter : GLFilter() {
     private val textures = IntArray(1)
     private var bitmap: Bitmap? = null
-    protected var inputResolution: Resolution = Resolution(1280, 720)
-
-    fun setResolution(v: Resolution) {
-        checkArgs(v.width > 0)
-        checkArgs(v.height > 0)
-        this.inputResolution = v
-    }
-
-    override fun setFrameSize(width: Int, height: Int) {
-        super.setFrameSize(width, height)
-        setResolution(Resolution(width, height))
-    }
 
     private fun createBitmap() {
         releaseBitmap(bitmap)
-        bitmap = Bitmap.createBitmap(inputResolution.width, inputResolution.height,
-                Bitmap.Config.ARGB_8888)
+        bitmap = Bitmap.createBitmap(
+            width, height,
+            Bitmap.Config.ARGB_8888
+        )
     }
 
     override fun setup() {
         super.setup()
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
-
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
-                GLES20.GL_LINEAR)
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,
-                GLES20.GL_LINEAR)
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
-                GLES20.GL_CLAMP_TO_EDGE)
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
-                GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
+            GLES20.GL_LINEAR
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,
+            GLES20.GL_LINEAR
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
+            GLES20.GL_CLAMP_TO_EDGE
+        )
+        GLES20.glTexParameteri(
+            GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
+            GLES20.GL_CLAMP_TO_EDGE
+        )
         createBitmap()
     }
 
@@ -53,8 +50,7 @@ abstract class GLOverlayFilter : GLFilter() {
         }
         var bitmap = this.bitmap!!
 
-        if (bitmap.width != inputResolution.width ||
-            bitmap.height != inputResolution.height) {
+        if (bitmap.width != width || bitmap.height != height) {
             createBitmap()
             bitmap = this.bitmap!!
         }

@@ -2,33 +2,18 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLHazeFilter(distance: Float = 0.2f, slope: Float = 0f,var checkArgs:Boolean=true ) : GLFilter() {
-    private var distance: Float = 0.2f
-    private var slope: Float = 0.0f
+class GLHazeFilter : GLFilter() {
 
-    init {
-        setDistance(distance)
-        setSlope(slope)
-    }
-
-    fun setDistance(v: Float) {
-        if(checkArgs){
-            checkArgs(v >= -0.3 && v <= 0.3)
-        }
-        this.distance = v
-    }
-
-    fun setSlope(v: Float) {
-        if(checkArgs){
-            checkArgs(v >= -0.3 && v <= 0.3)
-        }
-        this.slope = v
-    }
-
+    //suggest -0.3 ->0.3
+    var distance by FloatDelegate(0.2f,-1f,1f)
+    //suggest -0.3 ->0.3
+    var slope by FloatDelegate(0f,-1f,1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("distance",distance)
         put("slope",slope)
     }

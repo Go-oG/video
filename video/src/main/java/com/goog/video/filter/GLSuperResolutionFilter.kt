@@ -2,6 +2,7 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 /**
@@ -9,40 +10,19 @@ import com.goog.video.utils.checkArgs
  * shader copy from
  * https://github.com/SnapdragonStudios/snapdragon-gsr/blob/main/include/glsl/sgsr_shader_mobile.frag
  */
-class GLSuperResolutionFilter(mode: SRPixelMode = SRPixelMode.RGBA, threshold: Float = 0.031372f,
-    sharpness: Float = 2f) : GLFilter() {
+class GLSuperResolutionFilter : GLFilter() {
 
-    private var pixelMode = SRPixelMode.RGBA
-    private var edgeThreshold = 8.0f / 255.0f
-    private var edgeSharpness = 2.0f
-
-    init {
-        pixelMode = mode
-        setEdgeThreshold(threshold)
-        setEdgeSharpness(sharpness)
-    }
-
-    fun setPixelMode(mode: SRPixelMode) {
-        pixelMode = mode
-    }
-
-    fun setEdgeThreshold(v: Float) {
-        checkArgs(v > 0)
-        edgeThreshold = v
-    }
-
-    fun setEdgeSharpness(v: Float) {
-        checkArgs(v > 0)
-        edgeSharpness = v
-    }
+    var pixelMode = SRPixelMode.RGBA
+    var edgeThreshold by FloatDelegate(8.0f / 255.0f, 0f, 1f, includeMin = false)
+    var edgeSharpness by FloatDelegate(2f, 0f, includeMin = false)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         val w = (fbo?.width ?: 1).toFloat()
         val h = (fbo?.height ?: 1).toFloat()
         putVec4("viewportInfo", 1f / w, 1f / h, w, h)
-        put("operationMode",pixelMode.type)
-        put("edgeThreshold",edgeThreshold)
-        put("edgeSharpness",edgeSharpness)
+        put("operationMode", pixelMode.type)
+        put("edgeThreshold", edgeThreshold)
+        put("edgeSharpness", edgeSharpness)
     }
 
     override fun getVertexShader(): String {

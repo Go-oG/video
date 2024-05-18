@@ -2,21 +2,15 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLSaturationFilter(saturation: Float = 1f) : GLFilter() {
-    private var saturation = 1f
+class GLSaturationFilter : GLFilter() {
 
-    init {
-        setSaturation(saturation)
-    }
-
-    fun setSaturation(v: Float) {
-        checkArgs(v in 0f..2f, "saturation must be in [0, 2]")
-        this.saturation = v
-    }
+    var saturation by FloatDelegate(1f, 0f, 2f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("saturation", saturation)
     }
 

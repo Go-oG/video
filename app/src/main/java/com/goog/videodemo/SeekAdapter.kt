@@ -29,7 +29,7 @@ class SeekAdapter(val context: Context, private var filterItem: FilterItem?) : R
             return
         }
         this.filterItem = item
-        dataList = item.builder.getParameters()
+        dataList = item.parameter
         notifyDataSetChanged()
     }
 
@@ -63,10 +63,10 @@ class SeekAdapter(val context: Context, private var filterItem: FilterItem?) : R
             return
         }
         val data = dataList[position]
-        holder.seekBar.setRange(data.minValue, data.maxValue,data.step)
+        holder.seekBar.setRange(data.minValue, data.maxValue, data.step)
         holder.seekBar.setProgress(data.curValue)
         val s = "[${data.minValue.format()},${data.maxValue.format()}],cur:${data.curValue.format()}"
-        holder.title.text = "${data.name} $s"
+        holder.title.text = "${data.showName} $s"
     }
 
     inner class SeekViewHolder(view: View) : ViewHolder(view) {
@@ -75,19 +75,17 @@ class SeekAdapter(val context: Context, private var filterItem: FilterItem?) : R
 
         init {
             seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
-                override fun onRangeChanged(view: RangeSeekBar, leftValue: Float, rightValue: Float,
+                override fun onRangeChanged(
+                    view: RangeSeekBar, leftValue: Float, rightValue: Float,
                     isFromUser: Boolean) {
                     if (!isFromUser) {
                         return
                     }
-
                     val item = filterItem ?: return
-                    val filter = item.filter ?: return
-
                     val data = dataList[adapterPosition]
                     Log.i("SeekAdapter", "L:${leftValue.format()} R:${rightValue.format()}")
                     data.curValue = leftValue
-                    item.builder.changeParameter(filter, data.index, leftValue)
+                    item.changeParameter(data, leftValue)
                     notifyItemChanged(adapterPosition)
                 }
 

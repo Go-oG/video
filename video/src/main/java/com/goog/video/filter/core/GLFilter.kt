@@ -1,19 +1,22 @@
 package com.goog.video.filter.core
 
 import android.opengl.GLES20
+import androidx.annotation.CallSuper
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.gl.GLConstant.DEF_FRAGMENT_SHADER
 import com.goog.video.gl.GLConstant.DEF_VERTEX_SHADER
 import com.goog.video.gl.GLConstant.K_ATTR_COORD
 import com.goog.video.gl.GLConstant.K_ATTR_POSITION
 import com.goog.video.gl.GLConstant.K_UNIFORM_TEX
+import com.goog.video.model.FColor
+import com.goog.video.model.FColor4
 import com.goog.video.utils.EGLUtil.createBuffer
 import com.goog.video.utils.EGLUtil.createProgram
 import com.goog.video.utils.EGLUtil.loadShader
 import com.goog.video.utils.checkArgs
 
 open class GLFilter {
-    private var program = 0
+    protected var program = 0
 
     private var vertexShader = 0
 
@@ -24,6 +27,10 @@ open class GLFilter {
 
     private val handleMap = HashMap<String, Int>()
 
+    protected var width = 0
+
+    protected var height = 0
+
     open fun setup() {
         release()
         vertexShader = loadShader(getVertexShader(), false)
@@ -32,8 +39,10 @@ open class GLFilter {
         vertexBufferName = createBuffer(VERTICES_DATA)
     }
 
+    @CallSuper
     open fun setFrameSize(width: Int, height: Int) {
-
+        this.width = width
+        this.height = height
     }
 
     open fun release() {
@@ -49,28 +58,32 @@ open class GLFilter {
     }
 
     open fun draw(texName: Int, fbo: FrameBufferObject?) {
+        onDrawUseProgramPreHook(texName, fbo)
         useProgram()
+        onDrawUseProgramEndHook(texName, fbo)
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferName)
-
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_POSITION))
-        GLES20.glVertexAttribPointer(getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
-                VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
-
+        GLES20.glVertexAttribPointer(
+            getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
+            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET
+        )
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_COORD))
-        GLES20.glVertexAttribPointer(getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
-                VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
+        GLES20.glVertexAttribPointer(
+            getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
+            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET
+        )
 
         //激活并绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
         //设置纹理单元(sampler2D)
         GLES20.glUniform1i(getHandle(K_UNIFORM_TEX), 0)
-
         onDraw(fbo)
-
         ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+
+        onDrawEndHook(texName, fbo)
 
         ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
@@ -78,11 +91,25 @@ open class GLFilter {
         //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+
     }
+
+    ///提供三个钩子函数，用于子类重写
+    protected open fun onDrawUseProgramPreHook(texName: Int, fbo: FrameBufferObject?) {}
+
+    protected open fun onDrawUseProgramEndHook(texName: Int, fbo: FrameBufferObject?) {}
+
+    protected open fun onDrawEndHook(texName: Int, fbo: FrameBufferObject?) {}
 
     protected open fun onDraw(fbo: FrameBufferObject?) {
 
     }
+
+    protected fun putTextureSize() {
+        put("texelWidth", width.toFloat())
+        put("texelHeight", height.toFloat())
+    }
+
 
     protected open fun useProgram() {
         GLES20.glUseProgram(program)
@@ -103,6 +130,14 @@ open class GLFilter {
 
     protected fun put(name: String, value: Float) {
         GLES20.glUniform1f(getHandle(name), value)
+    }
+
+    protected fun putColor(name: String, color: FColor) {
+        putVec3(name, color.r, color.g, color.b)
+    }
+
+    protected fun putColor(name: String, color: FColor4) {
+        putVec4(name, color.r, color.g, color.b, color.a)
     }
 
     protected fun putVec2(name: String, v1: Float, v2: Float) {
@@ -215,10 +250,11 @@ open class GLFilter {
 }
 
 private val VERTICES_DATA = floatArrayOf( // X, Y, Z, U, V
-        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 0.0f)
+    -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+)
 
 private const val FLOAT_SIZE_BYTES = Float.SIZE_BYTES
 

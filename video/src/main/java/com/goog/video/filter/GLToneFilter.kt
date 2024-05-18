@@ -1,28 +1,15 @@
 package com.goog.video.filter
 
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLToneFilter(threshold: Float = 0.2f, quantizationLevels: Float = 10f) : GLThreex3TextureSamplingFilter() {
-    private var threshold: Float = 0.2f
-    private var quantizationLevels: Float = 10f
-
-    init {
-        setThreshold(threshold)
-        setQuantizationLevels(quantizationLevels)
-    }
-
-    fun setThreshold(v: Float) {
-        checkArgs(v in 0.0..1.0, "threshold must be >=0 and <=1")
-        this.threshold = v
-    }
-
-    fun setQuantizationLevels(v: Float) {
-        checkArgs(v >= 0, "quantizationLevels must be >=0")
-        this.quantizationLevels = v
-    }
+class GLToneFilter : GLThreex3TextureSamplingFilter() {
+    var threshold by FloatDelegate(0.2f, 0f, 1f)
+    var quantizationLevels by FloatDelegate(10f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("threshold", threshold)
         put("quantizationLevels", quantizationLevels)
     }

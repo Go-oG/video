@@ -2,43 +2,17 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLSwirlFilter(angle: Float = 1f, radius: Float = 0.5f, cx: Float = 0.5f, cy: Float = 0.5f) : GLFilter() {
-    private var angle = 1.0f
-    private var radius = 0.5f
-    private var centerX = 0.5f
-    private var centerY = 0.5f
-
-    init {
-        setAngle(angle)
-        setRadius(radius)
-        setCenterX(cx)
-        setCenterY(cy)
-    }
-
-    fun setAngle(v: Float) {
-        checkArgs(v>=0)
-        this.angle = v
-    }
-
-    fun setRadius(radius: Float) {
-        checkArgs(radius>=0)
-        this.radius = radius
-    }
-
-    fun setCenterX(v: Float) {
-        checkArgs(v in 0.0..1.0, "centerX must be in the range [0, 1]")
-        this.centerX = v
-    }
-
-    fun setCenterY(v: Float) {
-        checkArgs(v in 0.0..1.0, "centerY must be in the range [0, 1]")
-        this.centerY = v
-    }
-
+class GLSwirlFilter : GLFilter() {
+    var angle by FloatDelegate(1f, 0f)
+    var radius by FloatDelegate(0.5f, 0f, 1f)
+    var centerX by FloatDelegate(0.5f, 0f, 1f)
+    var centerY by FloatDelegate(0.5f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         putVec2("center", centerX, centerY)
         put("radius", radius)
         put("angle", angle)

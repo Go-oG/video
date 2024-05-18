@@ -6,8 +6,7 @@ varying highp vec2 vTextureCoord2;
 uniform sampler2D sTexture;
 uniform sampler2D sTexture2;
 
-void main()
-{
+void main() {
     vec4 base = texture2D(sTexture, vTextureCoord);
     vec4 overlay = texture2D(sTexture2, vTextureCoord2);
 

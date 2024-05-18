@@ -2,21 +2,14 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLHueFilter(hue: Float = 90f) : GLFilter() {
-    private var hue = 90f
-
-    init {
-        setHue(hue)
-    }
-
-    fun setHue(v: Float) {
-        checkArgs(v in 0f..360f, "Hue must be in range [0, 360]")
-        this.hue = v
-    }
+class GLHueFilter : GLFilter() {
+    var hue by FloatDelegate(90f, 0f, 360f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("hueAdjust", hue)
     }
 

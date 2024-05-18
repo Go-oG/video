@@ -2,20 +2,15 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLMonochromeFilter(intensity: Float = 1f) : GLFilter() {
-    private var intensity: Float = 1.0f
+class GLMonochromeFilter : GLFilter() {
+    var intensity by FloatDelegate(1f, 0f, 1f)
 
-    init {
-        setIntensity(intensity)
-    }
 
-    fun setIntensity(v: Float) {
-        checkArgs(v in 0f..1f, "intensity must be in [0, 1]")
-        this.intensity = v
-    }
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("intensity", intensity)
     }
 

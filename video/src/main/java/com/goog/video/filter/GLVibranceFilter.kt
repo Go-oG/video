@@ -2,23 +2,15 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLVibranceFilter(vibrance: Float = 0f, var checkArgs: Boolean = true) : GLFilter() {
-    private var vibrance = 0f
-
-    init {
-        setVibrance(vibrance)
-    }
-
-    fun setVibrance(v: Float) {
-        if (checkArgs) {
-            checkArgs(v >= -1.2 && v <= 1.2f)
-        }
-        this.vibrance = v
-    }
+class GLVibranceFilter : GLFilter() {
+    //suggest [-1.2,1.2]
+    var vibrance by FloatDelegate(0f, -2f, 2f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("vibrance", vibrance)
     }
 

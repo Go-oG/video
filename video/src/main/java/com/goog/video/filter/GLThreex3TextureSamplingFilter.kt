@@ -4,17 +4,9 @@ import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 
 open class GLThreex3TextureSamplingFilter : GLFilter() {
-    private var texelWidth: Float = 0f
-    private var texelHeight: Float = 0f
-
-    override fun setFrameSize(width: Int, height: Int) {
-        texelWidth = 1f / width
-        texelHeight = 1f / height
-    }
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("texelWidth", texelWidth)
-        put("texelHeight", texelHeight)
+        putTextureSize()
     }
 
     override fun getVertexShader(): String {

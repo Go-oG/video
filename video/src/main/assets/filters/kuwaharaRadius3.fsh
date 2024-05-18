@@ -4,16 +4,19 @@
 // 
 // Anisotropic Kuwahara Filtering on the GPU
 // by Jan Eric Kyprianidis <www.kyprianidis.com>
+precision highp float;
 
 varying highp vec2 vTextureCoord;
 uniform sampler2D sTexture;
 
-precision highp float;
+uniform int srcWidth;
+uniform int srcHeight;
 
-const vec2 src_size = vec2 (1.0 / 768.0, 1.0 / 1024.0);
+//const vec2 src_size = vec2 (1.0 / 768.0, 1.0 / 1024.0);
 
-void main (void)
-{
+void main (void) {
+    vec2 src_size = vec2(1.0 / float(srcWidth), 1.0 / float(srcHeight));
+
     vec2 uv = vTextureCoord;
     float n = float(16); // radius is assumed to be 3
     vec3 m0 = vec3(0.0); vec3 m1 = vec3(0.0); vec3 m2 = vec3(0.0); vec3 m3 = vec3(0.0);

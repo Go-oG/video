@@ -2,46 +2,15 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
 ///TODO 待校验
-class GLCornerFilter(corner: Float = 0f) : GLFilter() {
-    private var topLeftRadius = 0.0f
-    private var topRightRadius = 0.0f
-    private var bottomLeftRadius = 0.0f
-    private var bottomRightRadius = 0.0f
-
-    init {
-        setCorner(corner)
-    }
-
-    fun setCorner(corner: Float) {
-        checkArgs(corner >= 0.0f, "corner must be >= 0")
-        topRightRadius = corner
-        topLeftRadius = corner
-        bottomRightRadius = corner
-        bottomLeftRadius = corner
-    }
-
-    fun setTopLeftCorner(corner: Float) {
-        checkArgs(corner >= 0.0f, "topLeftRadius must be >= 0")
-        this.topLeftRadius = corner
-    }
-
-    fun setTopRightCorner(corner: Float) {
-        checkArgs(corner >= 0.0f, "topRightRadius must be >= 0")
-        this.topRightRadius = corner
-    }
-
-    fun setBottomLeftCorner(corner: Float) {
-        checkArgs(corner >= 0.0f, "bottomLeftRadius must be >= 0")
-        this.bottomLeftRadius = corner
-    }
-
-    fun setBottomRightCorner(corner: Float) {
-        checkArgs(corner >= 0.0f, "bottomRightRadius must be >= 0")
-        this.bottomRightRadius = corner
-    }
+class GLCornerFilter : GLFilter() {
+    var topLeftRadius by FloatDelegate(0f, 0f)
+    var topRightRadius by FloatDelegate(0f, 0f)
+    var bottomLeftRadius by FloatDelegate(0f, 0f)
+    var bottomRightRadius by FloatDelegate(0f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("topLeftRadius", topLeftRadius)

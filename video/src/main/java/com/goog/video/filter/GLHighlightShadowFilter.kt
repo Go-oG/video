@@ -2,32 +2,20 @@ package com.goog.video.filter
 
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
+import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLHighlightShadowFilter(shadows: Float = 1f, highlights: Float = 0f) : GLFilter() {
-    private var shadows = 1f
-    private var highlights = 0f
+class GLHighlightShadowFilter : GLFilter() {
+    var shadows by FloatDelegate(1f, 0f, 1f)
+    var highlights by FloatDelegate(0f, 0f, 1f)
 
-    init {
-        setShadows(shadows)
-        setHighlights(highlights)
-    }
-
-    fun setShadows(v: Float) {
-        checkArgs(v in 0.0..1.0)
-        shadows = v
-    }
-
-    fun setHighlights(v: Float) {
-        checkArgs(v in 0.0..1.0)
-        highlights = v
-    }
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        super.onDraw(fbo)
         put("shadows", shadows)
         put("highlights", highlights)
     }
-    
+
     override fun getFragmentShader(): String {
         return """
             precision mediump float;
