@@ -1,6 +1,7 @@
 package com.goog.videodemo
 
 import android.content.Context
+import android.util.Log
 import com.goog.video.filter.GLAdaptiveThresholdFilter
 import com.goog.video.filter.GLAlphaFrameFilter
 import com.goog.video.filter.GLAverageColorFilter
@@ -135,6 +136,7 @@ import com.goog.video.filter.core.GLPreviewFilter
 import com.goog.video.model.FloatDelegate
 import com.goog.video.model.IntDelegate
 import java.lang.Float.max
+import kotlin.math.log
 
 class Parameter(
     val name: String, val minValue: Float, val maxValue: Float, val step: Float,
@@ -152,6 +154,9 @@ class FilterItem(val clsName: Class<*>) {
     var select = false
 
     val parameter = loadParameters(clsName)
+    init {
+        Log.i("FilterItem","参数:${parameter.size}")
+    }
 
     val name: String
         get() {
@@ -174,12 +179,13 @@ class FilterItem(val clsName: Class<*>) {
     fun changeParameter(parameter: Parameter, value: Float) {
         val filter = this.filter ?: return
         val cls = filter::class.java
-        val field = cls.getDeclaredField(parameter.name)
-        field.isAccessible = true
+        val methodName="set${parameter.showName.capitalize()}"
+        val method=if(parameter.useFloat) cls.getMethod(methodName,Float::class.java) else cls.getMethod(methodName,Int::class.java)
+        method.isAccessible=true
         if (parameter.useFloat) {
-            field.setFloat(field, value)
+            method.invoke(filter,value)
         } else {
-            field.setInt(field, value.toInt())
+            method.invoke(filter,value.toInt())
         }
         parameter.curValue = value
     }
@@ -364,10 +370,11 @@ private fun loadParameters(cls: Class<*>): List<Parameter> {
     val idcls = IntDelegate::class.java
 
     val parameterList = mutableListOf<Parameter>()
-    for (pp in cls.javaClass.declaredFields) {
-        val name = pp.name
 
+    for (pp in cls.declaredFields) {
+        val name = pp.name
         val type = pp.type
+        pp.isAccessible=true
         if (type == fdcls) {
             val obj = pp.get(filter)
             val value = obj as FloatDelegate

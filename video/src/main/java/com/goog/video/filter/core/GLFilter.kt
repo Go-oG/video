@@ -63,16 +63,15 @@ open class GLFilter {
         onDrawUseProgramEndHook(texName, fbo)
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferName)
+
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glVertexAttribPointer(
             getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
-            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET
-        )
+            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_COORD))
         GLES20.glVertexAttribPointer(
             getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
-            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET
-        )
+            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
 
         //激活并绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
@@ -88,6 +87,7 @@ open class GLFilter {
         ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_COORD))
+
         //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)

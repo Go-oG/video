@@ -20,7 +20,6 @@ class SeekAdapter(val context: Context, private var filterItem: FilterItem?) : R
         changeFilter(filterItem)
     }
 
-
     fun changeFilter(item: FilterItem?) {
         if (item == null) {
             filterItem = null

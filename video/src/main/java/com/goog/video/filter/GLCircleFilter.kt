@@ -10,7 +10,7 @@ import com.goog.video.utils.loadFilterFromAsset
 class GLCircleFilter : GLCenterFilter() {
     var circleColor = FColor4()
     var backgroundColor = FColor4()
-    var radius by FloatDelegate(0.5f);
+    var radius by FloatDelegate(0.5f)
     var aspectRatio by FloatDelegate(1f, 0f);
 
     override fun onDraw(fbo: FrameBufferObject?) {
