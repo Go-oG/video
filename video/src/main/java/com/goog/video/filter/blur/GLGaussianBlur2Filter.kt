@@ -8,9 +8,10 @@ import kotlin.math.max
 
 ///优化后的高斯模糊
 ///具有更好的模糊质量和可控的参数
-class GLGaussianBlur2Filter() : GLFilter() {
+class GLGaussianBlur2Filter : GLFilter() {
 
     private var samplesSize = 25
+
     var scaleFactory by FloatDelegate(8f, 1f)
 
     ///允许采样率动态变化

@@ -28,6 +28,7 @@ class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
 
     override fun onBindViewHolder(holder: FilterHolder, position: Int) {
         val data = dataList[position]
+        holder.indexTV.text = "$position"
         holder.nameTv.text = dataList[position].name
         if (data.select) {
             holder.root.setBackgroundColor(0xFF2196F3.toInt())
@@ -40,5 +41,6 @@ class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
 class FilterHolder(view: View) : RecyclerView.ViewHolder(view) {
     internal val nameTv: TextView = view.findViewById(R.id.nameTV)
     internal val root: CardView = view.findViewById(R.id.itemRoot)
+    internal val indexTV = view.findViewById<TextView>(R.id.indexTV)
 
 }

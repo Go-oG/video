@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goog.video.view.surface.GLSurfaceView2
@@ -17,7 +16,6 @@ import com.goog.video.view.surface.GLSurfaceView2
 class MainActivity : AppCompatActivity() {
     private lateinit var listView: RecyclerView
     private lateinit var videoView: GLSurfaceView2
-
     private lateinit var player: PlayerWrapper
     private lateinit var adapter: FilterAdapter
     private lateinit var seekAdapter: SeekAdapter
