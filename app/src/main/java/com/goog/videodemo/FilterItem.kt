@@ -70,6 +70,7 @@ import com.goog.video.filter.GLPolkaDotFilter
 import com.goog.video.filter.GLPosterizeFilter
 import com.goog.video.filter.GLRGBFilter
 import com.goog.video.filter.GLSaturationFilter
+import com.goog.video.filter.GLScaleFilter
 import com.goog.video.filter.GLSepiaFilter
 import com.goog.video.filter.GLSharpenFilter
 import com.goog.video.filter.GLShiTomasiFeatureDetectorFilter
@@ -281,7 +282,10 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLPosterizeFilter::class.java))
 
             list.add(FilterItem(GLRGBFilter::class.java))
+
             list.add(FilterItem(GLSaturationFilter::class.java))
+            list.add(FilterItem(GLScaleFilter::class.java))
+
             list.add(FilterItem(GLSepiaFilter::class.java))
             list.add(FilterItem(GLSharpenFilter::class.java))
             list.add(FilterItem(GLShiTomasiFeatureDetectorFilter::class.java))

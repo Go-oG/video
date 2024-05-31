@@ -13,9 +13,9 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
         super.setup()
         val max = filters.size
         val list = mutableListOf<Pair<GLFilter?, FrameBufferObject?>>()
-        for ((count, shader) in filters.withIndex()) {
+        for ((index, shader) in filters.withIndex()) {
             shader.setup()
-            val fbo = if ((count + 1) < max) {
+            val fbo = if ((index + 1) < max) {
                 FrameBufferObject()
             } else {
                 null
@@ -28,12 +28,8 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
 
     override fun release() {
         for (pair in list) {
-            if (pair.first != null) {
-                pair.first!!.release()
-            }
-            if (pair.second != null) {
-                pair.second!!.release()
-            }
+            pair.first?.release()
+            pair.second?.release()
         }
         list = listOf()
         super.release()

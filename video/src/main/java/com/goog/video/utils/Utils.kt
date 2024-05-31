@@ -1,7 +1,8 @@
 package com.goog.video.utils
 
-import android.content.Context
+import android.content.res.Resources
 import java.lang.Thread.currentThread
+import kotlin.math.floor
 
 fun safeRun(block: () -> Unit) {
     try {
@@ -34,6 +35,22 @@ fun loadFilterFromAsset(assetName: String): String {
             "filters/$str"
         }
     }
-    return ContextUtil.getContext().assets.open(str).bufferedReader().use { it.readText() }
+    val s = ContextUtil.getContext().assets.open(str).bufferedReader().use { it.readText() }
+
+    if (s.isBlank()) {
+        throw IllegalArgumentException()
+    }
+    return s
 }
 
+val DENSITY = Resources.getSystem().displayMetrics.density
+
+val Number.dp: Float
+    get() {
+        return floor((this.toFloat() * DENSITY + 0.5f))
+    }
+
+val Any.TAG: String
+    get() {
+        return this::class.java.simpleName
+    }

@@ -3,6 +3,7 @@ package com.goog.video.gl
 import android.opengl.EGL14.EGL_CONTEXT_CLIENT_VERSION
 import android.opengl.GLSurfaceView.EGLContextFactory
 import android.util.Log
+import com.goog.video.utils.TAG
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLContext
@@ -22,7 +23,4 @@ class SimpleContextFactory(private val mEGLContextVersion: Int = 2) : EGLContext
         }
     }
 
-    companion object {
-        private const val TAG = "EGLContextFactory"
-    }
 }

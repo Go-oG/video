@@ -3,9 +3,9 @@ package com.goog.video.gl
 import android.opengl.GLES20
 import android.util.Log
 import com.goog.video.utils.EGLUtil
+import com.goog.video.utils.TAG
 
 class FrameBufferObject {
-    private val TAG="FrameBufferObject"
 
     var width: Int = 0
         private set
@@ -69,15 +69,16 @@ class FrameBufferObject {
                 Log.e(TAG,"create texture fail")
             }
             texName = args[0]
+
             ///绑定纹理到上下文
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
             ///初始化纹理相关的参数
             EGLUtil.setupTexture(GLES20.GL_TEXTURE_2D, magUseUseLinear = true, minUseLinear = false)
 
-            ///创建一个未初始化的纹理
+            ///创建一个未初始化的离屏渲染纹理
             ///并将texture(纹理)attach到帧缓冲区对象上(FBO)
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0, GLES20.GL_RGBA,
-                    GLES20.GL_UNSIGNED_BYTE, null)
+            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                    width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
             GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
                     texName, 0)
             ///校验FBO是否设置成功
@@ -120,7 +121,6 @@ class FrameBufferObject {
 
 
     fun enable() {
-        ///启用离屏渲染
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
     }
 }

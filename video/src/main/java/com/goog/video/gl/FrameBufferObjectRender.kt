@@ -13,11 +13,13 @@ import javax.microedition.khronos.opengles.GL10
 abstract class FBORenderer : GLSurfaceView.Renderer {
 
     private val fbo = FrameBufferObject()
+
+    //暂时不知道有什么用
     private var normalShader: GLFilter? = null
 
     private val runOnDraw: Queue<Runnable> = LinkedList()
 
-    protected var mClearColor: Int = Color.BLACK
+    protected var mClearColor: Int = Color.TRANSPARENT
 
     fun setClearColor(color: Int) {
         mClearColor = color
@@ -41,17 +43,20 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
                 runOnDraw.poll()?.run()
             }
         }
+
+        ///绑定缓冲区
         fbo.enable()
-
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
-
         onDrawFrame(fbo)
 
+        //解绑缓冲区
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-        GLES20.glViewport(0, 0, fbo.width, fbo.height)
 
+        //二次绘制
+        GLES20.glViewport(0, 0, fbo.width, fbo.height)
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         normalShader?.draw(fbo.texName, null)
+
     }
 
     @Throws(Throwable::class)

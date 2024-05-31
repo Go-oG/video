@@ -53,7 +53,6 @@ class FloatDelegate(
         floatValue = value
     }
 
-
     fun getCurrent():Float{
         return floatValue
     }

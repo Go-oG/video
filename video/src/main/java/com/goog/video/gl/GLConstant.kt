@@ -86,7 +86,6 @@ object GLConstant {
         TEN_VERTEX_SHADER
     )
 
-
     val DEF_VERTEX_SHADER: String = ONE_VERTEX_SHADER
 
     const val DEF_FRAGMENT_SHADER: String = """

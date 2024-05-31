@@ -9,14 +9,31 @@ import javax.microedition.khronos.egl.EGLDisplay
 
 ///默认为RGBA_8888 8，8，8，8，16，0
 ///RGB_565 对应为 5，6，5，0，0，0
-class SimpleConfigChooser(
-    val redSize: Int = 8,
-    val greenSize: Int = 8,
-    val blueSize: Int = 8,
-    val alphaSize: Int = 8,
-    val depthSize: Int = 16,
-    val stencilSize: Int = 0,
-    val version: Int = 2) : EGLConfigChooser {
+class SimpleConfigChooser private constructor(
+    val redSize: Int,
+    val greenSize: Int,
+    val blueSize: Int,
+    val alphaSize: Int,
+    val depthSize: Int,
+    val stencilSize: Int,
+    val version: Int) : EGLConfigChooser {
+
+    companion object {
+        private const val EGL_OPENGL_ES2_BIT = 4
+
+        fun RGBA8888(version: Int = 2): SimpleConfigChooser {
+            return SimpleConfigChooser(8, 8, 8, 8, 16, 0, version)
+        }
+
+        fun RGB565(version: Int = 2): SimpleConfigChooser {
+            return SimpleConfigChooser(5, 6, 5, 0, 16, 0, version)
+        }
+
+        fun RGB888(version: Int = 2): SimpleConfigChooser {
+            return SimpleConfigChooser(8, 8, 8, 0, 16, 0, version)
+        }
+
+    }
 
     private val configSpec: IntArray
 
@@ -35,7 +52,6 @@ class SimpleConfigChooser(
         if (version != 2) {
             return configSpec
         }
-
         val len = configSpec.size
         val newConfigSpec = IntArray(len + 2)
         System.arraycopy(configSpec, 0, newConfigSpec, 0, len - 1)
@@ -103,7 +119,5 @@ class SimpleConfigChooser(
         throw IllegalArgumentException("违法参数")
     }
 
-    companion object {
-        private const val EGL_OPENGL_ES2_BIT = 4
-    }
+
 }

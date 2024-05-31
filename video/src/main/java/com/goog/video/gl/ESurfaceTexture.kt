@@ -2,10 +2,11 @@ package com.goog.video.gl
 
 import android.graphics.SurfaceTexture
 import android.graphics.SurfaceTexture.OnFrameAvailableListener
+import android.view.Surface
 import com.goog.video.filter.core.GLPreviewFilter
 
 internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
-    val texture: SurfaceTexture = SurfaceTexture(texName)
+    private val texture: SurfaceTexture = SurfaceTexture(texName)
 
     private var frameAvailableListener: OnFrameAvailableListener? = null
 
@@ -34,5 +35,9 @@ internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
 
     fun release() {
         texture.release()
+    }
+
+    fun obtainSurface(): Surface {
+        return Surface(texture)
     }
 }

@@ -18,7 +18,7 @@ open class GLSurfaceView2 @JvmOverloads constructor(context: Context?, attrs: At
     init {
         ContextUtil.initContext(context)
         setEGLContextFactory(SimpleContextFactory())
-        val chooser=SimpleConfigChooser()
+        val chooser = SimpleConfigChooser.RGBA8888()
         setEGLConfigChooser(chooser)
         setZOrderOnTop(true)
         holder.setFormat(chooser.getPixelFormat())

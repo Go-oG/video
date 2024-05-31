@@ -12,6 +12,7 @@ import com.goog.video.Player
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.filter.core.GLPreviewFilter
 import com.goog.video.utils.EGLUtil
+import com.goog.video.utils.TAG
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.microedition.khronos.egl.EGLConfig
 
@@ -20,14 +21,17 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
     SurfaceTexture.OnFrameAvailableListener {
     private val handler = Handler(Looper.getMainLooper())
     private var player: Player? = null
+
+    //播放器承载的Surface
     private var playSurface: Surface? = null
+
     ///用于预览的纹理
     private var previewTexture: ESurfaceTexture? = null
 
     ///控制更新
     private val updateSurfaceFlag = AtomicBoolean(false)
 
-    ///纹理名字
+    ///纹理名字(叫句柄或指针更准确???)
     private var texName = 0
 
     ///Model-View-Project Matrix merge
@@ -38,10 +42,10 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
     private val MMatrix = FloatArray(16)
     private val VMatrix = FloatArray(16)
 
-    //未知矩阵？
+    //变换矩阵???
     private val STMatrix = FloatArray(16)
 
-    ///fbo
+    ///filterFBO
     private var filterFBO: FrameBufferObject? = null
 
     private var previewFilter: GLPreviewFilter? = null
@@ -94,16 +98,12 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         previewFilter = GLPreviewFilter(previewTexture!!.textureTarget)
         previewFilter?.setup()
 
-        val surface = Surface(previewTexture!!.texture)
+        val surface = previewTexture!!.obtainSurface()
         handler.post {
-            resetSurface(surface, false)
+            resetSurface(surface, true)
         }
-
         Matrix.setLookAtM(VMatrix, 0, 0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
-//        synchronized(this) {
-//            updateSurface = false
-//        }
         updateSurfaceFlag.set(false)
 
         ///确保在绘制时被初始化
@@ -139,7 +139,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
         if (newFilterFlag.compareAndSet(true, false)) {
             glFilter?.setup()
-            glFilter?.setFrameSize(fbo!!.width, fbo.height)
+            glFilter?.setFrameSize(fbo.width, fbo.height)
         }
 
         if (glFilter != null) {
@@ -197,10 +197,6 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
     fun onPause() {
         glFilter?.release()
         previewTexture?.release()
-    }
-
-    companion object {
-        private val TAG: String = FilterRenderer::class.java.simpleName
     }
 
 }
