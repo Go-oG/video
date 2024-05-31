@@ -4,6 +4,7 @@ import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.model.FloatDelegate
 
+//TODO 后续优化
 class GLBoxBlurFilter : GLFilter() {
     var texelWidthOffset by FloatDelegate(0.003f, 0f)
     var texelHeightOffset by FloatDelegate(0.003f, 0f)
