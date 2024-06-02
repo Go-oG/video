@@ -48,8 +48,8 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
         this.itemList = list
     }
 
-    override fun setup() {
-        super.setup()
+    override fun initialize() {
+        super.initialize()
         setTextures(itemList)
     }
 

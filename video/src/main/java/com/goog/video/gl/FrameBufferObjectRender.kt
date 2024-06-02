@@ -27,7 +27,7 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         normalShader = GLFilter()
-        normalShader?.setup()
+        normalShader?.initialize()
         onSurfaceCreated(config)
     }
 

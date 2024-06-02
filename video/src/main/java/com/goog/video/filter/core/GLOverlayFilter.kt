@@ -6,8 +6,6 @@ import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.goog.video.gl.FrameBufferObject
-import com.goog.video.model.Resolution
-import com.goog.video.utils.checkArgs
 
 abstract class GLOverlayFilter : GLFilter() {
     private val textures = IntArray(1)
@@ -21,8 +19,8 @@ abstract class GLOverlayFilter : GLFilter() {
         )
     }
 
-    override fun setup() {
-        super.setup()
+    override fun initialize() {
+        super.initialize()
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
         GLES20.glTexParameteri(

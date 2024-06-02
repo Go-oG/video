@@ -96,7 +96,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
         // GL_TEXTURE_EXTERNAL_OES
         previewFilter = GLPreviewFilter(previewTexture!!.textureTarget)
-        previewFilter?.setup()
+        previewFilter?.initialize()
 
         val surface = previewTexture!!.obtainSurface()
         handler.post {
@@ -138,7 +138,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         }
 
         if (newFilterFlag.compareAndSet(true, false)) {
-            glFilter?.setup()
+            glFilter?.initialize()
             glFilter?.setFrameSize(fbo.width, fbo.height)
         }
 

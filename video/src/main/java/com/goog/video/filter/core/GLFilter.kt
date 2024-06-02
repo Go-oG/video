@@ -31,8 +31,12 @@ open class GLFilter {
 
     protected var height = 0
 
-    open fun setup() {
+    open fun initialize() {
         release()
+        onInitialize()
+    }
+
+    protected open fun onInitialize() {
         vertexShader = loadShader(getVertexShader(), false)
         fragmentShader = loadShader(getFragmentShader(), true)
         program = createProgram(vertexShader, fragmentShader)
@@ -48,37 +52,39 @@ open class GLFilter {
     open fun release() {
         GLES20.glDeleteProgram(program)
         program = 0
+
         GLES20.glDeleteShader(vertexShader)
         vertexShader = 0
+
         GLES20.glDeleteShader(fragmentShader)
         fragmentShader = 0
+
         GLES20.glDeleteBuffers(1, intArrayOf(vertexBufferName), 0)
         vertexBufferName = 0
+
         handleMap.clear()
     }
 
     open fun draw(texName: Int, fbo: FrameBufferObject?) {
-        onDrawUseProgramPreHook(texName, fbo)
-        useProgram()
-        onDrawUseProgramEndHook(texName, fbo)
-
+        useProgram(texName, fbo)
+        ///绑定VBO
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferName)
-
+        ///设置顶点Position
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_POSITION))
-        GLES20.glVertexAttribPointer(
-            getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT, false,
-            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
+        GLES20.glVertexAttribPointer(getHandle(K_ATTR_POSITION), VERTICES_DATA_POS_SIZE, GLES20.GL_FLOAT,
+            false, VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_POS_OFFSET)
+        ///设置坐标
         GLES20.glEnableVertexAttribArray(getHandle(K_ATTR_COORD))
-        GLES20.glVertexAttribPointer(
-            getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
-            VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
-
+        GLES20.glVertexAttribPointer(getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT,
+            false, VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
         //激活并绑定纹理
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
         //设置纹理单元(sampler2D)
         GLES20.glUniform1i(getHandle(K_UNIFORM_TEX), 0)
+
         onDraw(fbo)
+
         ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
 
@@ -95,10 +101,6 @@ open class GLFilter {
     }
 
     ///提供三个钩子函数，用于子类重写
-    protected open fun onDrawUseProgramPreHook(texName: Int, fbo: FrameBufferObject?) {}
-
-    protected open fun onDrawUseProgramEndHook(texName: Int, fbo: FrameBufferObject?) {}
-
     protected open fun onDrawEndHook(texName: Int, fbo: FrameBufferObject?) {}
 
     protected open fun onDraw(fbo: FrameBufferObject?) {
@@ -111,7 +113,7 @@ open class GLFilter {
     }
 
 
-    protected open fun useProgram() {
+    protected open fun useProgram(texName: Int, fbo: FrameBufferObject?) {
         GLES20.glUseProgram(program)
     }
 

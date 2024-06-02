@@ -9,12 +9,12 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
 
     constructor(vararg glFilters: GLFilter) : this(listOf<GLFilter>(*glFilters))
 
-    override fun setup() {
-        super.setup()
+    override fun initialize() {
+        super.initialize()
         val max = filters.size
         val list = mutableListOf<Pair<GLFilter?, FrameBufferObject?>>()
         for ((index, shader) in filters.withIndex()) {
-            shader.setup()
+            shader.initialize()
             val fbo = if ((index + 1) < max) {
                 FrameBufferObject()
             } else {

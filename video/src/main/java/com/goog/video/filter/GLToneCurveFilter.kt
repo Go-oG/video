@@ -50,8 +50,8 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
         setBlueControlPoints(blueControlPoints)
     }
 
-    override fun setup() {
-        super.setup()
+    override fun initialize() {
+        super.initialize()
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
