@@ -6,10 +6,10 @@ import com.goog.video.utils.loadFilterFromAsset
 class GLBilateralBlurFilter :GLFilter() {
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("bilateralBlur.vsh")
+        return loadFilterFromAsset("blur/bilateralBlur.vsh")
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("bilateralBlur.fsh")
+        return loadFilterFromAsset("blur/bilateralBlur.fsh")
     }
 }

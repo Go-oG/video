@@ -23,6 +23,7 @@ class GLDualBlurFilter : GLFilterGroup() {
         verticalBlur.setWeightAndOffset(weights, offsets)
         horizontalBlur.setWeightAndOffset(weights, offsets)
     }
+
 }
 
 private class DUalInnerBlur(val vertical: Boolean) : GLFilter() {
@@ -70,7 +71,6 @@ private class DUalInnerBlur(val vertical: Boolean) : GLFilter() {
                 vec4 sum = vec4(0.0);
                 for (int i = 0; i < uSampleCount; i++) {
                     if(uDir==1){
-                     //vertical
                         sum += texture2D(sTexture, vTextureCoord + vec2(0.0, uOffsets[i] * uBlurSize)) * uWeights[i];
                     }else{
                         sum += texture2D(sTexture, vTextureCoord + vec2(uOffsets[i] * uBlurSize, 0.0)) * uWeights[i];

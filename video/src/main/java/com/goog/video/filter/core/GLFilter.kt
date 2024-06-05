@@ -166,12 +166,12 @@ open class GLFilter {
         GLES20.glUniform4i(getHandle(name), v1, v2, v3, v4)
     }
 
-    protected fun putArray(name: String, value: FloatArray, count: Int = 1) {
-        GLES20.glUniform1fv(getHandle(name), count, value, 0)
+    protected fun putArray(name: String, value: FloatArray) {
+        GLES20.glUniform1fv(getHandle(name), value.size, value, 0)
     }
 
-    protected fun putArray(name: String, value: IntArray, count: Int = 1) {
-        GLES20.glUniform1iv(getHandle(name), count, value, 0)
+    protected fun putArray(name: String, value: IntArray) {
+        GLES20.glUniform1iv(getHandle(name), value.size, value, 0)
     }
 
     protected fun putVec2Array(name: String, value: FloatArray, count: Int) {

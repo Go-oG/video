@@ -9,7 +9,7 @@ import com.goog.video.gl.GLConstant.K_UNIFORM_TEX
 class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
 
     fun draw(texName: Int, mvpMatrix: FloatArray, stMatrix: FloatArray, aspectRatio: Float) {
-        useProgram()
+        useProgram(texName,null)
 
         GLES20.glUniformMatrix4fv(getHandle("uMVPMatrix"), 1, false, mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(getHandle("uSTMatrix"), 1, false, stMatrix, 0)

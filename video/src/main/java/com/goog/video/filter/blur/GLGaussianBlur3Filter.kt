@@ -4,68 +4,96 @@ import com.goog.video.filter.core.GLFilter
 import com.goog.video.filter.core.GLFilterGroup
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.utils.checkArgs
+import kotlin.math.abs
+import kotlin.math.exp
+import kotlin.math.sqrt
 
-class GLGaussianBlur3Filter(blurSize: Int=3) : GLFilterGroup(listOf()) {
-
-    private var blurSize: Int = 3
-
+class GLGaussianBlur3Filter : GLFilterGroup(listOf()) {
     init {
-        val list = mutableListOf(
-            Blur3Inner(true, blurSize),
-            Blur3Inner(false, blurSize)
+        filters = mutableListOf(
+                Blur3Inner(true),
+                Blur3Inner(false)
         )
-        filters = list
-        setBlurSize(blurSize)
+        setBlurSize(15)
     }
 
     fun setBlurSize(size: Int) {
-        checkArgs(size > 0)
-        this.blurSize = size
+        checkArgs(size in 1..30)
         for (filter in filters) {
             if (filter is Blur3Inner) {
-                filter.blurSize = size
+                filter.setBlurSize(size)
             }
         }
     }
 }
-private class Blur3Inner(val horizontalBlur: Boolean, var blurSize: Int = 3) : GLFilter() {
+
+private class Blur3Inner(val horizontalBlur: Boolean) : GLFilter() {
+    private val sigma = 3f
+    private var blurSize: Int = 0
+    private var weights = floatArrayOf()
+
+    init {
+        setBlurSize(15)
+    }
+
+    fun setBlurSize(size: Int) {
+        checkArgs(size in 1..30)
+        if (size == blurSize) {
+            return
+        }
+        blurSize = size
+        weights = calculateGaussianWeights(blurSize, sigma)
+    }
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("useHorizontal", if (horizontalBlur) 1 else 0)
-        put("blurSize", blurSize)
-
-        val w = fbo?.width ?: 1
-        val h = fbo?.height ?: 1
-        putVec2("mTexOffset", 1.0f / w, 1.0f / h)
-
+        if (horizontalBlur) {
+            putVec2("uBlurDir", 1.0f, 0.0f)
+        } else {
+            putVec2("uBlurDir", 0.0f, 1.0f)
+        }
+        put("uBlurRadius", blurSize)
+        putArray("uWeights", weights)
+        val off = if (horizontalBlur) width else height
+        put("uOffset", 1f / off)
     }
 
     override fun getFragmentShader(): String {
         return """
-          precision mediump float;
+            precision mediump float;
 
-          varying highp vec2 vTextureCoord;
-          uniform sampler2D sTexture;
-          uniform int blurSize;
-          uniform vec2 mTexOffset;
-          uniform int useHorizontal;
+            varying vec2 vTextureCoord;
+            uniform sampler2D sTexture;
 
-          void main() {
-              vec4 color = vec4(0.0);
-              float totalWeight = 0.0;
-              int kernelSize = blurSize * 2 + 1;
-              float sizePow = 2.0 * blurSize * blurSize;
+            uniform vec2 uBlurDir;
+            uniform float uOffset;
+            uniform int uBlurRadius;
+            uniform float uWeights[31];
 
-              for (int i = -blurSize; i <= blurSize; ++i) {
-                  float fi = float(i);
-                  float weight = exp(-fi * fi / sizePow);
-                  vec2 offset = (useHorizontal != 0) ? vec2(fi * mTexOffset.x, 0.0) : vec2(0.0, fi * mTexOffset.y);
-                  color += texture(sTexture, vTextureCoord + offset) * weight;
-                  totalWeight += weight;
-              }
-              gl_FragColor = color / totalWeight;
-          }
+            void main() {
+                vec4 color = vec4(0.0);
+                for (int i = -uBlurRadius; i <= uBlurRadius; i++) {
+                    vec2 tmp = uOffset * float(i) * uBlurDir;
+                    vec4 tmpColor = texture2D(sTexture, vTextureCoord + tmp);
+                    color += tmpColor * uWeights[abs(i)];
+                }
+                gl_FragColor = color;
+            }
         """.trimIndent()
+    }
+
+    private fun calculateGaussianWeights(radius: Int, sigma: Float): FloatArray {
+        var sum = 0.0f
+        val list = mutableListOf<Float>()
+        // 计算权重
+        for (i in 0..radius) {
+            list.add(exp(-(i * i) / (2.0f * sigma * sigma)))
+            sum += list.last()
+        }
+        // 归一化权重
+        for (i in 0..<list.size) {
+            list[i] = list[i] / sum
+        }
+        return list.toFloatArray()
     }
 
 }

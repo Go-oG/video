@@ -23,11 +23,13 @@ class GLBoxBlurFilter : GLFilter() {
             uniform highp float texelWidthOffset;
             uniform highp float texelHeightOffset;
             uniform highp float blurSize;
+            
             varying highp vec2 centerTextureCoordinate;
             varying highp vec2 oneStepLeftTextureCoordinate;
             varying highp vec2 twoStepsLeftTextureCoordinate;
             varying highp vec2 oneStepRightTextureCoordinate;
             varying highp vec2 twoStepsRightTextureCoordinate;
+            
             void main() {
                 gl_Position = aPosition;
                 vec2 firstOffset = vec2(1.5 * texelWidthOffset, 1.5 * texelHeightOffset) * blurSize;

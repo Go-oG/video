@@ -116,7 +116,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
     override fun onSurfaceChanged(width: Int, height: Int) {
         Log.d(TAG, "onSurfaceChanged width = $width  height = $height")
-        filterFBO?.setup(width, height)
+        filterFBO?.initialize(width, height)
         previewFilter?.setFrameSize(width, height)
         glFilter?.setFrameSize(width, height)
 

@@ -16,10 +16,10 @@ class GLMotionBlurFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("motionBlur.fsh")
+        return loadFilterFromAsset("blur/motionBlur.fsh")
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("motionBlur.vsh")
+        return loadFilterFromAsset("blur/motionBlur.vsh")
     }
 }

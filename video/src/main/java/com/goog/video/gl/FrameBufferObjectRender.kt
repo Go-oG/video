@@ -32,7 +32,7 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
-        fbo.setup(width, height)
+        fbo.initialize(width, height)
         normalShader?.setFrameSize(width, height)
         onSurfaceChanged(width, height)
     }

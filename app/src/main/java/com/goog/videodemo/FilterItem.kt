@@ -227,7 +227,7 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLGammaFilter::class.java))
             list.add(FilterItem(GLGaussianBlurFilter::class.java))
             list.add(FilterItem(GLGaussianBlur2Filter::class.java))
-       //     list.add(FilterItem(GLGaussianBlur3Filter::class.java))
+            list.add(FilterItem(GLGaussianBlur3Filter::class.java))
             list.add(FilterItem(GLGlassSphereFilter::class.java))
             list.add(FilterItem(GLGrayScaleFilter::class.java))
 
@@ -371,6 +371,7 @@ fun String.firstUpCase(): String {
         if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
     }
 }
+
 fun String.firstLowCase(): String {
     if (isBlank()) {
         return ""

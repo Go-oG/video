@@ -3,6 +3,7 @@ package com.goog.video.filter.blur
 import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.model.FloatDelegate
+import com.goog.video.model.IntDelegate
 import com.goog.video.utils.checkArgs
 import kotlin.math.max
 
@@ -10,20 +11,19 @@ import kotlin.math.max
 ///具有更好的模糊质量和可控的参数
 class GLGaussianBlur2Filter : GLFilter() {
 
-    private var samplesSize = 25
+    private var blurRadius by IntDelegate(15,1,30)
 
-    var scaleFactory by FloatDelegate(8f, 1f)
+    var sampleFactor by FloatDelegate(8f, 1f)
 
     ///允许采样率动态变化
     private var maxSize: Int? = null
 
-
-    fun setSamplesSize(size: Int) {
+    fun setBlurRadius(size: Int) {
         checkArgs(size > 0)
         if (size % 2 == 0) {
-            this.samplesSize = size + 1
+            this.blurRadius = size + 1
         } else {
-            this.samplesSize = size
+            this.blurRadius = size
         }
     }
 
@@ -36,7 +36,7 @@ class GLGaussianBlur2Filter : GLFilter() {
         val w = fbo?.width ?: 0
         val h = fbo?.height ?: 0
         val frameMaxSize = max(w, h).toFloat()
-        var scale = scaleFactory
+        var scale = sampleFactor
         val ms = maxSize
         if (ms != null && frameMaxSize > ms) {
             val s = frameMaxSize / ms
@@ -47,7 +47,7 @@ class GLGaussianBlur2Filter : GLFilter() {
         val size: Float = frameMaxSize / scale
 
         put("sTextureSize", size)
-        put("sSamples", samplesSize)
+        put("sSamples", blurRadius)
     }
 
     override fun getFragmentShader(): String {

@@ -92,7 +92,6 @@ object EGLUtil {
         GLES20.glTexParameteri(target, GLES20.GL_TEXTURE_WRAP_T, warp)
     }
 
-
     @JvmStatic
     fun createBuffer(data: FloatArray): Int {
         return createBuffer(toFloatBuffer(data))

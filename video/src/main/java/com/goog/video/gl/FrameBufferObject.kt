@@ -20,7 +20,7 @@ class FrameBufferObject {
         private set
 
     ///创建texture 并绑定到FBO
-    fun setup(width: Int, height: Int) {
+    fun initialize(width: Int, height: Int) {
         val args = IntArray(1)
 
         ///校验纹理大小
@@ -118,7 +118,6 @@ class FrameBufferObject {
         GLES20.glDeleteFramebuffers(args.size, args, 0)
         frameBufferName = 0
     }
-
 
     fun enable() {
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
