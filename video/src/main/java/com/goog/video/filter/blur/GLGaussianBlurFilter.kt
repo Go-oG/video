@@ -5,16 +5,12 @@ import com.goog.video.gl.FrameBufferObject
 import com.goog.video.model.FloatDelegate
 import com.goog.video.utils.checkArgs
 
-class GLGaussianBlurFilter :
-    GLFilter() {
-
-    var texelWidthOffset by FloatDelegate(0.01f, 0f, 1f)
-    var texelHeightOffset by FloatDelegate(0.01f, 0f, 1f)
+class GLGaussianBlurFilter : GLFilter() {
     var blurSize by FloatDelegate(3f, 1f)
     
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("texelWidthOffset", texelWidthOffset)
-        put("texelHeightOffset", texelHeightOffset)
+        put("texelWidthOffset", 1f / width)
+        put("texelHeightOffset", 1f / height)
         put("blurSize", blurSize)
     }
 

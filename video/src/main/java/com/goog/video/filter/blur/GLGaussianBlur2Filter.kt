@@ -4,91 +4,120 @@ import com.goog.video.filter.core.GLFilter
 import com.goog.video.gl.FrameBufferObject
 import com.goog.video.model.FloatDelegate
 import com.goog.video.model.IntDelegate
-import com.goog.video.utils.checkArgs
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.exp
 import kotlin.math.max
 
 ///优化后的高斯模糊
 ///具有更好的模糊质量和可控的参数
 class GLGaussianBlur2Filter : GLFilter() {
+    private var mSampleFactor by FloatDelegate(8f, 1f)
+    private var mSigma by FloatDelegate(3f, 1f)
+    private var mBlurRadius by IntDelegate(15, 1, 30)
 
-    private var blurRadius by IntDelegate(15,1,30)
-
-    var sampleFactor by FloatDelegate(8f, 1f)
-
-    ///允许采样率动态变化
-    private var maxSize: Int? = null
+    private val needComputeFlag = AtomicBoolean(true)
+    private var weights = floatArrayOf()
+    private var offsets = floatArrayOf()
 
     fun setBlurRadius(size: Int) {
-        checkArgs(size > 0)
-        if (size % 2 == 0) {
-            this.blurRadius = size + 1
+        val ss = if (size % 2 == 0) {
+            size + 1
         } else {
-            this.blurRadius = size
+            size
         }
+        if (ss == mBlurRadius) {
+            return
+        }
+        mBlurRadius = ss
+        needComputeFlag.set(true)
     }
 
-    fun setMaxSize(maxSize: Int?) {
-        checkArgs(maxSize == null || maxSize > 0)
-        this.maxSize = maxSize
+    fun setSigma(v: Float) {
+        if (mSigma == v) {
+            return
+        }
+        mSigma = v
+        needComputeFlag.set(true)
+    }
+
+    fun setSampleFactor(sampleFactor: Float) {
+        if (sampleFactor == mSampleFactor) {
+            return
+        }
+        mSampleFactor = sampleFactor
+        needComputeFlag.set(true)
+    }
+
+    override fun setFrameSize(width: Int, height: Int) {
+        super.setFrameSize(width, height)
+        needComputeFlag.set(true)
     }
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        val w = fbo?.width ?: 0
-        val h = fbo?.height ?: 0
-        val frameMaxSize = max(w, h).toFloat()
-        var scale = sampleFactor
-        val ms = maxSize
-        if (ms != null && frameMaxSize > ms) {
-            val s = frameMaxSize / ms
-            if (s > scale) {
-                scale = s
-            }
-        }
-        val size: Float = frameMaxSize / scale
-
-        put("sTextureSize", size)
-        put("sSamples", blurRadius)
+        val w = width.toFloat()
+        val h = height.toFloat()
+        computeIfNeed(w, h, mBlurRadius, mSigma)
+        put("uBlurRadius", mBlurRadius)
+        putArray("uWeights", weights)
+        putArray("uOffsets", offsets)
     }
 
     override fun getFragmentShader(): String {
         return """
-           varying highp vec2 vTextureCoord;
+            varying highp vec2 vTextureCoord;
+            uniform lowp sampler2D sTexture;
 
-           uniform lowp sampler2D sTexture;
-           uniform int sSamples;
-           uniform float sTextureSize;
+            uniform int uBlurRadius;
+            uniform float uWeights[31];
+            uniform float uOffsets[31];
 
-           void main() {
-               float mSigmaX = 5.0;
-               float mSigmaY = mSigmaX;
-               int halfSamples = sSamples / 2;
-
-               float mSigmaX2 = 2.0 * mSigmaX * mSigmaX;
-               float mSigmaY2 = 2.0 * mSigmaY * mSigmaY;
-
-               float mPixelSize = 1.0 / sTextureSize;
-
-               float total = 0.0;
-               vec3 ret = vec3(0.0);
-
-               for (int iy = 0; iy < sSamples; ++iy) {
-                   float offsetY = float(iy - halfSamples);
-                   float fy = exp(-offsetY * offsetY / mSigmaY2);
-                   offsetY = offsetY * mPixelSize;
-
-                   for (int ix = 0; ix < sSamples; ++ix) {
-                       float offsetX = float(ix - halfSamples);
-                       float fx = exp(-offsetX * offsetX / mSigmaX2);
-
-                       offsetX = offsetX * mPixelSize;
-                       total += fx * fy;
-                       ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * fx * fy;
-                   }
-               }
-               gl_FragColor = vec4(ret / total, 1.0);
-           }
+            void main() {
+                float total = 0.0;
+                vec3 ret = vec3(0.0);
+                for (int iy = 0; iy < uBlurRadius; ++iy) {
+                    float offsetY = uOffsets[iy];
+                    float yWeight = uWeights[iy];
+                    for (int ix = 0; ix < uBlurRadius; ++ix) {
+                        float offsetX = uOffsets[ix];
+                        float xWeight = uWeights[ix];
+                        float vv = xWeight * yWeight;
+                        total += vv;
+                        ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * vv;
+                    }
+                }
+                gl_FragColor = vec4(ret / total, 1.0);
+            }
         """.trimIndent()
     }
 
+    private fun computeIfNeed(w: Float, h: Float, blurRadius: Int, sigma: Float) {
+        if (needComputeFlag.compareAndSet(true, false)) {
+            weights = computeWeight(blurRadius, sigma)
+            offsets = computeOffset(blurRadius, sigma, w, h)
+        }
+    }
+
+    private fun computeWeight(blurRadius: Int, sigma: Float): FloatArray {
+        val halfSamples = blurRadius / 2
+        val powSigma = 2f * sigma * sigma
+        val list = FloatArray(blurRadius)
+        for (i in 0..<blurRadius) {
+            val offset = i - halfSamples
+            list[i] = (exp(-offset * offset / powSigma))
+        }
+        return list
+    }
+
+    private fun computeOffset(blurRadius: Int, sigma: Float, w: Float, h: Float): FloatArray {
+        val list = FloatArray(blurRadius)
+        val halfSamples = sigma / 2f
+
+        val pixelSize = 1f / (max(w, h) / mSampleFactor)
+
+        for (i in 0..<blurRadius) {
+            list[i] = (i - halfSamples) * pixelSize
+        }
+        return list
+    }
 
 }
