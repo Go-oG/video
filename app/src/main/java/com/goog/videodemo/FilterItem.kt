@@ -86,6 +86,7 @@ import com.goog.effect.filter.blur.GLGaussianBlur2Filter
 import com.goog.effect.filter.blur.GLGaussianBlur3Filter
 import com.goog.effect.filter.blur.GLGaussianBlurFilter
 import com.goog.effect.filter.blur.GLMotionBlurFilter
+import com.goog.effect.filter.blur.GLRadialBlurFilter
 import com.goog.effect.filter.blur.GLZoomBlurFilter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.videodemo.ParameterBuilder.loadParameters
@@ -145,7 +146,9 @@ class FilterItem(val clsName: Class<*>) {
     companion object {
         fun loadFiltersData(context: Context): List<FilterItem> {
             val list = mutableListOf<FilterItem>()
+            list.add(FilterItem(GLRadialBlurFilter::class.java))
 
+            //============================
             list.add(FilterItem(GLAdaptiveThresholdFilter::class.java))
             list.add(FilterItem(GLAlphaFrameFilter::class.java))
             list.add(FilterItem(GLAverageColorFilter::class.java))
