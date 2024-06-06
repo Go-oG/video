@@ -82,9 +82,11 @@ import com.goog.effect.filter.GLYuvConversionVideoRangeFilter
 import com.goog.effect.filter.blend.GLAddBlendFilter
 import com.goog.effect.filter.blend.GLChromaKeyBlendFilter
 import com.goog.effect.filter.blur.GLBoxBlurFilter
+import com.goog.effect.filter.blur.GLDirectionBlurFilter
 import com.goog.effect.filter.blur.GLGaussianBlur2Filter
 import com.goog.effect.filter.blur.GLGaussianBlur3Filter
 import com.goog.effect.filter.blur.GLGaussianBlurFilter
+import com.goog.effect.filter.blur.GLGrainyBlurFilter
 import com.goog.effect.filter.blur.GLMotionBlurFilter
 import com.goog.effect.filter.blur.GLRadialBlurFilter
 import com.goog.effect.filter.blur.GLZoomBlurFilter
@@ -146,6 +148,10 @@ class FilterItem(val clsName: Class<*>) {
     companion object {
         fun loadFiltersData(context: Context): List<FilterItem> {
             val list = mutableListOf<FilterItem>()
+
+            list.add(FilterItem(GLGrainyBlurFilter::class.java))
+            list.add(FilterItem(GLDirectionBlurFilter::class.java))
+
             list.add(FilterItem(GLRadialBlurFilter::class.java))
 
             //============================

@@ -5,21 +5,36 @@ import androidx.annotation.CallSuper
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.gl.GLConstant
 import com.goog.effect.model.IntDelegate
-import java.util.concurrent.atomic.AtomicBoolean
 
-///用于实现需要进行多次迭代的相同效果的Filter
-open class GLIteratorFilter : GLFilter() {
-
+/**
+ * 用于实现需要进行多次迭代的Filter
+ * 迭代之间存在强关联性
+ */
+abstract class GLIteratorFilter : GLFilter() {
     protected var mIteratorCount by IntDelegate(1, 1)
-    private val updateFlag = AtomicBoolean(true)
-
     private val iteratorInfo = IteratorInfo()
     private var fboList = listOf<FrameBufferObject>()
 
     @CallSuper
     override fun initialize() {
         super.initialize()
-        updateFBOListIfNeed(mIteratorCount)
+        updateFBOList(mIteratorCount)
+    }
+
+    override fun release() {
+        for (fbo in fboList) {
+            fbo.release()
+        }
+        fboList = listOf()
+        mIteratorCount = 1
+        super.release()
+    }
+
+    override fun setFrameSize(width: Int, height: Int) {
+        super.setFrameSize(width, height)
+        for (fbo in fboList) {
+            fbo.initialize(width, height)
+        }
     }
 
     fun setIteratorCount(count: Int) {
@@ -27,36 +42,25 @@ open class GLIteratorFilter : GLFilter() {
             return
         }
         mIteratorCount = count
-        updateFlag.set(true)
+        fboList = updateFBOList(count)
     }
 
-    private fun updateFBOListIfNeed(size: Int) {
-        val b2 = fboList.size != mIteratorCount - 1 && mIteratorCount > 1
-        if (updateFlag.compareAndSet(true, false) || b2) {
-            updateFlag.set(false)
+    private fun updateFBOList(size: Int): List<FrameBufferObject> {
             if (size <= 1) {
-                fboList = listOf()
-                return
+                return listOf()
             }
             val list = mutableListOf<FrameBufferObject>()
             for (i in 0..<size - 1) {
                 list.add(FrameBufferObject())
             }
-            for (item in list) {
-                item.initialize(width, height)
-            }
-            fboList = list
-        }
+        return list
     }
 
     final override fun draw(texName: Int, fbo: FrameBufferObject?) {
-        val count = mIteratorCount
-        updateFBOListIfNeed(count)
-
         val list = fboList
         onIteratorPre(iteratorInfo)
         ///迭代次数为1 则直接调用自身
-        if (list.isEmpty() || count <= 1) {
+        if (list.isEmpty() || mIteratorCount <= 1) {
             onIteration(iteratorInfo, 0)
             superDrawV2(texName, fbo, iteratorInfo)
             return
@@ -67,7 +71,7 @@ open class GLIteratorFilter : GLFilter() {
             onIteration(iteratorInfo, i)
             fboItem.enable()
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-            superDrawV2(texName, fbo, iteratorInfo)
+            superDrawV2(prevTexName, fboItem, iteratorInfo)
             prevTexName = fboItem.texName
         }
 
@@ -133,4 +137,74 @@ open class GLIteratorFilter : GLFilter() {
 class IteratorInfo {
     var iteratorIndex = -1
     var data: Any? = null
+}
+
+/**
+ * 用于实现对单个Filter多次应用效果
+ * 相对于GLGroupFilter 具有更好的性能
+ */
+class GLSingleIteratorFilter(val filter: GLFilter) : GLFilter() {
+
+    private var mIteratorCount by IntDelegate(1, 1)
+        get
+
+    private var fboList = listOf<FrameBufferObject>()
+
+    fun setIteratorCount(count: Int) {
+        if (count == mIteratorCount) {
+            return
+        }
+        mIteratorCount = count
+        fboList = updateFBOList(count)
+    }
+
+    private fun updateFBOList(size: Int): List<FrameBufferObject> {
+        if (size <= 1) {
+            return listOf()
+        }
+        val list = mutableListOf<FrameBufferObject>()
+        for (i in 0..<size - 1) {
+            list.add(FrameBufferObject())
+        }
+        return list
+    }
+
+    override fun initialize() {
+        super.initialize()
+        fboList = updateFBOList(mIteratorCount)
+    }
+
+    override fun release() {
+        for (fbo in fboList) {
+            fbo.release()
+        }
+        fboList = listOf()
+        filter.release()
+        super.release()
+    }
+
+    override fun setFrameSize(width: Int, height: Int) {
+        super.setFrameSize(width, height)
+        filter.setFrameSize(width, height)
+        for (fbo in fboList) {
+            fbo.initialize(width, height)
+        }
+    }
+
+    override fun draw(texName: Int, fbo: FrameBufferObject?) {
+        var prevTexName = texName
+        for (fboItem in fboList) {
+            fboItem.enable()
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+            filter.draw(prevTexName, fboItem)
+            prevTexName = fboItem.texName
+        }
+        if (fbo != null) {
+            fbo.enable()
+        } else {
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
+        }
+        filter.draw(prevTexName, fbo)
+    }
+
 }

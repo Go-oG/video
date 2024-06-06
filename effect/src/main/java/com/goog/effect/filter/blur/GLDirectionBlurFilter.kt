@@ -1,17 +1,18 @@
 package com.goog.effect.filter.blur
 
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.filter.core.GLIteratorFilter
+import com.goog.effect.filter.core.IteratorInfo
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 import kotlin.math.sin
 
 //方向模糊
-//TODO 待验证
 class GLDirectionBlurFilter : GLFilter() {
     //距离角度偏移量
     private var directionX = 0f
     private var directionY = 0f
-    var strength by FloatDelegate(0.05f, 0.00001f, 1f)
+    var strength by FloatDelegate(0.05f, 0.00001f)
     ///不能出现负数
     var samples = 10
 
@@ -31,7 +32,7 @@ class GLDirectionBlurFilter : GLFilter() {
     fun setAngleY(angle: Float) {
         directionY = sin(Math.toRadians(angle.toDouble())).toFloat()
     }
-
+    
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
         put("uSamples", samples)

@@ -8,53 +8,59 @@ import kotlin.math.sin
 
 // 粒状模糊
 class GLGrainyBlurFilter : GLFilter() {
-    var directionX by FloatDelegate(0.25f, 0f, 1f)
-    var directionY by FloatDelegate(0.25f, 0f, 1f)
 
-    var blurRadius by IntDelegate(5, 1)
+    var blurRadius by IntDelegate(15, 1)
+    var iteratorCount by IntDelegate(20, 1)
+    var sigma by FloatDelegate(5f, 0.0f)
+    var noiseRange by FloatDelegate(5f, 0.0001f)
 
-    ///不能出现负数
-    var iteratorCount by IntDelegate(1, 1)
-
-    fun setDirection(angle: Float) {
-        val r = sin(Math.toRadians(angle.toDouble())).toFloat()
-        directionX = r
-        directionY = r
-    }
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        putVec2("uDirection", directionX, directionY)
-        put("uLoopCount", iteratorCount)
-        putVec2("uTexOffset", 1.0f / width, 1.0f / height)
-        put("uBlurSize", blurRadius)
+        put("uBlurRadius", blurRadius.toFloat())
+        put("uSigma", sigma)
+        put("uNoiseRange", noiseRange)
+        put("uSampleCount", iteratorCount)
+       // putVec2("uTextureSize", width.toFloat(), height.toFloat())
+
     }
 
     override fun getFragmentShader(): String {
         return """
             precision mediump float;
+
             varying vec2 vTextureCoord;
             uniform sampler2D sTexture;
 
-            uniform vec2 uDirection;
-            uniform int uLoopCount;
-            uniform vec2 uTexOffset;
-            uniform int uBlurSize;
+            uniform float uBlurRadius;
+            uniform float uSigma;
+            uniform float uNoiseRange;
+            uniform int uSampleCount;
+          //  uniform vec2 uTextureSize;
+            
+            const float PI = 3.141592653589;
 
-            float rand(vec2 uv) {
-                return fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43578.5453);
+            float rand(vec2 co) {
+                return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+            }
+
+            float gaussian(float x, float sigma) {
+                return exp(-x * x / (2.0 * sigma * sigma)) / (sigma * sqrt(2.0 * PI));
             }
 
             void main() {
-                vec4 t = vec4(0.0);
-                vec2 d = uTexOffset * uBlurSize;
-                float fc = float(uLoopCount);
-                for (float i = 0.0; i < fc; i += 1.0) {
-                    float r1 = clamp(rand(vTextureCoord * i) * 2.0 - 1.0, -d.x, d.x);
-                    float r2 = clamp(rand(vTextureCoord * (i + uLoopCount)) * 2.0 - 1.0, -d.y, d.y);
-                    t += texture2D(sTexture, vTextureCoord + vec2(r1, r2));
+                vec2 texelSize = vec2(0.5,0.5);
+                vec4 color = vec4(0.0);
+                float totalWeight = 0.0;
+                for (int i = 0; i < uSampleCount; i++) {
+                    float offset = float(i) / float(uSampleCount - 1) * uBlurRadius;
+                    float noise = rand(vTextureCoord) * uNoiseRange;
+                    float vv = gaussian(offset, uSigma);
+                    color += texture2D(sTexture, vTextureCoord + vec2(offset * texelSize.x + noise, 0.0)) * vv;
+                    totalWeight += vv;
                 }
-                gl_FragColor = t / float(uLoopCount);
+                color /= totalWeight;
+                gl_FragColor = color;
             }
         """.trimIndent()
     }
