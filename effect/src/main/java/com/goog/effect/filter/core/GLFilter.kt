@@ -87,13 +87,10 @@ open class GLFilter {
 
         ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
-
         onDrawEndHook(texName, fbo)
-
         ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_COORD))
-
         //解绑纹理
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
@@ -111,7 +108,6 @@ open class GLFilter {
         put("texelWidth", width.toFloat())
         put("texelHeight", height.toFloat())
     }
-
 
     protected open fun useProgram(texName: Int, fbo: FrameBufferObject?) {
         GLES20.glUseProgram(program)
