@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 ///用于实现需要进行多次迭代的相同效果的Filter
 open class GLIteratorFilter : GLFilter() {
 
-    protected var iteratorCount by IntDelegate(1, 1)
+    protected var mIteratorCount by IntDelegate(1, 1)
     private val updateFlag = AtomicBoolean(true)
 
     private val iteratorInfo = IteratorInfo()
@@ -19,19 +19,19 @@ open class GLIteratorFilter : GLFilter() {
     @CallSuper
     override fun initialize() {
         super.initialize()
-        updateFBOListIfNeed(iteratorCount)
+        updateFBOListIfNeed(mIteratorCount)
     }
 
     fun setIteratorCount(count: Int) {
-        if (count == iteratorCount) {
+        if (count == mIteratorCount) {
             return
         }
-        iteratorCount = count
+        mIteratorCount = count
         updateFlag.set(true)
     }
 
     private fun updateFBOListIfNeed(size: Int) {
-        val b2 = fboList.size != iteratorCount - 1 && iteratorCount > 1
+        val b2 = fboList.size != mIteratorCount - 1 && mIteratorCount > 1
         if (updateFlag.compareAndSet(true, false) || b2) {
             updateFlag.set(false)
             if (size <= 1) {
@@ -50,7 +50,7 @@ open class GLIteratorFilter : GLFilter() {
     }
 
     final override fun draw(texName: Int, fbo: FrameBufferObject?) {
-        val count = iteratorCount
+        val count = mIteratorCount
         updateFBOListIfNeed(count)
 
         val list = fboList
