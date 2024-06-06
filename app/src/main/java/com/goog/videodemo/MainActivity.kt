@@ -10,7 +10,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.goog.video.view.surface.GLSurfaceView2
+import com.goog.effect.view.surface.GLSurfaceView2
 
 @SuppressLint("NotifyDataSetChanged")
 class MainActivity : AppCompatActivity() {

@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":video"))
+    implementation(project(":effect"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

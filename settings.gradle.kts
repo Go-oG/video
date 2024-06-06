@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VideoDemo"
 include(":app")
-include(":video")
+include(":effect")

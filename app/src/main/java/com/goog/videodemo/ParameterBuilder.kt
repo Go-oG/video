@@ -1,11 +1,10 @@
 package com.goog.videodemo
 
-import com.goog.video.filter.core.GLFilter
-import com.goog.video.model.FloatDelegate
-import com.goog.video.model.IntDelegate
+import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.model.FloatDelegate
+import com.goog.effect.model.IntDelegate
 import java.lang.Math.max
 import java.lang.reflect.Modifier
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 object ParameterBuilder {
 
