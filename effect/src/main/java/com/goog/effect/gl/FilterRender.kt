@@ -100,7 +100,8 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
          * 创建对应的SurfaceTexture,内部是双缓冲,如果存在其它的surfaceTexture
          * 也可以调用[SurfaceTexture.attachToGLContext]来重新绑定相应纹理
          */
-        val previewTexture = ESurfaceTexture(externalTextureId).apply { setFrameAvailableListener(this) }
+        val previewTexture = ESurfaceTexture(externalTextureId)
+        previewTexture.setFrameAvailableListener(this)
         this.previewTexture = previewTexture
         //设置当前纹理参数
         GLES20.glBindTexture(previewTexture.textureTarget, externalTextureId)

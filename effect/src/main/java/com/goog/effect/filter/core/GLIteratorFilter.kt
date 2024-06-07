@@ -143,7 +143,7 @@ class IteratorInfo {
  * 用于实现对单个Filter多次应用效果
  * 相对于GLGroupFilter 具有更好的性能
  */
-class GLSingleIteratorFilter(val filter: GLFilter) : GLFilter() {
+open class GLSingleIteratorFilter(val filter: GLFilter) : GLFilter() {
 
     private var mIteratorCount by IntDelegate(1, 1)
         get

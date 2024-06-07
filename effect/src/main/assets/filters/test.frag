@@ -2,17 +2,17 @@ precision mediump float;
 
 varying vec2 vTextureCoord;
 uniform sampler2D sTexture;
+uniform float uScale;
+uniform vec2 uResolution;
+
+float rand(vec2 uv) {
+    return fract(sin(dot(uv, vec2(1225.6548, 321.8942))) * 4251.4865);
+}
 
 void main() {
-    vec3 color = vec3(0.0);
-    int iterationCount = 3;
-    float direction = 0.25;
-
-    for (int k = -iterationCount; k < iterationCount; k++) {
-        vec2 sampleCoord = vTextureCoord - direction * float(k);
-        sampleCoord = clamp(sampleCoord, vec2(0.0), vec2(1.0));
-        color += texture2D(sTexture, sampleCoord).rgb;
-    }
-    gl_FragColor = vec4(color / (iterationCount * 2.0), 1.0);
-
+    vec2 ps = vec2(1.0) / uResolution.xy;
+    vec2 uv = vTextureCoord.xy * ps;
+    vec2 offset = (rand(uv) - 0.5) * 2.0 * ps * uScale;
+    vec3 noise = texture2D(sTexture, uv + offset).rgb;
+    gl_FragColor = vec4(noise, 1.0);
 }

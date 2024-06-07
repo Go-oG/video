@@ -1,6 +1,7 @@
 package com.goog.effect.filter.core
 
 import android.opengl.GLES20
+import android.util.Log
 import androidx.annotation.CallSuper
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.gl.GLConstant.DEF_FRAGMENT_SHADER
@@ -13,6 +14,7 @@ import com.goog.effect.model.FColor4
 import com.goog.effect.utils.EGLUtil.createBuffer
 import com.goog.effect.utils.EGLUtil.createProgram
 import com.goog.effect.utils.EGLUtil.loadShader
+import com.goog.effect.utils.TAG
 import com.goog.effect.utils.checkArgs
 
 open class GLFilter {
@@ -47,6 +49,7 @@ open class GLFilter {
     open fun setFrameSize(width: Int, height: Int) {
         this.width = width
         this.height = height
+        Log.i(TAG, "setFrameSize:${width} X ${height}")
     }
 
     open fun release() {

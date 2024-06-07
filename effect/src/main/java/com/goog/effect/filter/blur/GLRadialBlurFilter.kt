@@ -1,22 +1,19 @@
 package com.goog.effect.filter.blur
 
+import com.goog.effect.filter.core.GLCenterFilter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 import com.goog.effect.model.IntDelegate
 
 //径向模糊
-open class GLRadialBlurFilter(val useGaussianKernel: Boolean = false) : GLFilter() {
-    var centerX by FloatDelegate(0.5f, 0f, 1f)
-    var centerY by FloatDelegate(0.5f, 0f, 1f)
+open class GLRadialBlurFilter(val useGaussianKernel: Boolean = false) : GLCenterFilter() {
     var blurAmount by FloatDelegate(0.1f, 0f, 1f)
     var sampleCount by IntDelegate(7, 1)
-
     ///高斯系数 只在使用高斯内核时有用
     var gaussianFactor by FloatDelegate(2f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        super.onDraw(fbo)
         putVec2("uCenter", centerX, centerY)
         put("uBlurAmount", blurAmount)
         put("uLoopCount", sampleCount)
