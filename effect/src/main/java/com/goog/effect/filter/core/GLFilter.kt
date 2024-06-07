@@ -87,6 +87,7 @@ open class GLFilter {
 
         ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+
         onDrawEndHook(texName, fbo)
         ///禁用顶点着色器相关属性
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
@@ -97,17 +98,11 @@ open class GLFilter {
 
     }
 
-    ///提供三个钩子函数，用于子类重写
-    protected open fun onDrawEndHook(texName: Int, fbo: FrameBufferObject?) {}
-
     protected open fun onDraw(fbo: FrameBufferObject?) {
 
     }
 
-    protected fun putTextureSize() {
-        put("texelWidth", width.toFloat())
-        put("texelHeight", height.toFloat())
-    }
+    protected open fun onDrawEndHook(texName: Int, fbo: FrameBufferObject?) {}
 
     protected open fun useProgram(texName: Int, fbo: FrameBufferObject?) {
         GLES20.glUseProgram(program)
@@ -120,6 +115,11 @@ open class GLFilter {
 
     protected open fun getFragmentShader(): String {
         return DEF_FRAGMENT_SHADER
+    }
+
+    protected fun putTextureSize() {
+        put("texelWidth", width.toFloat())
+        put("texelHeight", height.toFloat())
     }
 
     protected fun put(name: String, value: Int) {

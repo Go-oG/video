@@ -2,12 +2,13 @@ package com.goog.effect.gl
 
 import android.graphics.SurfaceTexture
 import android.graphics.SurfaceTexture.OnFrameAvailableListener
+import android.opengl.GLES11Ext
+import android.opengl.GLES20
 import android.view.Surface
 import com.goog.effect.filter.core.GLPreviewFilter
 
 internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
     private val texture: SurfaceTexture = SurfaceTexture(texName)
-
     private var frameAvailableListener: OnFrameAvailableListener? = null
 
     init {
@@ -18,8 +19,7 @@ internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
         frameAvailableListener = l
     }
 
-    val textureTarget: Int
-        get() = GLPreviewFilter.GL_TEXTURE_EXTERNAL_OES
+    val textureTarget: Int get() =GLES11Ext.GL_TEXTURE_EXTERNAL_OES
 
     fun updateTexImage() {
         texture.updateTexImage()
@@ -40,4 +40,5 @@ internal class ESurfaceTexture(texName: Int) : OnFrameAvailableListener {
     fun obtainSurface(): Surface {
         return Surface(texture)
     }
+
 }

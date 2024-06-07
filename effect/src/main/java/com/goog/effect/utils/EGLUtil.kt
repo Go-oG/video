@@ -1,17 +1,18 @@
 package com.goog.effect.utils
 
+import android.app.ActivityManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.opengl.GLES20
-import android.opengl.GLException
 import android.opengl.GLUtils
-import android.util.Log
+import android.os.Build
+import com.goog.effect.model.GLVersion
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 object EGLUtil {
     const val NO_TEXTURE: Int = -1
-    private const val FLOAT_SIZE_BYTES = Float.SIZE_BYTES
 
     /**
      * 加载shader资源
@@ -19,16 +20,18 @@ object EGLUtil {
      */
     @JvmStatic
     fun loadShader(shaderCode: String, isFragmentShader: Boolean): Int {
-        val compiled = IntArray(1)
         val shaderType = if (isFragmentShader) GLES20.GL_FRAGMENT_SHADER else GLES20.GL_VERTEX_SHADER
         val shader = GLES20.glCreateShader(shaderType)
-
+        if (shader == 0) {
+            throw RuntimeException("Could not create shader")
+        }
         GLES20.glShaderSource(shader, shaderCode)
         GLES20.glCompileShader(shader)
+        val compiled = IntArray(1)
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0)
         if (compiled[0] == 0) {
-            Log.d("Load Shader Failed", "$compiled ${GLES20.glGetShaderInfoLog(shader)}")
-            return 0
+            val s = "Load Shader Failed $compiled ${GLES20.glGetShaderInfoLog(shader)}"
+            throw RuntimeException(s)
         }
         return shader
     }
@@ -36,10 +39,8 @@ object EGLUtil {
     /**
      * 创建Program 并链接shader
      * shader 对应的索引值由 loadShader 返回值确定
-     *
      */
     @JvmStatic
-    @Throws(GLException::class)
     fun createProgram(vertexShader: Int, frameShader: Int): Int {
         val program = GLES20.glCreateProgram()
         if (program == 0) {
@@ -60,36 +61,65 @@ object EGLUtil {
 
     /**
      * 创建一个纹理并绑定
-     * 返回对应的纹理指针
+     * 返回对应的纹理指针 如果失败则返回0
      */
-    fun createTexture(): Int {
+    fun createAndBindTexture(textureType: Int = GLES20.GL_TEXTURE_2D): Int {
         val textures = IntArray(1)
         GLES20.glGenTextures(1, textures, 0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
+        if (textures[0] != 0) {
+            GLES20.glBindTexture(textureType, textures[0])
+        }
         return textures[0]
     }
 
     /**
      * 初始化 texture(sampler2D) 相关参数
      * 主要是填充模式和过滤模式
+     * @param  textureType 参数是指目标纹理的类型
+     *          常见值有 GLES20.TEXTURE_2D 、GLES20.TEXTURE_EXTERNAL_OES、GLES20.GL_TEXTURE_CUBE_MAP
      */
-    fun setupTexture(target: Int, magUseUseLinear: Boolean = true, minUseLinear: Boolean = true,
-        wrapUseToEdge: Boolean = true) {
+    fun configTexture(textureType: Int, filterUseLinear: Boolean = true, wrapUseToEdge: Boolean = true) {
         ///GL_TEXTURE_MAG_FILTER和GL_TEXTURE_MIN_FILTER 设置纹理过滤参数作用是当纹理渲染时比原理的纹理小或者大时要如何处理，
         // GL_LINEAR是线性处理方式，展示效果更平滑；
         // GL_NEAREST选择与最近的像素，展示效果有锯齿感。
-        val mag = if (magUseUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
-        val min = if (minUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
+        val filter = if (filterUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
 
-        GLES20.glTexParameteri(target, GLES20.GL_TEXTURE_MAG_FILTER, mag)
-        GLES20.glTexParameteri(target, GLES20.GL_TEXTURE_MIN_FILTER, min)
+        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_MAG_FILTER, filter)
+        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_MIN_FILTER, filter)
 
         //GL_TEXTURE_WRAP_T与GL_TEXTURE_WRAP_S是纹理坐标超出纹理范围的处理参数
         //GL_CLAMP_TO_EDGE 已填充方式进行处理
         //GL_REPEAT 以重复方式进行处理
         val warp = if (wrapUseToEdge) GLES20.GL_CLAMP_TO_EDGE else GLES20.GL_REPEAT
-        GLES20.glTexParameteri(target, GLES20.GL_TEXTURE_WRAP_S, warp)
-        GLES20.glTexParameteri(target, GLES20.GL_TEXTURE_WRAP_T, warp)
+        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_WRAP_S, warp)
+        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_WRAP_T, warp)
+    }
+
+    /**
+     * 从Bitmap中创建或者更新纹理对象
+     */
+    @JvmStatic
+    fun loadOrUpdateTextureFromBitmap(img: Bitmap, textureId: Int?, unBindOnEnd: Boolean = true): Int {
+        val textures = IntArray(1)
+        if (textureId == null || textureId == NO_TEXTURE || textureId == 0) {
+            textures[0] = createAndBindTexture()
+            configTexture(GLES20.GL_TEXTURE_2D, true, true)
+            //将Bitmap 数据加载到Texture中
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0)
+            if (unBindOnEnd) {
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+            }
+        } else {
+            textures[0] = textureId
+            ///绑定纹理
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
+            ///更新Bitmap 数据
+            GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img)
+            if (unBindOnEnd) {
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
+            }
+        }
+        return textures[0]
     }
 
     @JvmStatic
@@ -106,45 +136,50 @@ object EGLUtil {
 
     fun toFloatBuffer(data: FloatArray): FloatBuffer {
         val buffer = ByteBuffer
-            .allocateDirect(data.size * FLOAT_SIZE_BYTES)
+            .allocateDirect(data.size * Float.SIZE_BYTES)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
         buffer.put(data).position(0)
         return buffer
     }
 
+    /**
+     * 更新Buffer Data
+     */
     fun updateBufferData(bufferName: Int, data: FloatBuffer) {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, bufferName)
-        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, data.capacity() * FLOAT_SIZE_BYTES, data, GLES20.GL_STATIC_DRAW)
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, data.capacity() * Float.SIZE_BYTES, data, GLES20.GL_STATIC_DRAW)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
     }
 
-    @JvmStatic
-    fun loadTexture(img: Bitmap, usedTexId: Int, recycle: Boolean): Int {
-        val textures = IntArray(1)
-        if (usedTexId == NO_TEXTURE) {
-            GLES20.glGenTextures(1, textures, 0)
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE.toFloat())
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0)
+    /**
+     * 检查是否支持Open GL ES 3.0
+     */
+    fun isSupportGLES30(): Boolean {
+        try {
+            val manager = ContextUtil.getContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val config = manager.deviceConfigurationInfo
+            if (config.reqGlEsVersion >= 0x30000) {
+                return true
+            }
+            val versionString = GLES20.glGetString(GLES20.GL_VERSION);
+            return versionString != null && versionString.startsWith("OpenGL ES 3.", ignoreCase = true)
 
-        } else {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId)
-            GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img)
-            textures[0] = usedTexId
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
         }
+    }
 
-        if (recycle) {
-            img.recycle()
+    /**
+     * 获取当前环境的GLES 版本
+     */
+    fun getCurrentGLVersion(): GLVersion {
+        val version = GLES20.glGetString(GLES20.GL_VERSION)
+        if (version != null && version.startsWith("OpenGL ES 3.", ignoreCase = true)) {
+            return GLVersion.V30
         }
-        return textures[0]
+        return GLVersion.V20
     }
 
     fun checkEglError(operation: String) {
@@ -153,5 +188,6 @@ object EGLUtil {
             throw RuntimeException("$operation: glError $error")
         }
     }
+
 
 }

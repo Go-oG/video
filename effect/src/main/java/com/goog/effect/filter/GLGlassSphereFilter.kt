@@ -10,7 +10,6 @@ class GLGlassSphereFilter:GLCenterFilter() {
    var aspectRatio by FloatDelegate(1f,0f)
    var refractiveIndex by FloatDelegate(0.2f,0f,1f)
 
-
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
         put("radius",radius)

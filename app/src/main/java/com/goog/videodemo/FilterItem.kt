@@ -16,8 +16,8 @@ import com.goog.effect.filter.GLContrastFilter
 import com.goog.effect.filter.GLConvolution3X3Filter
 import com.goog.effect.filter.GLCornerFilter
 import com.goog.effect.filter.GLCrosshatchFilter
-import com.goog.effect.filter.GLDirectionalNonMaxSuppressionFilter
-import com.goog.effect.filter.GLDirectionalSobelEdgeDetectionFilter
+import com.goog.effect.filter.GLDirectionNonMaxSuppressionFilter
+import com.goog.effect.filter.GLDirectionSobelEdgeDetectionFilter
 import com.goog.effect.filter.GLExposureFilter
 import com.goog.effect.filter.GLGammaFilter
 import com.goog.effect.filter.GLGlassSphereFilter
@@ -182,8 +182,8 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLCrosshatchFilter::class.java))
 
          //   list.add(FilterItem(GLDilationFilter::class.java))
-            list.add(FilterItem(GLDirectionalNonMaxSuppressionFilter::class.java))
-            list.add(FilterItem(GLDirectionalSobelEdgeDetectionFilter::class.java))
+            list.add(FilterItem(GLDirectionNonMaxSuppressionFilter::class.java))
+            list.add(FilterItem(GLDirectionSobelEdgeDetectionFilter::class.java))
          //   list.add(FilterItem(GLErosionFilter::class.java))
             list.add(FilterItem(GLExposureFilter::class.java))
 

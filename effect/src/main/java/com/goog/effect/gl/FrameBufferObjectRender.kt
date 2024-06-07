@@ -25,25 +25,24 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
         mClearColor = color
     }
 
-    override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
+    final override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         normalShader = GLFilter()
         normalShader?.initialize()
         onSurfaceCreated(config)
     }
 
-    override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
+    final override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
         fbo.initialize(width, height)
         normalShader?.setFrameSize(width, height)
         onSurfaceChanged(width, height)
     }
 
-    override fun onDrawFrame(gl: GL10) {
+    final override fun onDrawFrame(gl: GL10) {
         synchronized(runOnDraw) {
             while (!runOnDraw.isEmpty()) {
                 runOnDraw.poll()?.run()
             }
         }
-
         ///绑定缓冲区
         fbo.enable()
         GLES20.glViewport(0, 0, fbo.width, fbo.height)

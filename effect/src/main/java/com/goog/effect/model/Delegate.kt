@@ -4,112 +4,57 @@ import com.goog.effect.utils.checkArgs
 import kotlin.reflect.KProperty
 
 class FloatDelegate(
-    defaultV: Float, val minV: Float? = null, val maxV: Float? = null,
-    val includeMin: Boolean = true, val includeMax: Boolean = true) {
-    private var floatValue = 0f
-
-    init {
-        if (minV != null && maxV != null) {
-            checkArgs(minV <= maxV)
-        }
-        floatValue = defaultV
-        if (minV != null) {
-            if (includeMin) {
-                checkArgs(defaultV >= minV)
-            } else {
-                checkArgs(defaultV > minV)
-            }
-        }
-        if (maxV != null) {
-            if (includeMax) {
-                checkArgs(defaultV <= maxV)
-            } else {
-                checkArgs(defaultV < maxV)
-            }
-        }
-        floatValue = defaultV
-    }
-
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): Float {
-        return floatValue
-    }
-
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Float) {
-        if (minV != null) {
-            if (includeMin) {
-                checkArgs(value >= minV)
-            } else {
-                checkArgs(value > minV)
-            }
-        }
-        if (maxV != null) {
-            if (includeMax) {
-                checkArgs(value <= maxV)
-            } else {
-                checkArgs(value < maxV)
-            }
-        }
-
-        floatValue = value
-    }
-
-    fun getCurrent():Float{
-        return floatValue
-    }
-
-}
+    defaultV: Float, minV: Float? = null, maxV: Float? = null,
+    includeMin: Boolean = true, includeMax: Boolean = true) : NumberDelegate<Float>(defaultV, minV, maxV, includeMin, includeMax)
 
 class IntDelegate(
-    defaultV: Int, val minV: Int? = null, val maxV: Int? = null,
-    val includeMin: Boolean = true, val includeMax: Boolean = true
-) {
-    private var intValue: Int = 0
+    defaultV: Int, minV: Int? = null, maxV: Int? = null,
+    includeMin: Boolean = true, includeMax: Boolean = true
+) : NumberDelegate<Int>(defaultV, minV, maxV, includeMin, includeMax)
+
+open class NumberDelegate<T : Number>(defaultV: T, val minV: T? = null, val maxV: T? = null,
+    val includeMin: Boolean = true, val includeMax: Boolean = true) {
+    private val accurate = 0.0000000001
+    private var numberValue: T
 
     init {
-        if (minV != null && maxV != null) {
-            checkArgs(minV <= maxV)
-        }
+        numberValue = checkValue(defaultV)
+    }
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        return numberValue
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        numberValue = checkValue(value)
+    }
+
+    fun getCurrent(): T {
+        return numberValue
+    }
+
+    private fun checkValue(nValue: T): T {
+        val v1 = nValue.toDouble()
         if (minV != null) {
+            val minv1 = minV.toDouble()
+            val sub = v1 - minv1
             if (includeMin) {
-                checkArgs(defaultV >= minV)
+                checkArgs(sub >= -accurate, "value($nValue) should be >= $minV")
             } else {
-                checkArgs(defaultV > minV)
+                checkArgs(sub > -accurate, "value($nValue) should be > $minV")
             }
         }
         if (maxV != null) {
+            val maxv1 = maxV.toDouble()
+            val sub = maxv1 - v1
             if (includeMax) {
-                checkArgs(defaultV <= maxV)
+                checkArgs(sub >= -accurate, "value($nValue) should be <= $maxV")
             } else {
-                checkArgs(defaultV < maxV)
+                checkArgs(sub > accurate, "value($nValue) should be < $maxV")
             }
         }
-        intValue = defaultV
+        return nValue
     }
 
-
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-        return intValue
-    }
-
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
-        if (minV != null) {
-            if (includeMin) {
-                checkArgs(value >= minV)
-            } else {
-                checkArgs(value > minV)
-            }
-        }
-        if (maxV != null) {
-            if (includeMax) {
-                checkArgs(value <= maxV)
-            } else {
-                checkArgs(value < maxV)
-            }
-        }
-        intValue = value
-    }
-    fun getCurrent():Int{
-        return intValue
-    }
 
 }

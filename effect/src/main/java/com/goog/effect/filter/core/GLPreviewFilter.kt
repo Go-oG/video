@@ -1,13 +1,21 @@
 package com.goog.effect.filter.core
 
+import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import com.goog.effect.gl.GLConstant.DEF_FRAGMENT_SHADER
 import com.goog.effect.gl.GLConstant.K_ATTR_COORD
 import com.goog.effect.gl.GLConstant.K_ATTR_POSITION
 import com.goog.effect.gl.GLConstant.K_UNIFORM_TEX
 
+/**
+ * [texTarget] 是纹理目标类型
+ * 这里传入的是 [GLES11Ext.GL_TEXTURE_EXTERNAL_OES]
+ */
 class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
 
+    /**
+     *这里外部传入的texName是oes对应的纹理ID
+     */
     fun draw(texName: Int, mvpMatrix: FloatArray, stMatrix: FloatArray, aspectRatio: Float) {
         useProgram(texName,null)
 
@@ -24,6 +32,7 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
         GLES20.glVertexAttribPointer(getHandle(K_ATTR_COORD), VERTICES_DATA_UV_SIZE, GLES20.GL_FLOAT, false,
                 VERTICES_DATA_STRIDE_BYTES, VERTICES_DATA_UV_OFFSET)
 
+        //激活并绑定一个纹理单元
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(texTarget, texName)
         GLES20.glUniform1i(getHandle(K_UNIFORM_TEX), 0)
@@ -33,9 +42,6 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
         GLES20.glDisableVertexAttribArray(getHandle(K_ATTR_POSITION))
         GLES20.glDisableVertexAttribArray(getHandle(K_UNIFORM_TEX))
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
-
-        ///替换
-        //GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
         GLES20.glBindTexture(texTarget, 0)
 
     }
@@ -58,7 +64,7 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        if (texTarget == GL_TEXTURE_EXTERNAL_OES) {
+        if (texTarget == GLES11Ext.GL_TEXTURE_EXTERNAL_OES) {
             return StringBuilder()
                 .append("#extension GL_OES_EGL_image_external : require\n")
                 .append(DEF_FRAGMENT_SHADER.replace("sampler2D", "samplerExternalOES"))
@@ -67,7 +73,4 @@ class GLPreviewFilter(private val texTarget: Int) : GLFilter() {
         return DEF_FRAGMENT_SHADER
     }
 
-    companion object {
-        const val GL_TEXTURE_EXTERNAL_OES: Int = 0x8D65
-    }
 }

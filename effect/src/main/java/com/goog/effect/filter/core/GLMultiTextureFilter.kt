@@ -9,7 +9,10 @@ import com.goog.effect.gl.GLConstant.VERTEX_SHADERS
 import com.goog.effect.utils.EGLUtil
 import com.goog.effect.utils.checkArgs
 
-@Deprecated("Not Stable")
+/**
+ * 实现多纹理对象的过滤器
+ */
+@Deprecated("待完善")
 abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
     private val texturePosArray = arrayOf(
         GLES20.GL_TEXTURE1,
@@ -24,6 +27,7 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
         GLES20.GL_TEXTURE10,
         GLES20.GL_TEXTURE11
     ).toIntArray()
+
     private var uniformTexArray = arrayOf(
         GLConstant.K_UNIFORM_TEX2,
         GLConstant.K_UNIFORM_TEX3,
@@ -81,7 +85,7 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
         GLES20.glGenTextures(1, args, 0)
         if (args[0] != 0) {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, args[0])
-            EGLUtil.setupTexture(args[0])
+            EGLUtil.configTexture(args[0])
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0)
             bitmap.recycle()
         }
@@ -104,18 +108,15 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
 }
 
 
-internal class MultiItem(val listIndex: Int, val texPosition: Int, val uniformName: String) {
+internal class MultiItem(val listIndex: Int, val texPosOffset: Int, val uniformName: String) {
     var bitmap: Bitmap? = null
 
     ///纹理指针
     var texPoint = 0
 
     fun activeTexture(program: Int) {
-        // 激活纹理单元
-        GLES20.glActiveTexture(texPosition)
-        // 绑定纹理
+        GLES20.glActiveTexture(texPosOffset)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texPoint)
-        // 获取着色器中的纹理uniform位置并设置它
         val handle = GLES20.glGetUniformLocation(program, uniformName)
         GLES20.glUniform1i(handle, listIndex + 1)
 

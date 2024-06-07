@@ -6,7 +6,7 @@ import androidx.annotation.CallSuper
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.utils.EGLUtil
-import com.goog.effect.utils.EGLUtil.loadTexture
+import com.goog.effect.utils.EGLUtil.loadOrUpdateTextureFromBitmap
 import kotlin.properties.Delegates
 
 class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
@@ -39,7 +39,7 @@ class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
     private fun loadTexture() {
         val bitmap = lutTexture
         if (hTex == EGLUtil.NO_TEXTURE && bitmap != null) {
-            hTex = loadTexture(bitmap, EGLUtil.NO_TEXTURE, false)
+            hTex = loadOrUpdateTextureFromBitmap(bitmap, null)
         }
     }
 
@@ -59,7 +59,7 @@ class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
 
     fun reset() {
         hTex = EGLUtil.NO_TEXTURE
-        hTex = loadTexture(lutTexture!!, EGLUtil.NO_TEXTURE, false)
+        hTex = loadOrUpdateTextureFromBitmap(lutTexture!!, EGLUtil.NO_TEXTURE, false)
     }
 
     override fun getFragmentShader(): String {

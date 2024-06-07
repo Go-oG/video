@@ -18,14 +18,38 @@ class GLCircleFilter : GLCenterFilter() {
         put("aspectRatio", aspectRatio)
         putColor("circleColor", circleColor)
         putColor("backgroundColor", backgroundColor)
-
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("circle.vsh")
+        return """
+            attribute vec4 aPosition;
+            attribute vec4 aTextureCoord;
+
+            varying vec2 currentPosition;
+
+            uniform float aspectRatio;
+
+            void main() {
+                currentPosition = vec2(aPosition.x, aPosition.y * aspectRatio);
+                gl_Position = aPosition;
+            }
+        """.trimIndent()
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("circle.fsh")
+        return """
+            uniform lowp vec4 circleColor;
+            uniform lowp vec4 backgroundColor;
+            uniform highp vec2 center;
+            uniform highp float radius;
+            varying highp vec2 currentPosition;
+
+            void main() {
+                 float distanceFromCenter = distance(center, currentPosition);
+                 float checkForPresenceWithinCircle = step(distanceFromCenter, radius);
+
+                gl_FragColor = mix(backgroundColor, circleColor, checkForPresenceWithinCircle);
+            }
+        """.trimIndent()
     }
 }

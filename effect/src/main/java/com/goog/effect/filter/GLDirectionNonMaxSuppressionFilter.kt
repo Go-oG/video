@@ -5,7 +5,7 @@ import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 import com.goog.effect.utils.loadFilterFromAsset
 
-class GLDirectionalNonMaxSuppressionFilter : GLFilter() {
+class GLDirectionNonMaxSuppressionFilter : GLFilter() {
     var upperThreshold by FloatDelegate(1f, 0f, 1f)
     var lowerThreshold by FloatDelegate(0f, 0f, 1f)
 

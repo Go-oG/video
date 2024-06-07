@@ -6,7 +6,7 @@ import com.goog.effect.model.FloatDelegate
 import com.goog.effect.utils.loadFilterFromAsset
 
 class GLSketchFilter : GLBoxBoundFilter() {
-    var edgeStrength by FloatDelegate(1f, 0f, 1f, includeMin = false)
+    var edgeStrength by FloatDelegate(1f, -0.000001f, 1f, includeMin = false)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)

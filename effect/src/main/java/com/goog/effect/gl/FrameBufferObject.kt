@@ -4,6 +4,7 @@ import android.opengl.GLES20
 import android.util.Log
 import com.goog.effect.utils.EGLUtil
 import com.goog.effect.utils.TAG
+import com.goog.effect.utils.checkArgs
 
 class FrameBufferObject {
 
@@ -19,68 +20,64 @@ class FrameBufferObject {
     var texName: Int = 0
         private set
 
-    ///创建texture 并绑定到FBO
+    /**
+     * 初始化FBO相关的设置
+     * 在设置完成后将会切换回原来的渲染环境
+     * 在初始化后，如果需要启用该FBO 则需要调用 [enable] 方法
+     */
     fun initialize(width: Int, height: Int) {
         val args = IntArray(1)
 
-        ///校验纹理大小
+        ///校验width 和 height 是否在最大纹理大小范围内
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
-        require(!(width > args[0] || height > args[0])) { "GL_MAX_TEXTURE_SIZE " + args[0] }
+        Log.i(TAG, "Max Texture Size is" + args[0])
+        checkArgs(width <= args[0] && height <= args[0],
+                "width($width) or height${height} must <=MaxTextureSize(${args[0]})")
+        //校验width 和 height是否在渲染缓冲区范围内
         GLES20.glGetIntegerv(GLES20.GL_MAX_RENDERBUFFER_SIZE, args, 0)
-        require(!(width > args[0] || height > args[0])) { "GL_MAX_RENDERBUFFER_SIZE " + args[0] }
+        checkArgs(width <= args[0] && height <= args[0],
+                "width($width) or height${height} must <=MaxRenderBufferSize(${args[0]})")
 
-        //获取FrameBuffer指针位置
+        //获取当前FrameBuffer、RenderBuffer、Texture指针位置并存储
         GLES20.glGetIntegerv(GLES20.GL_FRAMEBUFFER_BINDING, args, 0)
         val saveFrameBuffer = args[0]
-
-        //获取RenderBuffer指针位置
         GLES20.glGetIntegerv(GLES20.GL_RENDERBUFFER_BINDING, args, 0)
         val saveRenderBuffer = args[0]
-
-        //获取纹理指针位置
         GLES20.glGetIntegerv(GLES20.GL_TEXTURE_BINDING_2D, args, 0)
         val saveTexName = args[0]
 
-        ///先释放以前的
+        ///先释放以前绑定的对象并重新设置宽高
         release()
-
-        ///重新赋值
         this.width = width
         this.height = height
         try {
-
-            ///创建一个自定义帧缓冲并将其绑定到当前上下文
+            ///创建一个FrameBuffer并将其绑定到当前上下文
             GLES20.glGenFramebuffers(1, args, 0)
             frameBufferName = args[0]
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
 
-            ///创建深度缓冲并绑定
+            ///创建RenderBuffer并绑定到当前上下文
             GLES20.glGenRenderbuffers(1, args, 0)
             renderBufferName = args[0]
             GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderBufferName)
-            ///为深度缓冲区分配存储空间
+
+            ///创建和附加一个渲染缓冲区对象（RBO）到帧缓冲区对象（FBO）
             GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, width, height)
-            ///将深度缓冲区绑定到帧缓冲区对象(frameBuffer)
             GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, renderBufferName)
 
             ///创建纹理
-            GLES20.glGenTextures(1, args, 0)
-            if(args[0]==0){
-                Log.e(TAG,"create texture fail")
+            texName = EGLUtil.createAndBindTexture(GLES20.GL_TEXTURE_2D)
+            if (texName == 0) {
+                Log.e(TAG, "create texture fail")
             }
-            texName = args[0]
+            EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true)
 
-            ///绑定纹理到上下文
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texName)
-            ///初始化纹理相关的参数
-            EGLUtil.setupTexture(GLES20.GL_TEXTURE_2D, magUseUseLinear = true, minUseLinear = false)
-
-            ///创建一个未初始化的离屏渲染纹理
-            ///并将texture(纹理)attach到帧缓冲区对象上(FBO)
+            ///创建一个未初始化的离屏渲染纹理 并将texture(纹理)attach到帧缓冲区对象上(FBO)
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
                     width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
             GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
                     texName, 0)
+
             ///校验FBO是否设置成功
             val status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
             if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
@@ -91,17 +88,12 @@ class FrameBufferObject {
             throw e
         }
 
-        ///绑定FBO 和renderBuffer 以及texture
-        //恢复先前绑定的帧缓冲区、渲染缓冲区和纹理对象。
-        //这通常是在操作完成后，清理并恢复原来的OpenGL状态，以便不会影响后续的渲染操作
         //======================================================================================================
-        //OpenGL将saveFrameBuffer作为当前环境的 帧缓冲区。所有后续的渲染操作将定向到这个帧缓冲区。
+        //恢复先前绑定的FrameBuffer、RenderBuffer和Texture对象
+        //这样做会将渲染目标从离屏帧缓冲区切换回默认的帧缓冲区，即屏幕。
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, saveFrameBuffer)
-        //OpenGL将saveRenderBuffer作为当前环境的 渲染缓冲区。渲染缓冲区通常用于深度或模板缓冲区，或颜色缓冲区
         GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, saveRenderBuffer)
-        //OpenGL将saveTexName作为当前活动的纹理对象。所有后续的纹理操作将应用于这个纹理对象。
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, saveTexName)
-
     }
 
     fun release() {

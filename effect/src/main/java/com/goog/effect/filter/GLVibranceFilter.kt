@@ -10,7 +10,7 @@ class GLVibranceFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("vibrance", vibrance)
+        put("uVibrance", vibrance)
     }
 
     override fun getFragmentShader(): String {
@@ -19,13 +19,13 @@ class GLVibranceFilter : GLFilter() {
             varying vec2 vTextureCoord;
 
             uniform lowp sampler2D sTexture;
-            uniform lowp float vibrance;
+            uniform float uVibrance;
 
             void main() {
-                lowp vec4 color = texture2D(sTexture, vTextureCoord);
-                lowp float average = (color.r + color.g + color.b) / 3.0;
-                lowp float mx = max(color.r, max(color.g, color.b));
-                lowp float amt = (mx - average) * (-vibrance * 3.0);
+                vec4 color = texture2D(sTexture, vTextureCoord);
+                float average = (color.r + color.g + color.b) / 3.0;
+                float mx = max(color.r, max(color.g, color.b));
+                float amt = (mx - average) * (-uVibrance * 3.0);
                 color.rgb = mix(color.rgb, vec3(mx), amt);
                 gl_FragColor = color;
             }
