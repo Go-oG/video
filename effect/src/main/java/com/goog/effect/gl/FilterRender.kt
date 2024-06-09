@@ -105,7 +105,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         this.previewTexture = previewTexture
         //设置当前纹理参数
         GLES20.glBindTexture(previewTexture.textureTarget, externalTextureId)
-        EGLUtil.configTexture(previewTexture.textureTarget)
+        EGLUtil.configTexture(previewTexture.textureTarget,true,false)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
 
         // GL_TEXTURE_EXTERNAL_OES

@@ -70,7 +70,7 @@ class FrameBufferObject {
             if (texName == 0) {
                 Log.e(TAG, "create texture fail")
             }
-            EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true)
+            EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true,true)
 
             ///创建一个未初始化的离屏渲染纹理 并将texture(纹理)attach到帧缓冲区对象上(FBO)
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,

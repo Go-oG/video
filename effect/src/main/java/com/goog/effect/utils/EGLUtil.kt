@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
-import android.os.Build
 import com.goog.effect.model.GLVersion
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -78,14 +77,15 @@ object EGLUtil {
      * @param  textureType 参数是指目标纹理的类型
      *          常见值有 GLES20.TEXTURE_2D 、GLES20.TEXTURE_EXTERNAL_OES、GLES20.GL_TEXTURE_CUBE_MAP
      */
-    fun configTexture(textureType: Int, filterUseLinear: Boolean = true, wrapUseToEdge: Boolean = true) {
+    fun configTexture(textureType: Int, filterMaxUseLinear: Boolean = true,filterMinUseLinear:Boolean=false, wrapUseToEdge: Boolean = true) {
         ///GL_TEXTURE_MAG_FILTER和GL_TEXTURE_MIN_FILTER 设置纹理过滤参数作用是当纹理渲染时比原理的纹理小或者大时要如何处理，
         // GL_LINEAR是线性处理方式，展示效果更平滑；
         // GL_NEAREST选择与最近的像素，展示效果有锯齿感。
-        val filter = if (filterUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
+        val filter = if (filterMaxUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
+        val filter2 = if (filterMinUseLinear) GLES20.GL_LINEAR else GLES20.GL_NEAREST
 
         GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_MAG_FILTER, filter)
-        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_MIN_FILTER, filter)
+        GLES20.glTexParameteri(textureType, GLES20.GL_TEXTURE_MIN_FILTER, filter2)
 
         //GL_TEXTURE_WRAP_T与GL_TEXTURE_WRAP_S是纹理坐标超出纹理范围的处理参数
         //GL_CLAMP_TO_EDGE 已填充方式进行处理
@@ -103,7 +103,7 @@ object EGLUtil {
         val textures = IntArray(1)
         if (textureId == null || textureId == NO_TEXTURE || textureId == 0) {
             textures[0] = createAndBindTexture()
-            configTexture(GLES20.GL_TEXTURE_2D, true, true)
+            configTexture(GLES20.GL_TEXTURE_2D, true,true, true)
             //将Bitmap 数据加载到Texture中
             GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, img, 0)
             if (unBindOnEnd) {

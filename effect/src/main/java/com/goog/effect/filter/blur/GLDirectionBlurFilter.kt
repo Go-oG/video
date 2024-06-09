@@ -13,6 +13,7 @@ class GLDirectionBlurFilter : GLFilter() {
     private var directionX = 0f
     private var directionY = 0f
     var strength by FloatDelegate(0.05f, 0.00001f)
+
     ///不能出现负数
     var samples = 10
 
@@ -32,7 +33,7 @@ class GLDirectionBlurFilter : GLFilter() {
     fun setAngleY(angle: Float) {
         directionY = sin(Math.toRadians(angle.toDouble())).toFloat()
     }
-    
+
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
         put("uSamples", samples)
@@ -42,11 +43,12 @@ class GLDirectionBlurFilter : GLFilter() {
 
     override fun getFragmentShader(): String {
         return """
+            precision mediump float;
             varying highp vec2 vTextureCoord;
             uniform sampler2D sTexture;
             uniform lowp int uSamples;
-            uniform mediump vec2 uDirection;
-            uniform mediump float uStrength;
+            uniform vec2 uDirection;
+            uniform float uStrength;
 
             void main() {
                 vec2 angle = uStrength * uDirection;
