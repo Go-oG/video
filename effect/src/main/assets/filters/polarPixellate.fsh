@@ -1,29 +1,29 @@
+precision highp float;
 varying highp vec2 vTextureCoord;
-
 uniform sampler2D sTexture;
 
-uniform highp vec2 center;
-uniform highp vec2 pixelSize;
+uniform highp vec2 uCenter;
+uniform highp vec2 uPixelSize;
 
 void main() {
-    highp vec2 normCoord = 2.0 * vTextureCoord - 1.0;
-    highp vec2 normCenter = 2.0 * center - 1.0;
-    
+    vec2 normCoord = 2.0 * vTextureCoord - 1.0;
+    vec2 normCenter = 2.0 * uCenter - 1.0;
+
     normCoord -= normCenter;
-    
-    highp float r = length(normCoord); // to polar coords 
-    highp float phi = atan(normCoord.y, normCoord.x); // to polar coords 
-    
-    r = r - mod(r, pixelSize.x) + 0.03;
-    phi = phi - mod(phi, pixelSize.y);
-          
+
+    float r = length(normCoord); // to polar coords
+    float phi = atan(normCoord.y, normCoord.x); // to polar coords
+
+    r = r - mod(r, uPixelSize.x) + 0.03;
+    phi = phi - mod(phi, uPixelSize.y);
+
     normCoord.x = r * cos(phi);
     normCoord.y = r * sin(phi);
-     
+
     normCoord += normCenter;
-    
-    mediump vec2 textureCoordinateToUse = normCoord / 2.0 + 0.5;
-    
-    gl_FragColor = texture2D(sTexture, textureCoordinateToUse );
-    
+
+    vec2 textureCoordinateToUse = normCoord / 2.0 + 0.5;
+
+    gl_FragColor = texture2D(sTexture, textureCoordinateToUse);
+
 }

@@ -18,12 +18,11 @@ varying vec2 pointHTexCoord;
 
 void main() {
     gl_Position = aPosition;
-    
+    vTextureCoord = aTextureCoord.xy;
+
     float tripleTexelWidth = 3.0 * texelWidth;
     float tripleTexelHeight = 3.0 * texelHeight;
 
-    vTextureCoord = aTextureCoord.xy;
-    
     pointATexCoord = vec2(aTextureCoord2.x + tripleTexelWidth, vTextureCoord.y + texelHeight);
     pointBTexCoord = vec2(aTextureCoord2.x + texelWidth, vTextureCoord.y + tripleTexelHeight);
     pointCTexCoord = vec2(aTextureCoord2.x - texelWidth, vTextureCoord.y + tripleTexelHeight);

@@ -4,7 +4,6 @@ import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 
-
 /**
  * Changes the contrast of the image.
  * contrast value ranges from 0.0 to 4.0, with 1.0 as the normal level

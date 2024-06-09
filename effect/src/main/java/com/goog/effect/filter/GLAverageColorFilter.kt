@@ -4,12 +4,15 @@ import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.utils.loadFilterFromAsset
 
-class GLAverageColorFilter :GLFilter() {
+//TODO 将像素大小转换为比例大小
+class GLAverageColorFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        putTextureSize()
+        put("texelWidth", 1f / width)
+        put("texelHeight", 1f / height)
     }
+
     override fun getVertexShader(): String {
         return """
             attribute vec4 aPosition;
@@ -33,12 +36,12 @@ class GLAverageColorFilter :GLFilter() {
             }
         """.trimIndent()
     }
+
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
-
-            uniform sampler2D sTexture;
+            precision mediump float;
             varying highp vec2 vTextureCoord;
+            uniform sampler2D sTexture;
 
             varying highp vec2 upperLeftInputTextureCoord;
             varying highp vec2 upperRightInputTextureCoord;

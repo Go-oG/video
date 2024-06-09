@@ -6,7 +6,7 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLXyDerivativeFilter : GLBoxBoundFilter(){
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("xyDerivative.fsh")
+        return loadFilterFromAsset("filters/xyDerivative.fsh")
     }
 
 }

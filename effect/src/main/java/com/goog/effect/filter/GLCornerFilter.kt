@@ -9,10 +9,10 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLCornerFilter : GLFilter() {
     var fileType = FillType.TRANSPARENT
-    var topLeftRadius by FloatDelegate(8.dp, 0f, maxV = 24.dp)
-    var topRightRadius by FloatDelegate(18.dp, 0f, maxV = 24.dp)
-    var bottomLeftRadius by FloatDelegate(16.dp, 0f, maxV = 24.dp)
-    var bottomRightRadius by FloatDelegate(8.dp, 0f, maxV = 24.dp)
+    var topLeftRadius by FloatDelegate(8.dp, 0f)
+    var topRightRadius by FloatDelegate(18.dp, 0f)
+    var bottomLeftRadius by FloatDelegate(16.dp, 0f)
+    var bottomRightRadius by FloatDelegate(8.dp, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("uFillType",fileType.type)

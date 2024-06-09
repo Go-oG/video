@@ -1,73 +1,25 @@
-varying highp vec2 vTextureCoord;
-uniform lowp sampler2D sTexture;
+precision mediump float;
+varying vec2 vTextureCoord;
+uniform sampler2D sTexture;
+uniform vec2 uResolution;
 
-//varying highp vec2 uCoords[30][30];
+float dist = 4.0;
+int loops = 6;
 
-uniform int uBlurRadius;
-uniform float uWeights[31];
-uniform float uOffsets[31];
-
-void main() {
-    float total = 0.0;
-    vec3 ret = vec3(0.0);
-    for (int iy = 0; iy < uBlurRadius; ++iy) {
-        float offsetY = uOffsets[iy];
-        float yWeight = uWeights[iy];
-        for (int ix = 0; ix < uBlurRadius; ++ix) {
-            float offsetX = uOffsets[ix];
-            float xWeight = uWeights[ix];
-            float vv = xWeight * yWeight;
-            total += vv;
-            ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * vv;
-            // ret += texture2D(sTexture, uCoords[ix][iy]).rgb * vv;
-        }
-    }
-    gl_FragColor = vec4(ret / total, 1.0);
+float rand(vec2 uv) {
+    return fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43578.5453);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//uniform int uBlurRadius;
-//uniform highp float uWeights[31];
-//uniform highp float uOffsets[31];
-//
-//varying highp vec2 uCoords[31];
-//varying highp vec2 vTextureCoord;
-//
-//uniform lowp sampler2D sTexture;
-//
-//void main() {
-//    float total = 0.0;
-//    vec3 ret = vec3(0.0);
-//    for (int i = 0; i < uBlurRadius; ++i) {
-//        float offsetY = uOffsets[i];
-//        float yWeight = uWeights[i];
-//        float vv = yWeight * yWeight;
-//        total += vv;
-//        ret += texture2D(sTexture, vTextureCoord + uCoords[i]).rgb * vv;
-//    }
-//    gl_FragColor = vec4(ret / total, 1.0);
-//}
+void main() {
+    vec4 t = vec4(0.0);
+    vec2 texel = 1.0 / uResolution.xy;
+    vec2 d = texel * dist;
+    vec2 uv=vTextureCoord*vec2(1.0,-1.0);
+    for (int i = 0; i < loops; i++) {
+        float r1 = clamp(rand(uv * float(i)) * 2.0 - 1.0, -d.x, d.x);
+        float r2 = clamp(rand(uv * float(i + loops)) * 2.0 - 1.0, -d.y, d.y);
+        t += texture2D(sTexture, uv + vec2(r1, r2));
+    }
+    t /= float(loops);
+    gl_FragColor = t;
+}

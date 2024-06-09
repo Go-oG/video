@@ -21,13 +21,12 @@ class GLOpacityFilter : GLFilter() {
             precision mediump float;
             varying highp vec2 vTextureCoord;
 
-            uniform lowp sampler2D sTexture;
-            uniform lowp float opacity;
+            uniform  sampler2D sTexture;
+            uniform  float opacity;
 
             void main() {
-                lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
-
-                gl_FragColor = vec4(textureColor.rgb, textureColor.a * opacity);
+                 vec4 textureColor = texture2D(sTexture, vTextureCoord);
+                gl_FragColor = textureColor * opacity;
             }
         """.trimIndent()
     }

@@ -1,8 +1,6 @@
 attribute vec4 aPosition;
 attribute vec4 aTextureCoord;
-
 uniform float crosshairWidth;
-
 varying vec2 centerLocation;
 varying float pointSpacing;
 

@@ -10,7 +10,7 @@ class GLGrainyBlurFilter : GLFilter() {
 
     var sampleCount by IntDelegate(6, 1)
 
-    val blurSize by FloatDelegate(8f, 1f)
+    var blurSize by FloatDelegate(8f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)

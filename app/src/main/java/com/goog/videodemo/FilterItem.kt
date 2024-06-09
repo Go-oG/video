@@ -50,9 +50,8 @@ import com.goog.effect.filter.GLNobleCornerDetectorFilter
 import com.goog.effect.filter.GLOpacityFilter
 import com.goog.effect.filter.GLPassthroughFilter
 import com.goog.effect.filter.GLPinchDistortionFilter
-import com.goog.effect.filter.GLPixelationFilter
-import com.goog.effect.filter.GLPixellateFilter
-import com.goog.effect.filter.GLPolarPixellateFilter
+import com.goog.effect.filter.GLPixelateFilter
+import com.goog.effect.filter.GLPolarPixelateFilter
 import com.goog.effect.filter.GLPolkaDotFilter
 import com.goog.effect.filter.GLPosterizeFilter
 import com.goog.effect.filter.GLRGBFilter
@@ -238,9 +237,8 @@ class FilterItem(val clsName: Class<*>) {
 
             list.add(FilterItem(GLPassthroughFilter::class.java))
             list.add(FilterItem(GLPinchDistortionFilter::class.java))
-            list.add(FilterItem(GLPixelationFilter::class.java))
-            list.add(FilterItem(GLPixellateFilter::class.java))
-            list.add(FilterItem(GLPolarPixellateFilter::class.java))
+            list.add(FilterItem(GLPixelateFilter::class.java))
+            list.add(FilterItem(GLPolarPixelateFilter::class.java))
             list.add(FilterItem(GLPolkaDotFilter::class.java))
             list.add(FilterItem(GLPosterizeFilter::class.java))
 

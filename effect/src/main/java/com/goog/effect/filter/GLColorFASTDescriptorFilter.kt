@@ -7,7 +7,8 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLColorFASTDescriptorFilter : GLMultiTextureFilter(2) {
 
     override fun onDraw2(fbo: FrameBufferObject?) {
-        putTextureSize()
+        put("texelWidth",1f/ width.toFloat())
+        put("texelHeight", 1f/height.toFloat())
     }
 
 

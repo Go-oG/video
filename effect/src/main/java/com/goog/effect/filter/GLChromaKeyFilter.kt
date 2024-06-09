@@ -7,8 +7,8 @@ import com.goog.effect.model.FloatDelegate
 import com.goog.effect.utils.loadFilterFromAsset
 
 class GLChromaKeyFilter : GLFilter() {
-    var thresholdSensitivity by FloatDelegate(0.5f, 0f, 1f)
-    var smoothing by FloatDelegate(0.5f, 0f)
+    var thresholdSensitivity by FloatDelegate(0.01f, 0f, 1f)
+    var smoothing by FloatDelegate(0.05f, 0f,1f)
     var colorToReplace = FColor()
 
     override fun onDraw(fbo: FrameBufferObject?) {

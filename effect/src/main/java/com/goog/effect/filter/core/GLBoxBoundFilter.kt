@@ -5,8 +5,8 @@ import com.goog.effect.gl.FrameBufferObject
 abstract class GLBoxBoundFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("texelWidth", width.toFloat())
-        put("texelHeight", height.toFloat())
+        put("texelWidth", 1f/width)
+        put("texelHeight",1f/ height)
     }
 
     override fun getVertexShader(): String {

@@ -1,7 +1,3 @@
-// I'm using the Prewitt operator to obtain the derivative, then squaring the X and Y components and placing the product of the two in Z.
-// In tests, Prewitt seemed to be tied with Sobel for the best, and it's just a little cheaper to compute.
-// This is primarily intended to be used with corner detection filters.
-
 precision highp float;
 
 varying vec2 vTextureCoord;
