@@ -13,8 +13,8 @@ class GLBulgeDistortionFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("center", centerX, centerY)
-        put("radius", radius)
-        put("scale", scale)
+        put("radius", if (mEnable) radius else 0f)
+        put("scale", if (mEnable) scale else -1f)
     }
 
     override fun getFragmentShader(): String {
@@ -27,16 +27,21 @@ class GLBulgeDistortionFilter : GLFilter() {
             uniform highp float scale;
 
             void main() {
-                highp vec2 textureCoordinateToUse = vTextureCoord;
-                highp float dist = distance(center, vTextureCoord);
-                textureCoordinateToUse -= center;
-                if (dist < radius) {
-                    highp float percent = 1.0 - ((radius - dist) / radius) * scale;
-                    percent = percent * percent;
-                    textureCoordinateToUse = textureCoordinateToUse * percent;
+                if (radius <= 0.0 || scale < 0) {
+                    gl_FragColor = texture2D(sTexture, vTextureCoord);
+                } else {
+                    vec2 useTexCoord = vTextureCoord;
+                    float dist = distance(center, vTextureCoord);
+                    useTexCoord -= center;
+                    if (dist < radius) {
+                        float percent = 1.0 - ((radius - dist) / radius) * scale;
+                        percent = percent * percent;
+                        useTexCoord = useTexCoord * percent;
+                    }
+                    useTexCoord += center;
+                    gl_FragColor = texture2D(sTexture, useTexCoord);
                 }
-                textureCoordinateToUse += center;
-                gl_FragColor = texture2D(sTexture, textureCoordinateToUse);
+
             }
         """.trimIndent()
     }

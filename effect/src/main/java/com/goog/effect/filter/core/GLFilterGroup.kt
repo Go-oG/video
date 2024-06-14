@@ -9,8 +9,8 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
 
     constructor(vararg glFilters: GLFilter) : this(listOf<GLFilter>(*glFilters))
 
-    override fun initialize() {
-        super.initialize()
+    override fun onInitialize() {
+        super.onInitialize()
         val max = filters.size
         val list = mutableListOf<Pair<GLFilter, FrameBufferObject?>>()
         for ((index, shader) in filters.withIndex()) {
@@ -23,7 +23,6 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
             list.add(Pair.create(shader, fbo))
         }
         this.list = list
-
     }
 
     override fun release() {
@@ -35,9 +34,15 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
         super.release()
     }
 
+    override fun setEnable(enable: Boolean) {
+        super.setEnable(enable)
+        for (item in list) {
+            item.first.setEnable(enable)
+        }
+    }
+
     override fun setFrameSize(width: Int, height: Int) {
         super.setFrameSize(width, height)
-
         for (pair in list) {
             pair.first.setFrameSize(width, height)
             pair.second?.initialize(width, height)
@@ -47,24 +52,23 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
     override fun draw(texName: Int, fbo: FrameBufferObject?) {
         var prevTexName = texName
         for (pair in list) {
-            val second = pair.second
-            val first = pair.first
-            if (second != null) {
-                if (first != null) {
-                    second.enable()
+            val curFBO = pair.second
+            val curFilter = pair.first
+            if (curFBO != null) {
+                if (curFilter != null) {
+                    curFBO.enable()
                     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-                    first.draw(prevTexName, second)
+                    curFilter.draw(prevTexName, curFBO)
                 }
-                prevTexName = second.texName
+                prevTexName = curFBO.texName
             } else {
                 if (fbo != null) {
                     fbo.enable()
                 } else {
                     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
                 }
-                first?.draw(prevTexName, fbo)
+                curFilter?.draw(prevTexName, fbo)
             }
         }
     }
-
 }

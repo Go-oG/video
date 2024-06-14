@@ -57,6 +57,9 @@ abstract class GLIteratorFilter : GLFilter() {
     }
 
     final override fun draw(texName: Int, fbo: FrameBufferObject?) {
+        if (!mEnable) {
+            return
+        }
         val list = fboList
         onIteratorPre(iteratorInfo)
         ///迭代次数为1 则直接调用自身

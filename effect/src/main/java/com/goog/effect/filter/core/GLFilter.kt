@@ -25,13 +25,25 @@ open class GLFilter {
     private var fragmentShader = 0
 
     protected var vertexBufferName: Int = 0
-        private set
 
+    ///存储指针
     private val handleMap = HashMap<String, Int>()
 
     protected var width = 0
-
     protected var height = 0
+
+    ///用于控制着色器是否生效，注意该方法非强制性，
+    // 需要子类单独实现
+    protected var mEnable = true
+    open fun setEnable(enable: Boolean) {
+        if (enable == mEnable) {
+            return
+        }
+        this.mEnable = enable
+    }
+
+    fun isEnable(): Boolean = mEnable
+
 
     open fun initialize() {
         release()
@@ -135,6 +147,10 @@ open class GLFilter {
 
     protected fun put(name: String, value: Float) {
         GLES20.glUniform1f(getHandle(name), value)
+    }
+
+    protected fun put(name: String, value: Boolean) {
+        GLES20.glUniform1i(getHandle(name), if (value) 1 else 0)
     }
 
     protected fun putColor(name: String, color: FColor) {

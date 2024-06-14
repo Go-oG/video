@@ -9,14 +9,15 @@ import com.goog.effect.model.IntDelegate
 //径向模糊
 open class GLRadialBlurFilter(val useGaussianKernel: Boolean = false) : GLCenterFilter() {
     var blurAmount by FloatDelegate(0.1f, 0f, 1f)
-    var sampleCount by IntDelegate(7, 1)
+    var sampleCount by IntDelegate(7, 0)
     ///高斯系数 只在使用高斯内核时有用
     var gaussianFactor by FloatDelegate(2f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("uCenter", centerX, centerY)
         put("uBlurAmount", blurAmount)
-        put("uLoopCount", sampleCount)
+        put("uLoopCount", if (mEnable) sampleCount else 0)
+
         if (useGaussianKernel) {
             put("uFactor", gaussianFactor)
         }
@@ -38,7 +39,7 @@ open class GLRadialBlurFilter(val useGaussianKernel: Boolean = false) : GLCenter
             uniform int uLoopCount;
 
             void main() {
-                if (uBlurAmount <= 0.0) {
+                if (uBlurAmount <= 0.0 || uLoopCount <= 0) {
                     gl_FragColor = texture2D(sTexture, vTextureCoord);
                 } else {
                     vec4 color = vec4(0.0);

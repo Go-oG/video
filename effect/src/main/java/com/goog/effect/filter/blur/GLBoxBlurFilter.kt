@@ -4,13 +4,13 @@ import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 
-//TODO 后续优化
 class GLBoxBlurFilter : GLFilter() {
     var texelWidthOffset by FloatDelegate(0.003f, 0f)
     var texelHeightOffset by FloatDelegate(0.003f, 0f)
     var blurSize by FloatDelegate(1f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
+        put("uEnable", mEnable)
         put("texelWidthOffset", texelWidthOffset)
         put("texelHeightOffset", texelHeightOffset)
         put("blurSize", blurSize)
@@ -20,25 +20,25 @@ class GLBoxBlurFilter : GLFilter() {
         return """
             attribute vec4 aPosition;
             attribute vec4 aTextureCoord;
-            uniform highp float texelWidthOffset;
-            uniform highp float texelHeightOffset;
-            uniform highp float blurSize;
+            uniform float texelWidthOffset;
+            uniform float texelHeightOffset;
+            uniform float blurSize;
             
-            varying highp vec2 centerTextureCoordinate;
-            varying highp vec2 oneStepLeftTextureCoordinate;
-            varying highp vec2 twoStepsLeftTextureCoordinate;
-            varying highp vec2 oneStepRightTextureCoordinate;
-            varying highp vec2 twoStepsRightTextureCoordinate;
+            varying vec2 centerTexCoord;
+            varying vec2 oneStepLeftTexCoord;
+            varying vec2 twoStepsLeftTexCoord;
+            varying vec2 oneStepRightTexCoord;
+            varying vec2 twoStepsRightTexCoord;
             
             void main() {
                 gl_Position = aPosition;
                 vec2 firstOffset = vec2(1.5 * texelWidthOffset, 1.5 * texelHeightOffset) * blurSize;
                 vec2 secondOffset = vec2(3.5 * texelWidthOffset, 3.5 * texelHeightOffset) * blurSize;
-                centerTextureCoordinate = aTextureCoord.xy;
-                oneStepLeftTextureCoordinate = centerTextureCoordinate - firstOffset;
-                twoStepsLeftTextureCoordinate = centerTextureCoordinate - secondOffset;
-                oneStepRightTextureCoordinate = centerTextureCoordinate + firstOffset;
-                twoStepsRightTextureCoordinate = centerTextureCoordinate + secondOffset;
+                centerTexCoord = aTextureCoord.xy;
+                oneStepLeftTexCoord = centerTexCoord - firstOffset;
+                twoStepsLeftTexCoord = centerTexCoord - secondOffset;
+                oneStepRightTexCoord = centerTexCoord + firstOffset;
+                twoStepsRightTexCoord = centerTexCoord + secondOffset;
             }
         """.trimIndent()
     }
@@ -47,18 +47,23 @@ class GLBoxBlurFilter : GLFilter() {
         return """
             precision mediump float;
             uniform lowp sampler2D sTexture;
-            varying highp vec2 centerTextureCoordinate;
-            varying highp vec2 oneStepLeftTextureCoordinate;
-            varying highp vec2 twoStepsLeftTextureCoordinate;
-            varying highp vec2 oneStepRightTextureCoordinate;
-            varying highp vec2 twoStepsRightTextureCoordinate;
+            uniform bool uEnable;
+            varying vec2 centerTexCoord;
+            varying vec2 oneStepLeftTexCoord;
+            varying vec2 twoStepsLeftTexCoord;
+            varying vec2 oneStepRightTexCoord;
+            varying vec2 twoStepsRightTexCoord;
             void main() {
-                lowp vec4 color = texture2D(sTexture, centerTextureCoordinate) * 0.2;
-                color += texture2D(sTexture, oneStepLeftTextureCoordinate) * 0.2;
-                color += texture2D(sTexture, oneStepRightTextureCoordinate) * 0.2;
-                color += texture2D(sTexture, twoStepsLeftTextureCoordinate) * 0.2;
-                color += texture2D(sTexture, twoStepsRightTextureCoordinate) * 0.2;
-                gl_FragColor = color;
+                if(uEnable){
+                    vec4 color = texture2D(sTexture, centerTexCoord) * 0.2;
+                    color += texture2D(sTexture, oneStepLeftTexCoord) * 0.2;
+                    color += texture2D(sTexture, oneStepRightTexCoord) * 0.2;
+                    color += texture2D(sTexture, twoStepsLeftTexCoord) * 0.2;
+                    color += texture2D(sTexture, twoStepsRightTexCoord) * 0.2;
+                    gl_FragColor = color;
+                }else{
+                    gl_FragColor=texture2D(sTexture,centerTexCoord);
+                }
             }
         """.trimIndent()
     }

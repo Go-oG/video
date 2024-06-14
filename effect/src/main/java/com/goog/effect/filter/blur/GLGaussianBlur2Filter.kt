@@ -12,8 +12,8 @@ import kotlin.math.max
 ///具有更好的模糊质量和可控的参数
 class GLGaussianBlur2Filter : GLFilter() {
     private var mSampleFactor by FloatDelegate(8f, 1f)
-    private var mSigma by FloatDelegate(3f, 1f)
-    private var mBlurRadius by IntDelegate(15, 1, 30)
+    private var mSigma by FloatDelegate(3f, 0f)
+    private var mBlurRadius by IntDelegate(15, 0, 30)
 
     private val needComputeFlag = AtomicBoolean(true)
     private var weights = floatArrayOf()
@@ -57,7 +57,7 @@ class GLGaussianBlur2Filter : GLFilter() {
         val w = width.toFloat()
         val h = height.toFloat()
         computeIfNeed(w, h, mBlurRadius, mSigma)
-        put("uBlurRadius", mBlurRadius)
+        put("uBlurRadius", if (mEnable) mBlurRadius else 0)
         putArray("uWeights", weights)
         putArray("uOffsets", offsets)
     }
@@ -72,20 +72,24 @@ class GLGaussianBlur2Filter : GLFilter() {
             uniform float uOffsets[31];
 
             void main() {
-                float total = 0.0;
-                vec3 ret = vec3(0.0);
-                for (int iy = 0; iy < uBlurRadius; ++iy) {
-                    float offsetY = uOffsets[iy];
-                    float yWeight = uWeights[iy];
-                    for (int ix = 0; ix < uBlurRadius; ++ix) {
-                        float offsetX = uOffsets[ix];
-                        float xWeight = uWeights[ix];
-                        float vv = xWeight * yWeight;
-                        total += vv;
-                        ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * vv;
+                if (uBlurRadius <= 0) {
+                    gl_FragColor = texture2D(sTexture, vTextureCoord);
+                } else {
+                    float total = 0.0;
+                    vec3 ret = vec3(0.0);
+                    for (int iy = 0; iy < uBlurRadius; ++iy) {
+                        float offsetY = uOffsets[iy];
+                        float yWeight = uWeights[iy];
+                        for (int ix = 0; ix < uBlurRadius; ++ix) {
+                            float offsetX = uOffsets[ix];
+                            float xWeight = uWeights[ix];
+                            float vv = xWeight * yWeight;
+                            total += vv;
+                            ret += texture2D(sTexture, vTextureCoord + vec2(offsetX, offsetY)).rgb * vv;
+                        }
                     }
+                    gl_FragColor = vec4(ret / total, 1.0);
                 }
-                gl_FragColor = vec4(ret / total, 1.0);
             }
         """.trimIndent()
     }

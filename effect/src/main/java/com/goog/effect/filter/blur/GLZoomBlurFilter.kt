@@ -12,8 +12,8 @@ class GLZoomBlurFilter : GLCenterFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         putVec2("uCenter", centerX, centerY)
-        put("uBlurSize", blurSize)
-        put("uSampleCount", sampleCount)
+        put("uBlurSize", if (mEnable) blurSize else 0f)
+        put("uSampleCount", if (mEnable) sampleCount else 0)
     }
 
     override fun getFragmentShader(): String {
@@ -27,13 +27,18 @@ class GLZoomBlurFilter : GLCenterFilter() {
             uniform vec2 uCenter;
 
             void main() {
-                vec4 result = vec4(0);
-                float fs = float(uSampleCount);
-                for (int i = 0; i <= uSampleCount; i++) {
-                    float q = float(i) / fs;
-                    result += texture2D(sTexture, vTextureCoord + (uCenter - vTextureCoord) * q * uBlurSize) / fs;
+                if (uBlurSize <= 0.0 || uSampleCount <= 0) {
+                    gl_FragColor = texture2D(sTexture, vTextureCoord);
+                } else {
+                    vec4 result = vec4(0);
+                    float fs = float(uSampleCount);
+                    for (int i = 0; i <= uSampleCount; i++) {
+                        float q = float(i) / fs;
+                        result += texture2D(sTexture, vTextureCoord + (uCenter - vTextureCoord) * q * uBlurSize) / fs;
+                    }
+                    gl_FragColor = result;
                 }
-                gl_FragColor = result;
+
             }
         """.trimIndent()
     }

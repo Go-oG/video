@@ -21,6 +21,6 @@ class GLFalseColorFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("falseColor.fsh")
+        return loadFilterFromAsset("filters/falseColor.fsh")
     }
 }

@@ -36,6 +36,7 @@ class GLDirectionBlurFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
+        put("uEnable",mEnable)
         put("uSamples", samples)
         putVec2("uDirection", directionX, directionY)
         put("uStrength", strength)
@@ -46,18 +47,23 @@ class GLDirectionBlurFilter : GLFilter() {
             precision mediump float;
             varying highp vec2 vTextureCoord;
             uniform sampler2D sTexture;
-            uniform lowp int uSamples;
+            uniform int uSamples;
             uniform vec2 uDirection;
             uniform float uStrength;
+            uniform bool uEnable;
 
             void main() {
-                vec2 angle = uStrength * uDirection;
-                vec3 acc = vec3(0.0);
-                float delta = 2.0 / float(uSamples);
-                for (float i = -1.0; i <= 1.0; i += delta) {
-                    acc += texture2D(sTexture, vTextureCoord - angle * i).rgb * delta * 0.5;
+                if (uEnable) {
+                    vec2 angle = uStrength * uDirection;
+                    vec3 acc = vec3(0.0);
+                    float delta = 2.0 / float(uSamples);
+                    for (float i = -1.0; i <= 1.0; i += delta) {
+                        acc += texture2D(sTexture, vTextureCoord - angle * i).rgb * delta * 0.5;
+                    }
+                    gl_FragColor = vec4(acc, 1.0);
+                } else {
+                    gl_FragColor = texture2D(sTexture, vTextureCoord);
                 }
-                gl_FragColor = vec4(acc, 1.0);
             }
         """.trimIndent()
     }

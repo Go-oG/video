@@ -8,14 +8,14 @@ import com.goog.effect.model.IntDelegate
 // 粒状模糊
 class GLGrainyBlurFilter : GLFilter() {
 
-    var sampleCount by IntDelegate(6, 1)
+    var sampleCount by IntDelegate(6, 0)
 
-    var blurSize by FloatDelegate(8f, 1f)
+    var blurSize by FloatDelegate(8f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("uBlurSize", blurSize)
-        put("uSampleCount", sampleCount)
+        put("uBlurSize", if (mEnable) blurSize else 0f)
+        put("uSampleCount", if (mEnable) sampleCount else 0)
         putVec2("uResolution", width * 1f, height * 1f)
     }
 

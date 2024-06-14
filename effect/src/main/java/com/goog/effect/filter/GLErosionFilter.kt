@@ -12,18 +12,17 @@ class GLErosionFilter(val level: Level=Level.L1) : GLFilter() {
         putTextureSize()
     }
 
-
     override fun getVertexShader(): String {
         if (level == Level.L1) {
-            return loadFilterFromAsset("erosionDilation1.vsh")
+            return loadFilterFromAsset("filters/erosionDilation1.vsh")
         }
         if (level == Level.L2) {
-            return loadFilterFromAsset("erosionDilation2.vsh")
+            return loadFilterFromAsset("filters/erosionDilation2.vsh")
         }
         if (level == Level.L3) {
-            return loadFilterFromAsset("erosionDilation3.vsh")
+            return loadFilterFromAsset("filters/erosionDilation3.vsh")
         }
-        return loadFilterFromAsset("erosionDilation4.vsh")
+        return loadFilterFromAsset("filters/erosionDilation4.vsh")
 
     }
 

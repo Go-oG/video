@@ -14,6 +14,9 @@ class GLTwoChannelFilter : GLFilter() {
     }
 
     override fun draw(texName: Int, fbo: FrameBufferObject?) {
+        if(!mEnable){
+            return
+        }
         super.draw(texName, fbo)
         fbo2.enable()
     }

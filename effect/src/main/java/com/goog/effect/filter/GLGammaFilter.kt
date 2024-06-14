@@ -16,9 +16,8 @@ class GLGammaFilter : GLFilter() {
         return """
             precision mediump float;
             varying vec2 vTextureCoord;
-
-            uniform lowp sampler2D sTexture;
-            uniform lowp float gamma;
+            uniform highp sampler2D sTexture;
+            uniform float gamma;
 
             void main() {
                 lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
