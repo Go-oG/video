@@ -1,61 +1,127 @@
 package com.goog.effect.filter.blur
 
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.filter.core.GLFilterGroup
 import com.goog.effect.gl.FrameBufferObject
-import com.goog.effect.model.FloatDelegate
+import kotlin.math.exp
+import kotlin.math.min
 
-class GLGaussianBlurFilter : GLFilter() {
-    var blurSize by FloatDelegate(3f, 1f)
-    
-    override fun onDraw(fbo: FrameBufferObject?) {
-        put("texelWidthOffset", 1f / width)
-        put("texelHeightOffset", 1f / height)
-        put("blurSize", blurSize)
+/**
+ * 快速高斯模糊
+ * 模糊半径最多支持到30
+ */
+class GLGaussianBlurFilter : GLFilterGroup(listOf()) {
+    init {
+        mFilters = listOf(
+            Blur3Inner(true),
+            Blur3Inner(false)
+        )
+        setBlurSize(5)
     }
 
-    override fun getVertexShader(): String {
-        return """
-            attribute vec4 aPosition;
-            attribute vec4 aTextureCoord;
-            const lowp int GAUSSIAN_SAMPLES = 9;
-            uniform highp float texelWidthOffset;
-            uniform highp float texelHeightOffset;
-            uniform highp float blurSize;
-            varying highp vec2 blurCoordinates[GAUSSIAN_SAMPLES];
-            void main() {
-                gl_Position = aPosition;
-                highp vec2 vTextureCoord = aTextureCoord.xy;
-                int multiplier = 0;
-                highp vec2 blurStep;
-                highp vec2 singleStepOffset = vec2(texelHeightOffset, texelWidthOffset) * blurSize;
-                for (lowp int i = 0; i < GAUSSIAN_SAMPLES; i++) {
-                    multiplier = (i - ((GAUSSIAN_SAMPLES - 1) / 2));
-                    blurStep = float(multiplier) * singleStepOffset;
-                    blurCoordinates[i] = vTextureCoord.xy + blurStep;
-                }
+    fun setBlurSize(size: Int) {
+        for (filter in mFilters) {
+            if (filter is Blur3Inner) {
+                filter.setBlurSize(min(size, 30))
             }
-        """.trimIndent()
+        }
+    }
+
+    fun setSigma(sigma: Float) {
+        for (filter in mFilters) {
+            if (filter is Blur3Inner) {
+                filter.setSigma(sigma)
+            }
+        }
+    }
+
+}
+
+private class Blur3Inner(val horizontalBlur: Boolean) : GLFilter() {
+    private var sigma = 3f
+    private var blurSize: Int = 0
+    private var weights = floatArrayOf()
+
+    init {
+        setBlurSize(5)
+    }
+
+    fun setBlurSize(size: Int) {
+        blurSize = size
+        markNeedUpdateArgs()
+    }
+
+    fun setSigma(sigma: Float) {
+        if (this.sigma == sigma) {
+            return
+        }
+        this.sigma = sigma
+        markNeedUpdateArgs()
+    }
+
+    override fun onUpdateArgs() {
+        super.onUpdateArgs()
+        weights = calculateGaussianWeights(blurSize, sigma)
+    }
+
+    override fun onDraw(fbo: FrameBufferObject?) {
+        put("uBlurRadius", if (mEnable) blurSize else 0)
+        putArray("uWeights", weights)
+        val off = if (horizontalBlur) width else height
+        put("uOffset", 1f / off)
+        put("uVertical", !horizontalBlur)
     }
 
     override fun getFragmentShader(): String {
         return """
             precision mediump float;
-            const lowp int GAUSSIAN_SAMPLES = 9;
-            varying highp vec2 blurCoordinates[GAUSSIAN_SAMPLES];
-            uniform lowp sampler2D sTexture;
+            varying vec2 vTextureCoord;
+            uniform sampler2D sTexture;
+            uniform bool uVertical;
+            uniform float uOffset;
+            uniform int uBlurRadius;
+            uniform float uWeights[31];
+            
             void main() {
-                lowp vec4 sum = vec4(0.0);
-                sum += texture2D(sTexture, blurCoordinates[0]) * 0.05;
-                sum += texture2D(sTexture, blurCoordinates[1]) * 0.09;
-                sum += texture2D(sTexture, blurCoordinates[2]) * 0.12;
-                sum += texture2D(sTexture, blurCoordinates[3]) * 0.15;
-                sum += texture2D(sTexture, blurCoordinates[4]) * 0.18;
-                sum += texture2D(sTexture, blurCoordinates[5]) * 0.15;
-                sum += texture2D(sTexture, blurCoordinates[6]) * 0.12;
-                sum += texture2D(sTexture, blurCoordinates[7]) * 0.09;
-                sum += texture2D(sTexture, blurCoordinates[8]) * 0.05;
-                gl_FragColor = sum;
+                if (uBlurRadius <= 0) {
+                    gl_FragColor = texture2D(sTexture, vTextureCoord);
+                } else {
+                    vec4 color = vec4(0.0);
+                    for (int i = -uBlurRadius; i <= uBlurRadius; i++) {
+                        vec2 uPosition;
+                        if (uVertical) {
+                            uPosition = vec2(vTextureCoord.x, vTextureCoord.y + float(i) * uOffset);
+                        } else {
+                            uPosition = vec2(vTextureCoord.x + float(i) * uOffset, vTextureCoord.y);
+                        }
+                        vec4 tmpColor = texture2D(sTexture, uPosition);
+                        color += tmpColor * uWeights[abs(i)];
+                    }
+                    gl_FragColor = color;
+                }
             }
         """.trimIndent()
     }
+
+    private fun calculateGaussianWeights(radius: Int, sigma: Float): FloatArray {
+        if (radius <= 0 || sigma <= 0) {
+            return floatArrayOf(0f)
+        }
+        val list = mutableListOf<Float>()
+        var sum = 0.0f
+        val sigmaPow = 2 * sigma * sigma
+        for (x in 0..radius) {
+            val v = exp(-(x * x) / sigmaPow)
+            list.add(v)
+            sum += v
+        }
+        sum *= 2f
+        sum -= list.first()
+
+        for (i in 0..<list.size) {
+            list[i] = list[i] / sum
+        }
+        return list.toFloatArray()
+    }
+
 }

@@ -8,7 +8,7 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLPolkaDotFilter : GLFilter() {
 
     var fractionalWidthOfPixel by FloatDelegate(1f, 0f)
-    var aspectRatio by FloatDelegate(1f, 0f, includeMin = false)
+    var aspectRatio by FloatDelegate(1f, 0.0001f)
     var dotScaling by FloatDelegate(0f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {

@@ -6,8 +6,8 @@ import com.goog.effect.model.FloatDelegate
 
 class GLSharpenFilter : GLFilter() {
 
-    var imageWidthFactor by FloatDelegate(0.004f, 0f, 1f, includeMin = false)
-    var imageHeightFactor by FloatDelegate(0.004f, 0f, 1f, includeMin = false)
+    var imageWidthFactor by FloatDelegate(0.004f, 0.000001f, 1f)
+    var imageHeightFactor by FloatDelegate(0.004f, 0.00001f, 1f)
 
     var sharpness by FloatDelegate(0f, -4f, 4f)
 

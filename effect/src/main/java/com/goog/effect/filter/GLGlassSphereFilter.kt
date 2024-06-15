@@ -7,7 +7,7 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLGlassSphereFilter:GLCenterFilter() {
    var radius by FloatDelegate(0.5f,0f,1f)
-   var aspectRatio by FloatDelegate(1f,0f, includeMin = false)
+   var aspectRatio by FloatDelegate(1f,0.0001f)
    var refractiveIndex by FloatDelegate(0.2f,0f,1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {

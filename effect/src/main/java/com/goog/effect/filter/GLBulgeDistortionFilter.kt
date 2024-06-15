@@ -27,7 +27,7 @@ class GLBulgeDistortionFilter : GLFilter() {
             uniform highp float scale;
 
             void main() {
-                if (radius <= 0.0 || scale < 0) {
+                if (radius <= 0.0 || scale < 0.0) {
                     gl_FragColor = texture2D(sTexture, vTextureCoord);
                 } else {
                     vec2 useTexCoord = vTextureCoord;

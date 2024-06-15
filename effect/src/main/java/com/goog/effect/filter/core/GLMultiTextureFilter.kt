@@ -107,8 +107,7 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
     }
 }
 
-
-internal class MultiItem(val listIndex: Int, val texPosOffset: Int, val uniformName: String) {
+private class MultiItem(val listIndex: Int, val texPosOffset: Int, val uniformName: String) {
     var bitmap: Bitmap? = null
 
     ///纹理指针

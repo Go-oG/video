@@ -105,7 +105,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         this.previewTexture = previewTexture
         //设置当前纹理参数
         GLES20.glBindTexture(previewTexture.textureTarget, externalTextureId)
-        EGLUtil.configTexture(previewTexture.textureTarget,true,false)
+        EGLUtil.configTexture(previewTexture.textureTarget, true, false)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
 
         // GL_TEXTURE_EXTERNAL_OES
@@ -126,10 +126,10 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
          * (0.0f, 1.0f, 0.0f)：相机的上方向，用于确定相机的方向。
          */
         Matrix.setLookAtM(
-                viewMatrix, 0,
-                0.0f, 0.0f, 5.0f,
-                0.0f, 0.0f, 0.0f,
-                0.0f, 1.0f, 0.0f,
+            viewMatrix, 0,
+            0.0f, 0.0f, 5.0f,
+            0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
         )
 
         updateSurfaceFlag.set(false)
@@ -164,6 +164,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
          */
         Matrix.setIdentityM(modelMatrix, 0)
     }
+
 
     override fun onDrawFrame(fbo: FrameBufferObject) {
         /**启用混合功能，用于实现透明或者其它效果
@@ -265,6 +266,10 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         previewTexture?.release()
     }
 
+    override fun onRunTaskQueue() {
+        super.onRunTaskQueue()
+        glFilter?.runTaskQueue()
+    }
 
 }
 

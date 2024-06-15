@@ -1,8 +1,6 @@
 package com.goog.effect.filter.blur
 
 import com.goog.effect.filter.core.GLFilter
-import com.goog.effect.filter.core.GLIteratorFilter
-import com.goog.effect.filter.core.IteratorInfo
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 import kotlin.math.sin

@@ -9,8 +9,8 @@ class GLSphereRefractionFilter : GLFilter() {
     var centerX by FloatDelegate(0.5f, 0f, 1f)
     var centerY by FloatDelegate(0.5f, 0f, 1f)
     var radius by FloatDelegate(0.5f, 0f, 1f)
-    var aspectRatio by FloatDelegate(1f, 0f, 1f, includeMin = false)
-    var refractiveIndex by FloatDelegate(0.71f, 0f, 1f, includeMin = false)
+    var aspectRatio by FloatDelegate(1f, 0.00001f)
+    var refractiveIndex by FloatDelegate(0.71f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)

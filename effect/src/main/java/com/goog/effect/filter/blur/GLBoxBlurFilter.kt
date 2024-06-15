@@ -5,14 +5,12 @@ import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 
 class GLBoxBlurFilter : GLFilter() {
-    var texelWidthOffset by FloatDelegate(0.003f, 0f)
-    var texelHeightOffset by FloatDelegate(0.003f, 0f)
-    var blurSize by FloatDelegate(1f, 1f)
+    var blurSize by FloatDelegate(1f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         put("uEnable", mEnable)
-        put("texelWidthOffset", texelWidthOffset)
-        put("texelHeightOffset", texelHeightOffset)
+        put("texelWidthOffset", 1f/width)
+        put("texelHeightOffset", 1f/height)
         put("blurSize", blurSize)
     }
 

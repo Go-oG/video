@@ -1,24 +1,21 @@
 package com.goog.effect.model
 
-import com.goog.effect.utils.checkArgs
 import kotlin.reflect.KProperty
 
-class FloatDelegate(
-    defaultV: Float, minV: Float? = null, maxV: Float? = null,
-    includeMin: Boolean = true, includeMax: Boolean = true) : NumberDelegate<Float>(defaultV, minV, maxV, includeMin, includeMax)
+class FloatDelegate(defaultV: Float, minV: Float? = null, maxV: Float? = null) : NumberDelegate<Float>(defaultV, minV, maxV)
 
 class IntDelegate(
-    defaultV: Int, minV: Int? = null, maxV: Int? = null,
-    includeMin: Boolean = true, includeMax: Boolean = true
-) : NumberDelegate<Int>(defaultV, minV, maxV, includeMin, includeMax)
+    defaultV: Int, minV: Int? = null, maxV: Int? = null) : NumberDelegate<Int>(defaultV, minV, maxV)
 
-open class NumberDelegate<T : Number>(defaultV: T, val minV: T? = null, val maxV: T? = null,
-    val includeMin: Boolean = true, val includeMax: Boolean = true) {
-    private val accurate = 0.0000000001
+/**
+ * 限定数据范围，对于超过范围的数值，我们将把其缩放到最大或最小值
+ */
+open class NumberDelegate<T : Number>(
+    defaultV: T, val minV: T? = null, val maxV: T? = null) {
     private var numberValue: T
 
     init {
-        numberValue = checkValue(defaultV)
+        numberValue = formatValue(defaultV)
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
@@ -26,35 +23,29 @@ open class NumberDelegate<T : Number>(defaultV: T, val minV: T? = null, val maxV
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        numberValue = checkValue(value)
+        numberValue = formatValue(value)
     }
 
     fun getCurrent(): T {
         return numberValue
     }
 
-    private fun checkValue(nValue: T): T {
-        val v1 = nValue.toDouble()
+    private fun formatValue(value: T): T {
+        val v1 = value.toDouble()
         if (minV != null) {
             val minv1 = minV.toDouble()
-            val sub = v1 - minv1
-            if (includeMin) {
-                checkArgs(sub >= -accurate, "value($nValue) should be >= $minV")
-            } else {
-                checkArgs(sub > -accurate, "value($nValue) should be > $minV")
+            if (v1 < minv1) {
+                return minV
             }
         }
+
         if (maxV != null) {
             val maxv1 = maxV.toDouble()
-            val sub = maxv1 - v1
-            if (includeMax) {
-                checkArgs(sub >= -accurate, "value($nValue) should be <= $maxV")
-            } else {
-                checkArgs(sub > accurate, "value($nValue) should be < $maxV")
+            if (v1 > maxv1) {
+                return maxV
             }
         }
-        return nValue
+        return value
     }
-
 
 }

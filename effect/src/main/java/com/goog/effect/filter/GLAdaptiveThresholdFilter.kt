@@ -13,7 +13,7 @@ class GLAdaptiveThresholdFilter(blurSize: Float = 4f) : GLFilterGroup() {
         val boxBlur = GLBoxBlurFilter()
         boxBlur.blurSize = blurSize
         val adaptiveThreshold = AdaptiveThresholdInner()
-        filters = listOf(luminance, boxBlur, adaptiveThreshold)
+        mFilters = listOf(luminance, boxBlur, adaptiveThreshold)
     }
 }
 

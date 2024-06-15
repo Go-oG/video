@@ -4,7 +4,7 @@ import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
 
-class GLBilateralFilter: GLFilter() {
+class GLBilateralFilter : GLFilter() {
     var texelWidthOffset by FloatDelegate(0.003f, 0f)
     var texelHeightOffset by FloatDelegate(0.003f, 0f)
     var blurSize by FloatDelegate(1f, 1f)
@@ -19,7 +19,7 @@ class GLBilateralFilter: GLFilter() {
         return """
         attribute vec4 aPosition; 
                 attribute vec4 aTextureCoord;
-                const lowp int GAUSSIAN_SAMPLES = 9;
+                const  int GAUSSIAN_SAMPLES = 9;
                 uniform highp float texelWidthOffset; 
                 uniform highp float texelHeightOffset;
                 uniform highp float blurSize;
@@ -29,9 +29,9 @@ class GLBilateralFilter: GLFilter() {
                     gl_Position = aPosition;
                     vTextureCoord = aTextureCoord.xy; 
                     int multiplier = 0;
-                    highp vec2 blurStep;
-                    highp vec2 singleStepOffset = vec2(texelHeightOffset, texelWidthOffset) * blurSize;
-                    for (lowp int i = 0; i < GAUSSIAN_SAMPLES; i++) {
+                     vec2 blurStep;
+                     vec2 singleStepOffset = vec2(texelHeightOffset, texelWidthOffset) * blurSize;
+                    for ( int i = 0; i < GAUSSIAN_SAMPLES; i++) {
                         multiplier = (i - ((GAUSSIAN_SAMPLES - 1) / 2)); 
                         blurStep = float(multiplier) * singleStepOffset;
                         blurCoordinates[i] = vTextureCoord.xy + blurStep;
@@ -44,18 +44,18 @@ class GLBilateralFilter: GLFilter() {
         return """
             precision mediump float;
             uniform lowp sampler2D sTexture;
-            const lowp int GAUSSIAN_SAMPLES = 9;
+            const  int GAUSSIAN_SAMPLES = 9;
             varying highp vec2 vTextureCoord;
             varying highp vec2 blurCoordinates[GAUSSIAN_SAMPLES];
-            const mediump float distanceNormalizationFactor = 1.5;
+            const float distanceNormalizationFactor = 1.5;
             void main() {
-                lowp vec4 centralColor = texture2D(sTexture, blurCoordinates[4]);
-                lowp float gaussianWeightTotal = 0.18;
-                lowp vec4 sum = centralColor * 0.18;
-                lowp vec4 sampleColor = texture2D(sTexture, blurCoordinates[0]);
-                lowp float distanceFromCentralColor;
+                vec4 centralColor = texture2D(sTexture, blurCoordinates[4]);
+                float gaussianWeightTotal = 0.18;
+                vec4 sum = centralColor * 0.18;
+                vec4 sampleColor = texture2D(sTexture, blurCoordinates[0]);
+                float distanceFromCentralColor;
                 distanceFromCentralColor = min(distance(centralColor, sampleColor) * distanceNormalizationFactor, 1.0);
-                lowp float gaussianWeight = 0.05 * (1.0 - distanceFromCentralColor);
+                float gaussianWeight = 0.05 * (1.0 - distanceFromCentralColor);
                 gaussianWeightTotal += gaussianWeight;
                 sum += sampleColor * gaussianWeight;
                 sampleColor = texture2D(sTexture, blurCoordinates[1]);

@@ -14,7 +14,6 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
 
     private val fbo = FrameBufferObject()
 
-    //暂时不知道有什么用
     private var normalShader: GLFilter? = null
 
     private val runOnDraw: Queue<Runnable> = LinkedList()
@@ -38,11 +37,7 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
     }
 
     final override fun onDrawFrame(gl: GL10) {
-        synchronized(runOnDraw) {
-            while (!runOnDraw.isEmpty()) {
-                runOnDraw.poll()?.run()
-            }
-        }
+        onRunTaskQueue()
         ///绑定缓冲区
         fbo.enable()
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
@@ -51,11 +46,20 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
         //解绑缓冲区
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
 
-        //二次绘制
+
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
+        //上屏绘制
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         normalShader?.draw(fbo.texName, null)
 
+    }
+
+    open fun onRunTaskQueue() {
+        synchronized(runOnDraw) {
+            while (!runOnDraw.isEmpty()) {
+                runOnDraw.poll()?.run()
+            }
+        }
     }
 
     @Throws(Throwable::class)

@@ -82,8 +82,7 @@ import com.goog.effect.filter.blend.GLAddBlendFilter
 import com.goog.effect.filter.blend.GLChromaKeyBlendFilter
 import com.goog.effect.filter.blur.GLBoxBlurFilter
 import com.goog.effect.filter.blur.GLDirectionBlurFilter
-import com.goog.effect.filter.blur.GLGaussianBlur2Filter
-import com.goog.effect.filter.blur.GLGaussianBlur3Filter
+import com.goog.effect.filter.blur.GLDualKawaseBlurFilter
 import com.goog.effect.filter.blur.GLGaussianBlurFilter
 import com.goog.effect.filter.blur.GLGrainyBlurFilter
 import com.goog.effect.filter.blur.GLRadialBlurFilter
@@ -147,6 +146,8 @@ class FilterItem(val clsName: Class<*>) {
         fun loadFiltersData(context: Context): List<FilterItem> {
             val list = mutableListOf<FilterItem>()
 
+            list.add(FilterItem(GLDualKawaseBlurFilter::class.java))
+
             list.add(FilterItem(GLGrainyBlurFilter::class.java))
             list.add(FilterItem(GLDirectionBlurFilter::class.java))
 
@@ -157,55 +158,53 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLAlphaFrameFilter::class.java))
             list.add(FilterItem(GLAverageColorFilter::class.java))
 
-          //  list.add(FilterItem(GLAverageLuminanceFilter::class.java))
+            //  list.add(FilterItem(GLAverageLuminanceFilter::class.java))
 
             list.add(FilterItem(GLBilateralFilter::class.java))
-          //  list.add(FilterItem(GLBilateralBlurFilter::class.java))
+            //  list.add(FilterItem(GLBilateralBlurFilter::class.java))
             list.add(FilterItem(GLBoxBlurFilter::class.java))
             list.add(FilterItem(GLBrightnessFilter::class.java))
             list.add(FilterItem(GLBulgeDistortionFilter::class.java))
 
             list.add(FilterItem(GLCGAColorSpaceFilter::class.java))
             list.add(FilterItem(GLChromaKeyFilter::class.java))
-          //  list.add(FilterItem(GLCircleFilter::class.java))
+            //  list.add(FilterItem(GLCircleFilter::class.java))
             list.add(FilterItem(GLColorFASTDescriptorFilter::class.java))
-          //  list.add(FilterItem(GLColorLocalNonaryPatternFilter::class.java))
+            //  list.add(FilterItem(GLColorLocalNonaryPatternFilter::class.java))
             list.add(FilterItem(GLColorMatrixFilter::class.java))
             list.add(FilterItem(GLColorSwizzlingFilter::class.java))
 
             list.add(FilterItem(GLContrastFilter::class.java))
             list.add(FilterItem(GLConvolution3X3Filter::class.java))
             list.add(FilterItem(GLCornerFilter::class.java))
-           // list.add(FilterItem(GLCrosshairFilter::class.java))
+            // list.add(FilterItem(GLCrosshairFilter::class.java))
             list.add(FilterItem(GLCrosshatchFilter::class.java))
 
-         //   list.add(FilterItem(GLDilationFilter::class.java))
+            //   list.add(FilterItem(GLDilationFilter::class.java))
             list.add(FilterItem(GLDirectionNonMaxSuppressionFilter::class.java))
             list.add(FilterItem(GLDirectionSobelEdgeDetectionFilter::class.java))
-         //   list.add(FilterItem(GLErosionFilter::class.java))
+            //   list.add(FilterItem(GLErosionFilter::class.java))
             list.add(FilterItem(GLExposureFilter::class.java))
 
-         //   list.add(FilterItem(GLFalseColorFilter::class.java))
-
+            //   list.add(FilterItem(GLFalseColorFilter::class.java))
             list.add(FilterItem(GLGammaFilter::class.java))
+
             list.add(FilterItem(GLGaussianBlurFilter::class.java))
-            list.add(FilterItem(GLGaussianBlur2Filter::class.java))
-            list.add(FilterItem(GLGaussianBlur3Filter::class.java))
             list.add(FilterItem(GLGlassSphereFilter::class.java))
             list.add(FilterItem(GLGrayScaleFilter::class.java))
 
             list.add(FilterItem(GLHalftoneFilter::class.java))
             list.add(FilterItem(GLHighlightShadowFilter::class.java))
             list.add(FilterItem(GLHighLightShadowTintFilter::class.java))
-           // list.add(FilterItem(GLHistogramAccumulationFilter::class.java))
+            // list.add(FilterItem(GLHistogramAccumulationFilter::class.java))
             list.add(FilterItem(GLHistogramBlueSamplingFilter::class.java))
             list.add(FilterItem(GLHistogramDisplayFilter::class.java))
             list.add(FilterItem(GLHistogramEqualizationGreenFilter::class.java))
             list.add(FilterItem(GLHistogramEqualizationLuminanceFilter::class.java))
             list.add(FilterItem(GLHistogramEqualizationRedFilter::class.java))
             list.add(FilterItem(GLHistogramEqualizationRGBFilter::class.java))
-      //      list.add(FilterItem(GLHistogramGreenSamplingFilter::class.java))
-       //     list.add(FilterItem(GLHistogramLuminanceSamplingFilter::class.java))
+            //      list.add(FilterItem(GLHistogramGreenSamplingFilter::class.java))
+            //     list.add(FilterItem(GLHistogramLuminanceSamplingFilter::class.java))
             list.add(FilterItem(GLHistogramRedSamplingFilter::class.java))
             list.add(FilterItem(GLHueBlendFilter::class.java))
             list.add(FilterItem(GLHueFilter::class.java))
@@ -219,7 +218,7 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLLaplacianFilter::class.java))
 
             list.add(FilterItem(GLLevelsFilter::class.java))
-          //  list.add(FilterItem(GLLineFilter::class.java))
+            //  list.add(FilterItem(GLLineFilter::class.java))
             list.add(FilterItem(GLLocalBinaryPatternFilter::class.java))
             list.add(FilterItem(GLLookupFilter::class.java))
             //  list.add(FilterItem(GLLookUpTableFilter::class.java))
@@ -227,9 +226,9 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLLuminanceRangeFilter::class.java))
             list.add(FilterItem(GLLuminanceThresholdFilter::class.java))
 
-         //   list.add(FilterItem(GLMedianFilter::class.java))
+            //   list.add(FilterItem(GLMedianFilter::class.java))
             list.add(FilterItem(GLMonochromeFilter::class.java))
-          //  list.add(FilterItem(GLMotionComparisonFilter::class.java))
+            //  list.add(FilterItem(GLMotionComparisonFilter::class.java))
 
             list.add(FilterItem(GLNobleCornerDetectorFilter::class.java))
 
@@ -255,19 +254,19 @@ class FilterItem(val clsName: Class<*>) {
             list.add(FilterItem(GLSolarizeFilter::class.java))
             list.add(FilterItem(GLSphereRefractionFilter::class.java))
             list.add(FilterItem(GLStretchDistortionFilter::class.java))
-         //   list.add(FilterItem(GLSuperResolutionFilter::class.java))
+            //   list.add(FilterItem(GLSuperResolutionFilter::class.java))
             list.add(FilterItem(GLSwirlFilter::class.java))
 
-       //     list.add(FilterItem(GLThreex3TextureSamplingFilter::class.java))
+            //     list.add(FilterItem(GLThreex3TextureSamplingFilter::class.java))
             list.add(FilterItem(GLThresholdEdgeDetectionFilter::class.java))
             list.add(FilterItem(GLThresholdedNonMaximumSuppressionFilter::class.java))
-         //   list.add(FilterItem(GLThresholdSketchFilter::class.java))
-          //  list.add(FilterItem(GLTiltShiftFilter::class.java))
+            //   list.add(FilterItem(GLThresholdSketchFilter::class.java))
+            //  list.add(FilterItem(GLTiltShiftFilter::class.java))
 
             //  list.add(FilterItem(GLToneCurveFilter::class.java))
 
             list.add(FilterItem(GLToneFilter::class.java))
-          //  list.add(FilterItem(GLTransformFilter::class.java))
+            //  list.add(FilterItem(GLTransformFilter::class.java))
 
             list.add(FilterItem(GLUnsharpMaskFilter::class.java))
 
@@ -289,14 +288,14 @@ class FilterItem(val clsName: Class<*>) {
 
             //Blend
             list.add(FilterItem(GLAddBlendFilter::class.java))
-          //  list.add(FilterItem(GLAlphaBlendFilter::class.java))
+            //  list.add(FilterItem(GLAlphaBlendFilter::class.java))
             list.add(FilterItem(GLChromaKeyBlendFilter::class.java))
-           // list.add(FilterItem(GLColorBlendFilter::class.java))
-          //  list.add(FilterItem(GLColorBurnBlendFilter::class.java))
-         //   list.add(FilterItem(GLColorDodgeBlendFilter::class.java))
+            // list.add(FilterItem(GLColorBlendFilter::class.java))
+            //  list.add(FilterItem(GLColorBurnBlendFilter::class.java))
+            //   list.add(FilterItem(GLColorDodgeBlendFilter::class.java))
 
-           // list.add(FilterItem(GLDarkenBlendFilter::class.java))
-           // list.add(FilterItem(GLDifferenceBlendFilter::class.java))
+            // list.add(FilterItem(GLDarkenBlendFilter::class.java))
+            // list.add(FilterItem(GLDifferenceBlendFilter::class.java))
 //            list.add(FilterItem(GLDissolveBlendFilter::class.java))
 //            list.add(FilterItem(GLDivideBlendFilter::class.java))
 //

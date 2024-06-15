@@ -4,13 +4,22 @@ import android.opengl.GLES20
 import android.util.Pair
 import com.goog.effect.gl.FrameBufferObject
 
-open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
+open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
     private var list = listOf<Pair<GLFilter, FrameBufferObject?>>()
+
+    protected var mFilters: List<GLFilter> = listOf()
+
+    init {
+        if (filters != null) {
+            mFilters = filters
+        }
+    }
 
     constructor(vararg glFilters: GLFilter) : this(listOf<GLFilter>(*glFilters))
 
     override fun onInitialize() {
         super.onInitialize()
+        val filters = mFilters
         val max = filters.size
         val list = mutableListOf<Pair<GLFilter, FrameBufferObject?>>()
         for ((index, shader) in filters.withIndex()) {
@@ -69,6 +78,13 @@ open class GLFilterGroup(internal var filters: List<GLFilter>) : GLFilter() {
                 }
                 curFilter?.draw(prevTexName, fbo)
             }
+        }
+    }
+
+    override fun runTaskQueue() {
+        super.runTaskQueue()
+        for (filter in list) {
+            filter.first.runTaskQueue()
         }
     }
 }

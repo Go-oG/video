@@ -1,7 +1,6 @@
 package com.goog.effect.filter.core
 
 import android.opengl.GLES20
-import android.util.Log
 import androidx.annotation.CallSuper
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.gl.GLConstant.DEF_FRAGMENT_SHADER
@@ -14,27 +13,27 @@ import com.goog.effect.model.FColor4
 import com.goog.effect.utils.EGLUtil.createBuffer
 import com.goog.effect.utils.EGLUtil.createProgram
 import com.goog.effect.utils.EGLUtil.loadShader
-import com.goog.effect.utils.TAG
 import com.goog.effect.utils.checkArgs
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 
 open class GLFilter {
     protected var program = 0
-
     private var vertexShader = 0
-
     private var fragmentShader = 0
-
     protected var vertexBufferName: Int = 0
-
-    ///存储指针
-    private val handleMap = HashMap<String, Int>()
-
     protected var width = 0
     protected var height = 0
+
+    ///存储指针
+    protected val handleMap = ConcurrentHashMap<String, Int>()
+
+    private val mUpdateArgsFlag = AtomicBoolean(false)
 
     ///用于控制着色器是否生效，注意该方法非强制性，
     // 需要子类单独实现
     protected var mEnable = true
+
     open fun setEnable(enable: Boolean) {
         if (enable == mEnable) {
             return
@@ -43,7 +42,6 @@ open class GLFilter {
     }
 
     fun isEnable(): Boolean = mEnable
-
 
     open fun initialize() {
         release()
@@ -61,7 +59,6 @@ open class GLFilter {
     open fun setFrameSize(width: Int, height: Int) {
         this.width = width
         this.height = height
-        Log.i(TAG, "setFrameSize:${width} X ${height}")
     }
 
     open fun release() {
@@ -79,6 +76,49 @@ open class GLFilter {
 
         handleMap.clear()
     }
+
+    protected fun releaseFBOList(fboList: List<FrameBufferObject>):List<FrameBufferObject> {
+        for (item in fboList) {
+            item.release()
+        }
+        return emptyList()
+    }
+
+    protected fun createFBOList(count: Int, initNow: Boolean): List<FrameBufferObject> {
+        if (count <= 0) {
+            return emptyList()
+        }
+        val list = mutableListOf<FrameBufferObject>()
+        for (i in 0 until count) {
+            val fbo = FrameBufferObject()
+            if (initNow) {
+                fbo.initialize(width, height)
+            }
+            list.add(fbo)
+        }
+        return list
+    }
+
+
+    fun markNeedUpdateArgs() {
+        mUpdateArgsFlag.set(true)
+    }
+
+    fun resetUpdateArgsFlag() {
+        mUpdateArgsFlag.set(false)
+    }
+
+    fun isNeedUpdateArgs(): Boolean {
+        return mUpdateArgsFlag.get()
+    }
+
+    open fun runTaskQueue() {
+        if (mUpdateArgsFlag.compareAndSet(true, false)) {
+            onUpdateArgs()
+        }
+    }
+
+    open fun onUpdateArgs() {}
 
     open fun draw(texName: Int, fbo: FrameBufferObject?) {
         useProgram(texName, fbo)

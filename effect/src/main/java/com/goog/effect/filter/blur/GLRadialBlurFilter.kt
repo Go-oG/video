@@ -17,7 +17,6 @@ open class GLRadialBlurFilter(val useGaussianKernel: Boolean = false) : GLCenter
         putVec2("uCenter", centerX, centerY)
         put("uBlurAmount", blurAmount)
         put("uLoopCount", if (mEnable) sampleCount else 0)
-
         if (useGaussianKernel) {
             put("uFactor", gaussianFactor)
         }

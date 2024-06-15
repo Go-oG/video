@@ -6,7 +6,7 @@ import com.goog.effect.model.FloatDelegate
 import com.goog.effect.utils.loadFilterFromAsset
 
 class GLPrewittEdgeDetectionFilter : GLBoxBoundFilter() {
-     var edgeStrength by FloatDelegate(1f,0f, includeMin = false)
+     var edgeStrength by FloatDelegate(1f,0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)

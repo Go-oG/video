@@ -12,8 +12,8 @@ import com.goog.effect.model.FloatDelegate
 class GLSuperResolutionFilter : GLFilter() {
 
     var pixelMode = SRPixelMode.RGBA
-    var edgeThreshold by FloatDelegate(8.0f / 255.0f, 0f, 1f, includeMin = false)
-    var edgeSharpness by FloatDelegate(2f, 0f, includeMin = false)
+    var edgeThreshold by FloatDelegate(8.0f / 255.0f, 0f, 1f)
+    var edgeSharpness by FloatDelegate(2f, 0f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
         val w = (fbo?.width ?: 1).toFloat()

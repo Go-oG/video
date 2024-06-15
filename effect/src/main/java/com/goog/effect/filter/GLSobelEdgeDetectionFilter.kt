@@ -7,7 +7,7 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLSobelEdgeDetectionFilter : GLBoxBoundFilter() {
 
-    var edgeStrength by FloatDelegate(1f, 0f, 1f, includeMin = false)
+    var edgeStrength by FloatDelegate(1f, 0f, 1f)
 
 
     override fun onDraw(fbo: FrameBufferObject?) {

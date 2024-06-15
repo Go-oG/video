@@ -51,5 +51,4 @@ class GLGrainyBlurFilter : GLFilter() {
                }
         """.trimIndent()
     }
-
 }

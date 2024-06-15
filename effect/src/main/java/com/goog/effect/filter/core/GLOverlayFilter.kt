@@ -16,8 +16,7 @@ abstract class GLOverlayFilter : GLFilter() {
         releaseBitmap(bitmap)
         bitmap = Bitmap.createBitmap(
             width, height,
-            Bitmap.Config.ARGB_8888
-        )
+            Bitmap.Config.ARGB_8888)
     }
 
     override fun onInitialize() {
@@ -33,12 +32,10 @@ abstract class GLOverlayFilter : GLFilter() {
             createBitmap()
         }
         var bitmap = this.bitmap!!
-
         if (bitmap.width != width || bitmap.height != height) {
             createBitmap()
             bitmap = this.bitmap!!
         }
-
         bitmap.eraseColor(Color.argb(0, 0, 0, 0))
         val bitmapCanvas = Canvas(bitmap)
         bitmapCanvas.scale(1f, -1f, bitmapCanvas.width / 2f, bitmapCanvas.height / 2f)

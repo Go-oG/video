@@ -28,12 +28,11 @@ class FrameBufferObject {
     fun initialize(width: Int, height: Int) {
         val args = IntArray(1)
 
-        ///校验width 和 height 是否在最大纹理大小范围内
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
         Log.i(TAG, "Max Texture Size is" + args[0])
         checkArgs(width <= args[0] && height <= args[0],
                 "width($width) or height${height} must <=MaxTextureSize(${args[0]})")
-        //校验width 和 height是否在渲染缓冲区范围内
+
         GLES20.glGetIntegerv(GLES20.GL_MAX_RENDERBUFFER_SIZE, args, 0)
         checkArgs(width <= args[0] && height <= args[0],
                 "width($width) or height${height} must <=MaxRenderBufferSize(${args[0]})")
@@ -48,6 +47,7 @@ class FrameBufferObject {
 
         ///先释放以前绑定的对象并重新设置宽高
         release()
+
         this.width = width
         this.height = height
         try {
@@ -72,7 +72,7 @@ class FrameBufferObject {
             }
             EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true,true)
 
-            ///创建一个未初始化的离屏渲染纹理 并将texture(纹理)attach到帧缓冲区对象上(FBO)
+            ///创建一个未初始化的离屏渲染纹理 将texture(纹理)attach到帧缓冲区对象上(FBO)
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
                     width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
             GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
