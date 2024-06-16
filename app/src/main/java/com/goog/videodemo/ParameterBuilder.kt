@@ -1,6 +1,7 @@
 package com.goog.videodemo
 
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.model.CallBy
 import com.goog.effect.model.FloatDelegate
 import com.goog.effect.model.IntDelegate
 import java.lang.Math.max
@@ -44,7 +45,7 @@ object ParameterBuilder {
                 parameterList.add(para)
             }
         }
-        (filter as GLFilter).release()
+        (filter as GLFilter).release(CallBy.DESTROY)
         return parameterList
     }
 

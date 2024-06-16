@@ -1,6 +1,6 @@
 package com.goog.effect.model
 
-enum class GLVersion{
+enum class GLVersion {
     V20,
     V30;
 }
@@ -31,5 +31,12 @@ enum class Level(val sort: Int) {
     L8(8),
     L9(9),
     L10(10);
+}
+
+enum class CallBy {
+    NORMAL,
+    PAUSE,
+    UPDATE_ARGS,
+    DESTROY;
 }
 

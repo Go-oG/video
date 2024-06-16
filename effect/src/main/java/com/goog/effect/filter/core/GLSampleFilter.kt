@@ -1,9 +1,8 @@
 package com.goog.effect.filter.core
 
 import android.opengl.GLES20
-import android.util.Log
 import com.goog.effect.gl.FrameBufferObject
-import com.goog.effect.utils.TAG
+import com.goog.effect.model.CallBy
 import kotlin.math.abs
 
 /**
@@ -81,8 +80,7 @@ open class GLSampleWrapFilter(sample: Float = 1f, val upSample: Boolean, filter:
     }
 
     override fun onUpdateArgs() {
-        release()
-        initialize()
+        initialize(CallBy.UPDATE_ARGS)
         setFrameSize(originWidth, originHeight)
     }
 

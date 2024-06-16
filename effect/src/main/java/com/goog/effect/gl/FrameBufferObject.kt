@@ -3,6 +3,7 @@ package com.goog.effect.gl
 import android.opengl.GLES20
 import android.util.Log
 import com.goog.effect.utils.EGLUtil
+import com.goog.effect.utils.EGLUtil.clearColorAndDepthBit
 import com.goog.effect.utils.TAG
 import com.goog.effect.utils.checkArgs
 
@@ -30,12 +31,15 @@ class FrameBufferObject {
 
         GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, args, 0)
         Log.i(TAG, "Max Texture Size is" + args[0])
-        checkArgs(width <= args[0] && height <= args[0],
-                "width($width) or height${height} must <=MaxTextureSize(${args[0]})")
+        checkArgs(
+            width <= args[0] && height <= args[0],
+            "width($width) or height${height} must <=MaxTextureSize(${args[0]})"
+        )
 
         GLES20.glGetIntegerv(GLES20.GL_MAX_RENDERBUFFER_SIZE, args, 0)
-        checkArgs(width <= args[0] && height <= args[0],
-                "width($width) or height${height} must <=MaxRenderBufferSize(${args[0]})")
+        checkArgs(
+            width <= args[0] && height <= args[0],
+            "width($width) or height${height} must <=MaxRenderBufferSize(${args[0]})")
 
         //获取当前FrameBuffer、RenderBuffer、Texture指针位置并存储
         GLES20.glGetIntegerv(GLES20.GL_FRAMEBUFFER_BINDING, args, 0)
@@ -70,17 +74,21 @@ class FrameBufferObject {
             if (texName == 0) {
                 Log.e(TAG, "create texture fail")
             }
-            EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true,true)
+            EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true, true)
 
             ///创建一个未初始化的离屏渲染纹理 将texture(纹理)attach到帧缓冲区对象上(FBO)
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-                    width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
-            GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                GLES20.GL_TEXTURE_2D, texName, 0)
+            GLES20.glTexImage2D(
+                GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null
+            )
+            GLES20.glFramebufferTexture2D(
+                GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                GLES20.GL_TEXTURE_2D, texName, 0
+            )
             ///校验FBO是否设置成功
             val status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
             if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
-               throw RuntimeException("Failed to initialize framebuffer object $status")
+                throw RuntimeException("Failed to initialize framebuffer object $status")
             }
         } catch (e: RuntimeException) {
             release()
@@ -110,7 +118,10 @@ class FrameBufferObject {
         frameBufferName = 0
     }
 
-    fun enable() {
+    fun enable(clearColorAndDepth: Boolean = false) {
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferName)
+        if (clearColorAndDepth) {
+            clearColorAndDepthBit()
+        }
     }
 }

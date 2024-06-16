@@ -5,6 +5,7 @@ import android.graphics.PointF
 import android.opengl.GLES20
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.model.CallBy
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -50,20 +51,18 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
         setBlueControlPoints(blueControlPoints)
     }
 
-    override fun initialize() {
-        super.initialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-
         while (!runOnDraw.isEmpty()) {
             runOnDraw.removeFirst().run()
         }
     }
-
     override fun onDraw(fbo: FrameBufferObject?) {
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE3)

@@ -6,6 +6,7 @@ import android.opengl.GLUtils
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.gl.GLConstant
 import com.goog.effect.gl.GLConstant.VERTEX_SHADERS
+import com.goog.effect.model.CallBy
 import com.goog.effect.utils.EGLUtil
 import com.goog.effect.utils.checkArgs
 
@@ -52,8 +53,8 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
         this.itemList = list
     }
 
-    override fun initialize() {
-        super.initialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         setTextures(itemList)
     }
 

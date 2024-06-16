@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.model.CallBy
 import com.goog.effect.utils.EGLUtil
 
 abstract class GLOverlayFilter : GLFilter() {
@@ -19,8 +20,8 @@ abstract class GLOverlayFilter : GLFilter() {
             Bitmap.Config.ARGB_8888)
     }
 
-    override fun onInitialize() {
-        super.onInitialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
         EGLUtil.configTexture(GLES20.GL_TEXTURE_2D, true, true, true)

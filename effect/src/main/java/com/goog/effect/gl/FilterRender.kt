@@ -12,6 +12,7 @@ import android.view.Surface
 import com.goog.effect.Player
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.filter.core.GLPreviewFilter
+import com.goog.effect.model.CallBy
 import com.goog.effect.utils.EGLUtil
 import com.goog.effect.utils.TAG
 import java.util.concurrent.atomic.AtomicBoolean
@@ -72,7 +73,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
     fun setGlFilter(filter: GLFilter?) {
         glSurfaceView.queueEvent {
-            glFilter?.release()
+            glFilter?.release(CallBy.NORMAL)
             glFilter = filter
             newFilterFlag.set(true)
             glSurfaceView.requestRender()
@@ -109,7 +110,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
 
         // GL_TEXTURE_EXTERNAL_OES
-        val previewFilter = GLPreviewFilter(previewTexture.textureTarget).apply { initialize() }
+        val previewFilter = GLPreviewFilter(previewTexture.textureTarget).apply { initialize(CallBy.NORMAL) }
         this.previewFilter = previewFilter
 
         ///创建一个信息surface 并进行绑定更新
@@ -186,7 +187,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
         if (newFilterFlag.compareAndSet(true, false)) {
             glFilter?.let {
-                it.initialize()
+                it.initialize(CallBy.NORMAL)
                 it.setFrameSize(fbo.width, fbo.height)
             }
         }
@@ -223,8 +224,8 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
         //绘制设置的glFilter
         glFilter?.let {
-            fbo.enable()
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+            //TODO 这里是否应该只清除颜色而不应该清楚深度
+            fbo.enable(true)
             it.runTaskQueueIfNeed()
             it.draw(filterFBO.texName, fbo)
         }
@@ -262,7 +263,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
 
     ///由外界调用
     fun onPause() {
-        glFilter?.release()
+        glFilter?.release(CallBy.PAUSE)
         previewTexture?.release()
     }
 }

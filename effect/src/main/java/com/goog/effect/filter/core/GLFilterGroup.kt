@@ -3,6 +3,7 @@ package com.goog.effect.filter.core
 import android.opengl.GLES20
 import android.util.Pair
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.model.CallBy
 
 open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
     private var list = listOf<Pair<GLFilter, FrameBufferObject?>>()
@@ -17,13 +18,13 @@ open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
 
     constructor(vararg glFilters: GLFilter) : this(listOf<GLFilter>(*glFilters))
 
-    override fun onInitialize() {
-        super.onInitialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         val filters = mFilters
         val max = filters.size
         val list = mutableListOf<Pair<GLFilter, FrameBufferObject?>>()
         for ((index, shader) in filters.withIndex()) {
-            shader.initialize()
+            shader.initialize(callBy)
             val fbo = if ((index + 1) < max) {
                 FrameBufferObject()
             } else {
@@ -34,13 +35,14 @@ open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
         this.list = list
     }
 
-    override fun release() {
+
+    override fun release(callBy: CallBy) {
         for (pair in list) {
-            pair.first?.release()
+            pair.first?.release(callBy)
             pair.second?.release()
         }
         list = listOf()
-        super.release()
+        super.release(callBy)
     }
 
     override fun setEnable(enable: Boolean) {
@@ -65,8 +67,7 @@ open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
             val curFilter = pair.first
             if (curFBO != null) {
                 if (curFilter != null) {
-                    curFBO.enable()
-                    GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+                    curFBO.enable(true)
                     curFilter.draw(prevTexName, curFBO)
                 }
                 prevTexName = curFBO.texName

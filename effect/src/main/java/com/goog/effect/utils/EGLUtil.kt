@@ -152,6 +152,10 @@ object EGLUtil {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
     }
 
+    fun clearColorAndDepthBit(){
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+    }
+
     /**
      * 检查是否支持Open GL ES 3.0
      */

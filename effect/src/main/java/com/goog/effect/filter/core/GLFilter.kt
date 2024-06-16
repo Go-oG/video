@@ -8,6 +8,7 @@ import com.goog.effect.gl.GLConstant.DEF_VERTEX_SHADER
 import com.goog.effect.gl.GLConstant.K_ATTR_COORD
 import com.goog.effect.gl.GLConstant.K_ATTR_POSITION
 import com.goog.effect.gl.GLConstant.K_UNIFORM_TEX
+import com.goog.effect.model.CallBy
 import com.goog.effect.model.FColor
 import com.goog.effect.model.FColor4
 import com.goog.effect.utils.EGLUtil.createBuffer
@@ -43,12 +44,12 @@ open class GLFilter {
 
     fun isEnable(): Boolean = mEnable
 
-    open fun initialize() {
-        release()
-        onInitialize()
+    open fun initialize(callBy: CallBy) {
+        release(callBy)
+        onInitialize(callBy)
     }
 
-    protected open fun onInitialize() {
+    protected open fun onInitialize(callBy: CallBy) {
         vertexShader = loadShader(getVertexShader(), false)
         fragmentShader = loadShader(getFragmentShader(), true)
         program = createProgram(vertexShader, fragmentShader)
@@ -61,7 +62,12 @@ open class GLFilter {
         this.height = height
     }
 
-    open fun release() {
+    /**
+     * 释放函数
+     * [objWillUse] 为true表示该对象将会被继续使用，
+     * 调用该方法只是为了清理一些临时对象，此时不应该将一些全生命周期的数据清除
+     */
+    open fun release(callBy: CallBy) {
         GLES20.glDeleteProgram(program)
         program = 0
 
@@ -76,6 +82,7 @@ open class GLFilter {
 
         handleMap.clear()
     }
+
 
     protected fun releaseFBOList(fboList: List<FrameBufferObject>): List<FrameBufferObject> {
         for (item in fboList) {
@@ -98,7 +105,6 @@ open class GLFilter {
         }
         return list
     }
-
 
     fun markNeedUpdateArgs() {
         mUpdateArgsFlag.set(true)

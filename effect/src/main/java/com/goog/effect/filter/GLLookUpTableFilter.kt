@@ -5,6 +5,7 @@ import android.opengl.GLES20
 import androidx.annotation.CallSuper
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.model.CallBy
 import com.goog.effect.utils.EGLUtil
 import com.goog.effect.utils.EGLUtil.loadOrUpdateTextureFromBitmap
 import kotlin.properties.Delegates
@@ -23,9 +24,8 @@ class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
         this.lutTexture = lutTexture
     }
 
-
-    override fun onInitialize() {
-        super.onInitialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         loadTexture()
     }
 
@@ -43,8 +43,8 @@ class GLLookUpTableFilter(lutTexture: Bitmap?) : GLFilter() {
         }
     }
 
-    override fun release() {
-        super.release()
+    override fun release(callBy: CallBy) {
+        super.release(callBy)
         releaseLutBitmap()
     }
 

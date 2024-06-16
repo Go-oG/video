@@ -4,6 +4,7 @@ import android.opengl.GLES20
 import androidx.annotation.CallSuper
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.gl.GLConstant
+import com.goog.effect.model.CallBy
 import com.goog.effect.model.IntDelegate
 
 /**
@@ -26,8 +27,8 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
     }
 
     @CallSuper
-    override fun onInitialize() {
-        super.onInitialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         mFboList = releaseFBOList(mFboList)
         mFboList = if (mIteratorCount >= 2) {
             createFBOList(2, false)
@@ -36,9 +37,9 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
         }
     }
 
-    override fun release() {
+    override fun release(callBy: CallBy) {
         mFboList = releaseFBOList(mFboList)
-        super.release()
+        super.release(callBy)
     }
 
     override fun setFrameSize(width: Int, height: Int) {
@@ -186,27 +187,22 @@ open class GLIteratorWrapFilter(val filter: GLFilter, iterationCount: Int = 1) :
         }
     }
 
-    override fun initialize() {
-        super.initialize()
-        val list = mutableListOf<FrameBufferObject>()
-        for (i in 0..<1) {
-            list.add(FrameBufferObject())
-        }
-        fboList = list
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
+        fboList = releaseFBOList(fboList)
+        fboList = createFBOList(2, false)
+        filter.initialize(callBy)
     }
 
-    override fun onInitialize() {
-        filter.initialize()
-    }
-
-    override fun release() {
+    override fun release(callBy: CallBy) {
         for (fbo in fboList) {
             fbo.release()
         }
         fboList = listOf()
-        filter.release()
+        filter.release(callBy)
         handleMap.clear()
     }
+
 
     override fun setFrameSize(width: Int, height: Int) {
         super.setFrameSize(width, height)

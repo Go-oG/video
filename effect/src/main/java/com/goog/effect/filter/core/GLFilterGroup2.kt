@@ -2,6 +2,7 @@ package com.goog.effect.filter.core
 
 import android.opengl.GLES20
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.model.CallBy
 
 /**
  * 目前该类和[GLIteratorFilter]同时使用时会有冲突
@@ -43,11 +44,11 @@ open class GLFilterGroup2(filters: List<GLFilter>? = null) : GLFilter() {
         }
     }
 
-    override fun onInitialize() {
-        super.onInitialize()
+    override fun onInitialize(callBy: CallBy) {
+        super.onInitialize(callBy)
         val filterList = mFilters
         for (item in filterList) {
-            item.initialize()
+            item.initialize(callBy)
         }
         mFboList = releaseFBOList(mFboList)
         if (filterList.size > 1) {
@@ -67,7 +68,7 @@ open class GLFilterGroup2(filters: List<GLFilter>? = null) : GLFilter() {
 
     override fun onUpdateArgs() {
         for (item in mFilters) {
-            item.initialize()
+            item.initialize(CallBy.UPDATE_ARGS)
             item.setFrameSize(width, height)
         }
 
@@ -77,12 +78,12 @@ open class GLFilterGroup2(filters: List<GLFilter>? = null) : GLFilter() {
         }
     }
 
-    override fun release() {
+    override fun release(callBy: CallBy) {
         for (item in mFilters) {
-            item.release()
+            item.release(callBy)
         }
         mFboList = releaseFBOList(mFboList)
-        super.release()
+        super.release(callBy)
     }
 
     override fun setEnable(enable: Boolean) {
@@ -106,8 +107,7 @@ open class GLFilterGroup2(filters: List<GLFilter>? = null) : GLFilter() {
         for (i in 0 until filterList.size - 1) {
             val curFilter = filterList[i]
             val curFBO = fboList[curFBOIndex]
-            curFBO.enable()
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+            curFBO.enable(true)
             curFilter.draw(curTexture, curFBO)
             curTexture = curFBO.texName
             curFBOIndex = 1 - curFBOIndex

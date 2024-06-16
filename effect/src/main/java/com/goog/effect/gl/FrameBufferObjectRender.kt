@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.model.CallBy
 import java.util.LinkedList
 import java.util.Queue
 import javax.microedition.khronos.egl.EGLConfig
@@ -26,7 +27,7 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
 
     final override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         normalShader = GLFilter()
-        normalShader?.initialize()
+        normalShader?.initialize(CallBy.NORMAL)
         onSurfaceCreated(config)
     }
 
@@ -43,11 +44,9 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
         onDrawFrame(fbo)
 
-        //解绑缓冲区
+        //上屏
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
-        //上屏绘制
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
         normalShader?.draw(fbo.texName, null)
 
@@ -69,6 +68,9 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
 
     abstract fun onSurfaceChanged(width: Int, height: Int)
 
+    /**
+     * 该方法调用前，[fbo]对象已调用enable并设置了viewPort
+     */
     abstract fun onDrawFrame(fbo: FrameBufferObject)
 
 }
