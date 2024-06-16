@@ -46,7 +46,6 @@ abstract class FBORenderer : GLSurfaceView.Renderer {
         //解绑缓冲区
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
 
-
         GLES20.glViewport(0, 0, fbo.width, fbo.height)
         //上屏绘制
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)

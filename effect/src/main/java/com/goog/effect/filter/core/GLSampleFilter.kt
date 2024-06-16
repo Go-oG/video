@@ -1,7 +1,10 @@
 package com.goog.effect.filter.core
 
 import android.opengl.GLES20
+import android.util.Log
 import com.goog.effect.gl.FrameBufferObject
+import com.goog.effect.utils.TAG
+import kotlin.math.abs
 
 /**
  * 用于实现降采样和升采样的Filter包装
@@ -27,22 +30,17 @@ abstract class GLSampleFilter(sample: Float = 1f, val upSample: Boolean, iterati
     override fun setFrameSize(width: Int, height: Int) {
         originWidth = width
         originHeight = height
-        if (mSample == 1f || mSample <= 0) {
+        val sample = mSample
+        if (abs(sample - 1f) <= 0.00001 || sample <= 0.00001) {
             super.setFrameSize(width, height)
             return
         }
         val sampleFactor = if (upSample) {
-            mSample
-        } else 1f / mSample
+            sample
+        } else 1f / sample
         val w = (sampleFactor * width).toInt()
         val h = (sampleFactor * height).toInt()
         super.setFrameSize(w, h)
-    }
-
-    override fun onUpdateArgs() {
-        release()
-        initialize()
-        setFrameSize(originWidth, originHeight)
     }
 
     override fun onLastIterationPre(texName: Int, fbo: FrameBufferObject?) {

@@ -15,7 +15,7 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
     private val iterationInfo = IterationInfo()
 
     ///这里我们只创建两个FBO或者都不创建,对于多次迭代我们交替使用FBO来实现
-    private var fboList: List<FrameBufferObject> = emptyList()
+    protected var mFboList: List<FrameBufferObject> = emptyList()
 
     fun setIteratorCount(count: Int) {
         if (count == mIteratorCount) {
@@ -28,8 +28,8 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
     @CallSuper
     override fun onInitialize() {
         super.onInitialize()
-        releaseFBOList(fboList)
-        fboList = if (mIteratorCount >= 2) {
+        mFboList = releaseFBOList(mFboList)
+        mFboList = if (mIteratorCount >= 2) {
             createFBOList(2, false)
         } else {
             emptyList()
@@ -37,22 +37,20 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
     }
 
     override fun release() {
-        releaseFBOList(fboList)
-        fboList = emptyList()
+        mFboList = releaseFBOList(mFboList)
         super.release()
     }
 
     override fun setFrameSize(width: Int, height: Int) {
         super.setFrameSize(width, height)
-        for (fbo in fboList) {
+        for (fbo in mFboList) {
             fbo.initialize(width, height)
         }
     }
 
     override fun onUpdateArgs() {
-        super.onUpdateArgs()
-        fboList = releaseFBOList(fboList)
-        fboList = if (mIteratorCount >= 2) {
+        mFboList = releaseFBOList(mFboList)
+        mFboList = if (mIteratorCount >= 2) {
             createFBOList(2, true)
         } else {
             emptyList()
@@ -61,7 +59,7 @@ abstract class GLIteratorFilter(iterationCount: Int = 1) : GLFilter() {
 
     override fun draw(texName: Int, fbo: FrameBufferObject?) {
         val iterationCount = mIteratorCount
-        val list = fboList
+        val list = mFboList
         onIterationPre(iterationInfo)
         if (list.size < 2 || iterationCount <= 1) {
             onIteration(iterationInfo, 0)
@@ -232,7 +230,6 @@ open class GLIteratorWrapFilter(val filter: GLFilter, iterationCount: Int = 1) :
             val fboIndex = i % 2
             val tmpFBO = list[fboIndex]
             tmpFBO.enable()
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
             filter.draw(prevTexName, tmpFBO)
             prevTexName = tmpFBO.texName
         }

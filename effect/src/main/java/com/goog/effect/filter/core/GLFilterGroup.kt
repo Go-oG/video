@@ -81,10 +81,10 @@ open class GLFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
         }
     }
 
-    override fun runTaskQueue() {
-        super.runTaskQueue()
+    override fun runTaskQueueIfNeed() {
+        super.runTaskQueueIfNeed()
         for (filter in list) {
-            filter.first.runTaskQueue()
+            filter.first.runTaskQueueIfNeed()
         }
     }
 }

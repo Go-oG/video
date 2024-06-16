@@ -165,7 +165,6 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         Matrix.setIdentityM(modelMatrix, 0)
     }
 
-
     override fun onDrawFrame(fbo: FrameBufferObject) {
         /**启用混合功能，用于实现透明或者其它效果
          * 根据源颜色的 alpha 值，以及目标颜色的 alpha 值来混合源颜色和目标颜色。
@@ -226,6 +225,7 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         glFilter?.let {
             fbo.enable()
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+            it.runTaskQueueIfNeed()
             it.draw(filterFBO.texName, fbo)
         }
     }
@@ -265,11 +265,5 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         glFilter?.release()
         previewTexture?.release()
     }
-
-    override fun onRunTaskQueue() {
-        super.onRunTaskQueue()
-        glFilter?.runTaskQueue()
-    }
-
 }
 

@@ -77,7 +77,7 @@ open class GLFilter {
         handleMap.clear()
     }
 
-    protected fun releaseFBOList(fboList: List<FrameBufferObject>):List<FrameBufferObject> {
+    protected fun releaseFBOList(fboList: List<FrameBufferObject>): List<FrameBufferObject> {
         for (item in fboList) {
             item.release()
         }
@@ -112,7 +112,11 @@ open class GLFilter {
         return mUpdateArgsFlag.get()
     }
 
-    open fun runTaskQueue() {
+    /***
+     * 该方法将在GL线程中调用
+     * 且在draw方法之前
+     */
+    open fun runTaskQueueIfNeed() {
         if (mUpdateArgsFlag.compareAndSet(true, false)) {
             onUpdateArgs()
         }

@@ -88,6 +88,7 @@ import com.goog.effect.filter.blur.GLGrainyBlurFilter
 import com.goog.effect.filter.blur.GLRadialBlurFilter
 import com.goog.effect.filter.blur.GLZoomBlurFilter
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.filter.core.GLFilterGroup2
 import com.goog.videodemo.ParameterBuilder.loadParameters
 import java.util.Locale
 
@@ -145,6 +146,15 @@ class FilterItem(val clsName: Class<*>) {
     companion object {
         fun loadFiltersData(context: Context): List<FilterItem> {
             val list = mutableListOf<FilterItem>()
+
+            val group=GLFilterGroup2(
+                listOf(
+                    GLInvertFilter(),
+                    GLAlphaFrameFilter()
+                )
+            )
+            list.add(FilterItem(GLDualKawaseBlurFilter::class.java))
+
 
             list.add(FilterItem(GLDualKawaseBlurFilter::class.java))
 

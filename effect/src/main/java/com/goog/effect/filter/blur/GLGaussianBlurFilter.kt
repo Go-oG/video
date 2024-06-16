@@ -2,6 +2,7 @@ package com.goog.effect.filter.blur
 
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.filter.core.GLFilterGroup
+import com.goog.effect.filter.core.GLFilterGroup2
 import com.goog.effect.gl.FrameBufferObject
 import kotlin.math.exp
 import kotlin.math.min
@@ -10,7 +11,7 @@ import kotlin.math.min
  * 快速高斯模糊
  * 模糊半径最多支持到30
  */
-class GLGaussianBlurFilter : GLFilterGroup(listOf()) {
+class GLGaussianBlurFilter : GLFilterGroup2(listOf()) {
     init {
         mFilters = listOf(
             Blur3Inner(true),

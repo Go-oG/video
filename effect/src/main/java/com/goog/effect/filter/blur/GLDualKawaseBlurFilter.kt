@@ -1,6 +1,6 @@
 package com.goog.effect.filter.blur
 
-import com.goog.effect.filter.core.GLFilterGroup
+import com.goog.effect.filter.core.GLFilterGroup2
 import com.goog.effect.filter.core.GLSampleFilter
 import com.goog.effect.filter.core.IterationInfo
 import com.goog.effect.gl.FrameBufferObject
@@ -11,7 +11,7 @@ import com.goog.effect.model.FloatDelegate
  * 其模糊效果和高斯模糊相接近
  * 但其计算量更小，性能更好
  */
-class GLDualKawaseBlurFilter : GLFilterGroup(
+class GLDualKawaseBlurFilter : GLFilterGroup2(
     listOf(DownSampleBlur(), UpSampleBlur())
 ) {
 

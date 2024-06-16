@@ -75,13 +75,12 @@ class FrameBufferObject {
             ///创建一个未初始化的离屏渲染纹理 将texture(纹理)attach到帧缓冲区对象上(FBO)
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
                     width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
-            GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D,
-                    texName, 0)
-
+            GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                GLES20.GL_TEXTURE_2D, texName, 0)
             ///校验FBO是否设置成功
             val status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
             if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
-                throw RuntimeException("Failed to initialize framebuffer object $status")
+               throw RuntimeException("Failed to initialize framebuffer object $status")
             }
         } catch (e: RuntimeException) {
             release()
