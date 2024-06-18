@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLExclusionBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("exclusionBlend.fsh")
+        return loadFilterFromAsset("filters/exclusion_blend.fsh")
     }
 }

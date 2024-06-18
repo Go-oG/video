@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLAverageLuminanceFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return  loadFilterFromAsset("averageLuminance.fsh")
+        return  loadFilterFromAsset("filters/average_luminance.fsh")
     }
 }

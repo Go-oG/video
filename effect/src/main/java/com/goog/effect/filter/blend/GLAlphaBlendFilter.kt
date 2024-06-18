@@ -13,7 +13,7 @@ class GLAlphaBlendFilter : GLMultiTextureFilter(2) {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("alphaBlend.fsh")
+        return loadFilterFromAsset("filters/alpha_blend.fsh")
     }
 
 }

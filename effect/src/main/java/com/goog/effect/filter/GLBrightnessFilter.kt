@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 /**
  * brightness value ranges from -1.0 to 1.0, with 0.0 as the normal level
@@ -16,18 +17,7 @@ class GLBrightnessFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-
-            uniform lowp sampler2D sTexture;
-            uniform  float brightness;
-
-            void main() {
-                vec4 textureColor = texture2D(sTexture, vTextureCoord);
-                gl_FragColor = vec4((textureColor.rgb + vec3(brightness)), textureColor.w);
-            }
-        """.trimIndent()
+       return loadFilterFromAsset("filters/brightness.frag")
     }
 
 

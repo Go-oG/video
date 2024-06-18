@@ -15,6 +15,6 @@ class GLKuwaharaFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("kuwahara.fsh")
+        return loadFilterFromAsset("filters/kuwahara.fsh")
     }
 }

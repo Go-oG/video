@@ -6,6 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLLocalBinaryPatternFilter : GLBoxBoundFilter() {
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("localBinaryPattern.fsh")
+        return loadFilterFromAsset("filters/local_binary_pattern.fsh")
     }
 }

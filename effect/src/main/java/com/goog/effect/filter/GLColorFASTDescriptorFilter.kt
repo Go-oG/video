@@ -13,10 +13,10 @@ class GLColorFASTDescriptorFilter : GLMultiTextureFilter(2) {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("colorFASTDescriptor.fsh")
+        return loadFilterFromAsset("filters/color_fast_descriptor.fsh")
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("colorFASTDescriptor.vsh")
+        return loadFilterFromAsset("filters/color_fast_descriptor.vsh")
     }
 }

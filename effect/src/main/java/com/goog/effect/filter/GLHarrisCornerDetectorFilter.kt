@@ -15,7 +15,7 @@ class GLHarrisCornerDetectorFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("harrisCornerDetector.fsh")
+        return loadFilterFromAsset("filters/harris_corner_detector.fsh")
     }
 
 }

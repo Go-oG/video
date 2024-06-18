@@ -6,10 +6,10 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLBilateralBlurFilter :GLFilter() {
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("blur/bilateralBlur.vsh")
+        return loadFilterFromAsset("filters/blur/bilateralBlur.vsh")
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("blur/bilateralBlur.fsh")
+        return loadFilterFromAsset("filters/blur/bilateralBlur.fsh")
     }
 }

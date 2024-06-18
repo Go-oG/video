@@ -17,6 +17,6 @@ class GLThresholdSketchFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("thresholdSketch.fsh")
+        return loadFilterFromAsset("filters/threshold_sketch.fsh")
     }
 }

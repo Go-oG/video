@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLMedianFilter : GLBoxBoundFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("median.fsh")
+        return loadFilterFromAsset("filters/median.fsh")
     }
 }

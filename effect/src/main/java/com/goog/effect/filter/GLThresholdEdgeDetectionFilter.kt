@@ -17,6 +17,6 @@ class GLThresholdEdgeDetectionFilter : GLBoxBoundFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("thresholdEdgeDetection.fsh")
+        return loadFilterFromAsset("filters/threshold_edge_detection.fsh")
     }
 }

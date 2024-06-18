@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLSaturationBlendFilter : GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("saturationBlend.fsh")
+        return loadFilterFromAsset("filters/saturation_blend.fsh")
     }
 }

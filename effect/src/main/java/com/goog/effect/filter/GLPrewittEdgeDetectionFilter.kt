@@ -14,6 +14,6 @@ class GLPrewittEdgeDetectionFilter : GLBoxBoundFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("prewittEdgeDetection.fsh")
+        return loadFilterFromAsset("filters/prewitt_edge_detection.fsh")
     }
 }

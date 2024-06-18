@@ -11,10 +11,10 @@ class GLLanczosResamplingFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("lanczosResampling.fsh")
+        return loadFilterFromAsset("filters/lanczos_resampling.fsh")
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("lanczosResampling.vsh")
+        return loadFilterFromAsset("filters/lanczos_resampling.vsh")
     }
 }

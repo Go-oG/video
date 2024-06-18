@@ -23,6 +23,6 @@ class GLLevelsFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("levels.fsh")
+        return loadFilterFromAsset("filters/levels.fsh")
     }
 }

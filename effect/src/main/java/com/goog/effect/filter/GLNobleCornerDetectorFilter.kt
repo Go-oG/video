@@ -13,6 +13,6 @@ class GLNobleCornerDetectorFilter : GLFilter() {
         put("sensitivity",sensitivity)
     }
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("nobleCornerDetector.fsh")
+        return loadFilterFromAsset("filters/noble_corner_detector.fsh")
     }
 }

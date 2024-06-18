@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLColorDodgeBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("colorDodgeBlend.fsh")
+        return loadFilterFromAsset("filters/color_dodge_blend.fsh")
     }
 }

@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 class GLGammaFilter : GLFilter() {
     var gamma by FloatDelegate(1f, 0f, 4f)
@@ -13,16 +14,6 @@ class GLGammaFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-            uniform highp sampler2D sTexture;
-            uniform float gamma;
-
-            void main() {
-                lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
-                gl_FragColor = vec4(pow(textureColor.rgb, vec3(gamma)), textureColor.w);
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/gamma.frag")
     }
 }

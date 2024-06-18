@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLDissolveBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("dissolveBlend.fsh")
+        return loadFilterFromAsset("filters/dissolve_blend.fsh")
     }
 }

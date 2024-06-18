@@ -18,6 +18,6 @@ class GLPinchDistortionFilter : GLCenterFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("pinchDistortion.fsh")
+        return loadFilterFromAsset("filters/pinch_distortion.fsh")
     }
 }

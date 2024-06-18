@@ -5,9 +5,9 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHistogramDisplayFilter:GLFilter() {
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("histogramDisplay.vsh")
+        return loadFilterFromAsset("filters/histogram_display.vsh")
     }
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("histogramDisplay.fsh")
+        return loadFilterFromAsset("filters/histogram_display.fsh")
     }
 }

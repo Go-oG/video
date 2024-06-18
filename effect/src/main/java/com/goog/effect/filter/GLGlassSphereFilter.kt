@@ -18,6 +18,6 @@ class GLGlassSphereFilter:GLCenterFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("glassSphere.fsh")
+        return loadFilterFromAsset("filters/glass_sphere.fsh")
     }
 }

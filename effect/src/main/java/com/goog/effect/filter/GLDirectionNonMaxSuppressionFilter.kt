@@ -19,6 +19,6 @@ class GLDirectionNonMaxSuppressionFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("directionalNonMaxSuppression.fsh")
+        return loadFilterFromAsset("filters/directional_non_Max_suppression.fsh")
     }
 }

@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLDirectionSobelEdgeDetectionFilter:GLBoxBoundFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("directionalSobelEdgeDetection.fsh")
+        return loadFilterFromAsset("filters/directional_sobel_edge_detection.fsh")
     }
 }

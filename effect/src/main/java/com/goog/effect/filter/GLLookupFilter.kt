@@ -6,6 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLLookupFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("lookup.fsh")
+        return loadFilterFromAsset("filters/lookup.fsh")
     }
 }

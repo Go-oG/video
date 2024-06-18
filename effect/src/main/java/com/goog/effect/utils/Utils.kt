@@ -27,16 +27,13 @@ fun checkArgs(value: Boolean, error: String = "Args check failed") {
 }
 
 fun loadFilterFromAsset(assetName: String): String {
-    var str = assetName
-    if (!str.startsWith("filters")) {
-        str = if (str.startsWith("/")) {
-            "filters$str"
-        } else {
-            "filters/$str"
-        }
+    val ins = ContextUtil.getContext().assets.open(assetName)
+    val s = ins.bufferedReader().use { it.readText() }
+    try {
+        ins.close()
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
-    val s = ContextUtil.getContext().assets.open(str).bufferedReader().use { it.readText() }
-
     if (s.isBlank()) {
         throw IllegalArgumentException()
     }

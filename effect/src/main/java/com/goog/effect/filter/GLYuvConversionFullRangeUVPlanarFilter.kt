@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLYuvConversionFullRangeUVPlanarFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("yuvConversionFullRangeUVPlanar.fsh")
+        return loadFilterFromAsset("filters/yuv_conversion_full_range_uv_planar.fsh")
     }
 }

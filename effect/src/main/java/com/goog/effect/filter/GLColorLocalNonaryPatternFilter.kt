@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLColorLocalNonaryPatternFilter: GLBoxBoundFilter(){
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("colorLocalNonaryPattern.fsh")
+        return loadFilterFromAsset("filters/colorLocalNonaryPattern.fsh")
     }
 }

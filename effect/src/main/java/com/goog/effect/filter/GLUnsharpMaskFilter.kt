@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLUnsharpMaskFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("unsharpMask.fsh")
+        return loadFilterFromAsset("filters/unsharp_mask.fsh")
     }
 }

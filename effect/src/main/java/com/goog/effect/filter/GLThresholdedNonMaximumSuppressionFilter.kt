@@ -14,6 +14,6 @@ class GLThresholdedNonMaximumSuppressionFilter : GLBoxBoundFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("thresholdedNonMaximumSuppression.fsh")
+        return loadFilterFromAsset("filters/thresholded_non_max_suppression.fsh")
     }
 }

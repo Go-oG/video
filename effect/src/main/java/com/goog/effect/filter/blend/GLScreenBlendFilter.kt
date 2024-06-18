@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLScreenBlendFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("screenBlend.fsh")
+        return loadFilterFromAsset("filters/screen_blend.fsh")
     }
 }

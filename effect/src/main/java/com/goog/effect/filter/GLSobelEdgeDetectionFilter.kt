@@ -16,7 +16,7 @@ class GLSobelEdgeDetectionFilter : GLBoxBoundFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("sobelEdgeDetection.fsh")
+        return loadFilterFromAsset("filters/sobel_edge_detection.fsh")
     }
 
 

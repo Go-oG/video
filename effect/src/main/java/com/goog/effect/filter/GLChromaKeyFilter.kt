@@ -19,6 +19,6 @@ class GLChromaKeyFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("chromaKey.fsh")
+        return loadFilterFromAsset("filters/chroma_key.fsh")
     }
 }

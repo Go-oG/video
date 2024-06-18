@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 /**
  * Adjusts the alpha channel of the incoming image
@@ -17,17 +18,6 @@ class GLOpacityFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying highp vec2 vTextureCoord;
-
-            uniform  sampler2D sTexture;
-            uniform  float opacity;
-
-            void main() {
-                 vec4 textureColor = texture2D(sTexture, vTextureCoord);
-                gl_FragColor = textureColor * opacity;
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/opacity.frag")
     }
 }

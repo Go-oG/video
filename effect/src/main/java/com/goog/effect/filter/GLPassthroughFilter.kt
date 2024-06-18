@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLPassthroughFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("passthrough.fsh")
+        return loadFilterFromAsset("filters/passthrough.fsh")
     }
 }

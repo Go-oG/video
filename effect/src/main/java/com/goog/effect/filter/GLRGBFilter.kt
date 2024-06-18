@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 class GLRGBFilter : GLFilter() {
 
@@ -24,31 +25,6 @@ class GLRGBFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-
-            uniform lowp sampler2D sTexture;
-            uniform highp float red;
-            uniform highp float green;
-            uniform highp float blue;
-            uniform lowp float brightness;
-            uniform lowp float saturation;
-            uniform lowp float contrast;
-
-            const mediump vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
-
-            void main() {
-                highp vec4 textureColor = texture2D(sTexture, vTextureCoord);
-                lowp vec4 textureOtherColor = texture2D(sTexture, vTextureCoord);
-                lowp float luminance = dot(textureOtherColor.rgb, luminanceWeighting);
-                lowp vec3 greyScaleColor = vec3(luminance);
-
-                gl_FragColor = vec4(textureColor.r * red, textureColor.g * green, textureColor.b * blue, 1.0);
-                gl_FragColor = vec4((textureOtherColor.rgb + vec3(brightness)), textureOtherColor.w);
-                gl_FragColor = vec4(mix(greyScaleColor, textureColor.rgb, saturation), textureOtherColor.w);
-                gl_FragColor = vec4(((textureOtherColor.rgb - vec3(0.5)) * contrast + vec3(0.5)), textureOtherColor.w);
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/rgb.frag")
     }
 }

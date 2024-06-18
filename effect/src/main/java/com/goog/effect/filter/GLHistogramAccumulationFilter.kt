@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHistogramAccumulationFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("histogramAccumulation.fsh")
+        return loadFilterFromAsset("histogram_accumulation.fsh")
     }
 }

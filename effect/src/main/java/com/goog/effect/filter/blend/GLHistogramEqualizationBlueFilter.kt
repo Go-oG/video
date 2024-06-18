@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHistogramEqualizationBlueFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("histogramEqualizationBlue.fsh")
+        return loadFilterFromAsset("filters/histogram_equalization_blue.fsh")
     }
 }

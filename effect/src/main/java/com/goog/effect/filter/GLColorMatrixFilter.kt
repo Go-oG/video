@@ -21,7 +21,7 @@ class GLColorMatrixFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("colorMatrix.fsh")
+        return loadFilterFromAsset("filters/color_matrix.fsh")
     }
 
 }

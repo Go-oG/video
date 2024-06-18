@@ -23,6 +23,6 @@ class GLHighLightShadowTintFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("highlightShadowTint.fsh")
+        return loadFilterFromAsset("filters/highlight_shadow_tint.fsh")
     }
 }

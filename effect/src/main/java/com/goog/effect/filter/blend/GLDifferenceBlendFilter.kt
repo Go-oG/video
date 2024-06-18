@@ -6,6 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLDifferenceBlendFilter:GLFilter() {
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("differenceBlend.fsh")
+        return loadFilterFromAsset("filters/difference_blend.fsh")
     }
 }

@@ -14,46 +14,10 @@ class GLAverageColorFilter : GLFilter() {
     }
 
     override fun getVertexShader(): String {
-        return """
-            attribute vec4 aPosition;
-            attribute vec4 aTextureCoord;
-            varying highp vec2 vTextureCoord;
-            uniform float texelWidth;
-            uniform float texelHeight;
-
-            varying vec2 upperLeftInputTextureCoord;
-            varying vec2 upperRightInputTextureCoord;
-            varying vec2 lowerLeftInputTextureCoord;
-            varying vec2 lowerRightInputTextureCoord;
-
-            void main() {
-                gl_Position = aPosition;
-                vTextureCoord = aTextureCoord.xy;
-                upperLeftInputTextureCoord = aTextureCoord.xy + vec2(-texelWidth, -texelHeight);
-                upperRightInputTextureCoord = aTextureCoord.xy + vec2(texelWidth, -texelHeight);
-                lowerLeftInputTextureCoord = aTextureCoord.xy + vec2(-texelWidth, texelHeight);
-                lowerRightInputTextureCoord = aTextureCoord.xy + vec2(texelWidth, texelHeight);
-            }
-        """.trimIndent()
+      return loadFilterFromAsset("filters/average_color.vert")
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying mediump vec2 vTextureCoord;
-            uniform sampler2D sTexture;
-            varying  vec2 upperLeftInputTextureCoord;
-            varying  vec2 upperRightInputTextureCoord;
-            varying  vec2 lowerLeftInputTextureCoord;
-            varying  vec2 lowerRightInputTextureCoord;
-
-            void main() {
-                 vec4 upperLeftColor = texture2D(sTexture, upperLeftInputTextureCoord);
-                 vec4 upperRightColor = texture2D(sTexture, upperRightInputTextureCoord);
-                 vec4 lowerLeftColor = texture2D(sTexture, lowerLeftInputTextureCoord);
-                 vec4 lowerRightColor = texture2D(sTexture, lowerRightInputTextureCoord);
-                gl_FragColor = 0.25 * (upperLeftColor + upperRightColor + lowerLeftColor + lowerRightColor);
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/average_color.frag")
     }
 }

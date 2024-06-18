@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHueFilter : GLFilter() {
     var hue by FloatDelegate(90f, 0f, 360f)
@@ -13,48 +14,6 @@ class GLHueFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-
-            uniform lowp sampler2D sTexture;
-            uniform float hueAdjust;
-            const vec4 kRGBToYPrime = vec4(0.299, 0.587, 0.114, 0.0);
-            const vec4 kRGBToI = vec4(0.595716, -0.274453, -0.321263, 0.0);
-            const vec4 kRGBToQ = vec4(0.211456, -0.522591, 0.31135, 0.0);
-
-            const vec4 kYIQToR = vec4(1.0, 0.9563, 0.6210, 0.0);
-            const vec4 kYIQToG = vec4(1.0, -0.2721, -0.6474, 0.0);
-            const vec4 kYIQToB = vec4(1.0, -1.1070, 1.7046, 0.0);
-
-            void main() {
-                // Sample the input pixel
-                highp vec4 color = texture2D(sTexture, vTextureCoord);
-
-                // Convert to YIQ
-                highp float YPrime = dot(color, kRGBToYPrime);
-                highp float I = dot(color, kRGBToI);
-                highp float Q = dot(color, kRGBToQ);
-
-                // Calculate the hue and chroma
-                highp float hue = atan(Q, I);
-                highp float chroma = sqrt(I * I + Q * Q);
-
-                // Make the user's adjustments
-                hue += (-hueAdjust); //why negative rotation?
-
-                // Convert back to YIQ
-                Q = chroma * sin(hue);
-                I = chroma * cos(hue);
-
-                // Convert back to RGB
-                highp vec4 yIQ = vec4(YPrime, I, Q, 0.0);
-                color.r = dot(yIQ, kYIQToR);
-                color.g = dot(yIQ, kYIQToG);
-                color.b = dot(yIQ, kYIQToB);
-                
-                gl_FragColor = color;
-            }
-        """.trimIndent()
+     return loadFilterFromAsset("filters/hue.frag")
     }
 }

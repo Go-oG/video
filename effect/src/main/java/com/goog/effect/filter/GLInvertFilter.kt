@@ -1,17 +1,10 @@
 package com.goog.effect.filter
 
 import com.goog.effect.filter.core.GLFilter
+import com.goog.effect.utils.loadFilterFromAsset
 
 class GLInvertFilter : GLFilter() {
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-            uniform lowp sampler2D sTexture;
-            void main() {
-                lowp vec4 color = texture2D(sTexture, vTextureCoord);
-                gl_FragColor = vec4((1.0 - color.rgb), color.w);
-            }
-        """.trimIndent()
+       return loadFilterFromAsset("filters/invert.frag")
     }
 }

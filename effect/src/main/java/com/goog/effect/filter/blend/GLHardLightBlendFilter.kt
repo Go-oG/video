@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHardLightBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("hardLightBlend.fsh")
+        return loadFilterFromAsset("filters/hard_light_blend.fsh")
     }
 }

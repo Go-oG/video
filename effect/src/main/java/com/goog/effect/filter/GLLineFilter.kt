@@ -17,10 +17,10 @@ class GLLineFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("line.fsh")
+        return loadFilterFromAsset("filters/line.fsh")
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("line.vsh")
+        return loadFilterFromAsset("filters/line.vsh")
     }
 }

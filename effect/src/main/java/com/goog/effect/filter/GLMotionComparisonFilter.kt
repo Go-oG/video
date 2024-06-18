@@ -6,6 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLMotionComparisonFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("motionComparison.fsh")
+        return loadFilterFromAsset("motion_comparison.fsh")
     }
 }

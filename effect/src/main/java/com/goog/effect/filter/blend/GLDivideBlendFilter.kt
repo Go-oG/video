@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLDivideBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("divideBlend.fsh")
+        return loadFilterFromAsset("filters/divide_blend.fsh")
     }
 }

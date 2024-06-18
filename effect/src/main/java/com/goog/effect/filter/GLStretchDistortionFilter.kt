@@ -6,6 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 class GLStretchDistortionFilter : GLCenterFilter() {
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("stretchDistortion.fsh")
+        return loadFilterFromAsset("filters/stretch_distortion.fsh")
     }
 }

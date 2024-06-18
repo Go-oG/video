@@ -23,7 +23,7 @@ class GLScaleFilter : GLFilter() {
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("scale.vert")
+        return loadFilterFromAsset("filters/scale.vert")
     }
 
     fun setScaleType(scaleType: ScaleType) {

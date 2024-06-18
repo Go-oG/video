@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLDarkenBlendFilter :GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("darkenBlend.fsh")
+        return loadFilterFromAsset("filters/darken_blend.fsh")
     }
 }

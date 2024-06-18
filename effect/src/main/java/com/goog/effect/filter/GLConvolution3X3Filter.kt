@@ -17,6 +17,6 @@ class GLConvolution3X3Filter : GLBoxBoundFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("convolution3x3.fsh")
+        return loadFilterFromAsset("filters/convolution3x3.fsh")
     }
 }

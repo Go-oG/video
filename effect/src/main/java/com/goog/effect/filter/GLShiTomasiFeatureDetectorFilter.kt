@@ -14,6 +14,6 @@ class GLShiTomasiFeatureDetectorFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("shiTomasiFeatureDetector.fsh")
+        return loadFilterFromAsset("filters/shi_tomasi_feature_detector.fsh")
     }
 }

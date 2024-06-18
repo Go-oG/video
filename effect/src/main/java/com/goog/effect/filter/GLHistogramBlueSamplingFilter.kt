@@ -5,7 +5,7 @@ import com.goog.effect.utils.loadFilterFromAsset
 
  class GLHistogramBlueSamplingFilter : GLFilter() {
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("histogramBlueSampling.vsh")
+        return loadFilterFromAsset("filters/histogram_blue_sampling.vsh")
     }
 }
 

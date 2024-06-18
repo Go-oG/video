@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLColorBurnBlendFilter:GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("colorBurnBlend.fsh")
+        return loadFilterFromAsset("filters/color_burn_blend.fsh")
     }
 }

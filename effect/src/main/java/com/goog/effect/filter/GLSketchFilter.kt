@@ -14,6 +14,6 @@ class GLSketchFilter : GLBoxBoundFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("sketch.fsh")
+        return loadFilterFromAsset("filters/sketch.fsh")
     }
 }

@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLTiltShiftFilter : GLFilter() {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("tiltShift.fsh")
+        return loadFilterFromAsset("filters/tiltShift.fsh")
     }
 }

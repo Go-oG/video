@@ -10,6 +10,6 @@ class GLChromaKeyBlendFilter: GLMultiTextureFilter(2) {
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("chromaKeyBlend.fsh")
+        return loadFilterFromAsset("filters/chromaKey_blend.fsh")
     }
 }

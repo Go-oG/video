@@ -16,6 +16,6 @@ class GLLuminanceRangeFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("luminanceRange.fsh")
+        return loadFilterFromAsset("filters/luminance_range.fsh")
     }
 }

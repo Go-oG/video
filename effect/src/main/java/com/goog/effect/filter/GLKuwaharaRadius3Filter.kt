@@ -11,7 +11,7 @@ class GLKuwaharaRadius3Filter : GLFilter() {
         put("srcHeight",height)
     }
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("kuwaharaRadius3.fsh")
+        return loadFilterFromAsset("filters/kuwahara_radius3.fsh")
     }
 
 }

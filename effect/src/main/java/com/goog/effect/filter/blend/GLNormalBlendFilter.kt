@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLNormalBlendFilter : GLMultiTextureFilter(2) {
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("normalBlend.fsh")
+        return loadFilterFromAsset("filters/normal_blend.fsh")
     }
 }

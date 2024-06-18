@@ -13,10 +13,10 @@ class GLCrosshairFilter:GLFilter() {
         put("crosshairWidth",crosshairWidth)
     }
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("crosshair.fsh")
+        return loadFilterFromAsset("filters/crosshair.fsh")
     }
 
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("crosshair.vsh")
+        return loadFilterFromAsset("filters/crosshair.vsh")
     }
 }

@@ -5,6 +5,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLHistogramLuminanceSamplingFilter : GLFilter() {
     override fun getVertexShader(): String {
-        return loadFilterFromAsset("histogramLuminanceSampling.vsh")
+        return loadFilterFromAsset("filters/histogram_luminance_sampling.vsh")
     }
 }

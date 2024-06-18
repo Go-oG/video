@@ -20,6 +20,6 @@ class GLPolkaDotFilter : GLFilter() {
 
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("polkaDot.fsh")
+        return loadFilterFromAsset("filters/polka_dot.fsh")
     }
 }
