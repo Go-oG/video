@@ -25,9 +25,9 @@ private class AdaptiveThresholdInner : GLMultiTextureFilter(2) {
     ///TODO 暂不可用
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
-            varying highp vec2 vTextureCoord;
-            varying highp vec2 vTextureCoord2;
+            precision mediump float;
+            varying vec2 vTextureCoord;
+            varying vec2 vTextureCoord2;
 
             uniform sampler2D sTexture;
             uniform sampler2D sTexture2; 

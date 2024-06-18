@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D sTexture;
 varying vec2 vTextureCoord;
@@ -16,17 +16,17 @@ varying vec2 bottomRightTextureCoord;
 
 
 void main() {
-    lowp float centerIntensity = texture2D(sTexture, vTextureCoord).r;
-    lowp float bottomLeftIntensity = texture2D(sTexture, bottomLeftTextureCoord).r;
-    lowp float topRightIntensity = texture2D(sTexture, topRightTextureCoord).r;
-    lowp float topLeftIntensity = texture2D(sTexture, topLeftTextureCoord).r;
-    lowp float bottomRightIntensity = texture2D(sTexture, bottomRightTextureCoord).r;
-    lowp float leftIntensity = texture2D(sTexture, leftTextureCoord).r;
-    lowp float rightIntensity = texture2D(sTexture, rightTextureCoord).r;
-    lowp float bottomIntensity = texture2D(sTexture, bottomTextureCoord).r;
-    lowp float topIntensity = texture2D(sTexture, topTextureCoord).r;
+    float centerIntensity = texture2D(sTexture, vTextureCoord).r;
+    float bottomLeftIntensity = texture2D(sTexture, bottomLeftTextureCoord).r;
+    float topRightIntensity = texture2D(sTexture, topRightTextureCoord).r;
+    float topLeftIntensity = texture2D(sTexture, topLeftTextureCoord).r;
+    float bottomRightIntensity = texture2D(sTexture, bottomRightTextureCoord).r;
+    float leftIntensity = texture2D(sTexture, leftTextureCoord).r;
+    float rightIntensity = texture2D(sTexture, rightTextureCoord).r;
+    float bottomIntensity = texture2D(sTexture, bottomTextureCoord).r;
+    float topIntensity = texture2D(sTexture, topTextureCoord).r;
 
-    lowp float byteTally = 1.0 / 255.0 * step(centerIntensity, topRightIntensity);
+    float byteTally = 1.0 / 255.0 * step(centerIntensity, topRightIntensity);
     byteTally += 2.0 / 255.0 * step(centerIntensity, topIntensity);
     byteTally += 4.0 / 255.0 * step(centerIntensity, topLeftIntensity);
     byteTally += 8.0 / 255.0 * step(centerIntensity, leftIntensity);

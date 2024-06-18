@@ -1,11 +1,4 @@
-// Sourced from Kyprianidis, J. E., Kang, H., and Doellner, J. "Anisotropic Kuwahara Filtering on the GPU," GPU Pro p.247 (2010).
-// 
-// Original header:
-// 
-// Anisotropic Kuwahara Filtering on the GPU
-// by Jan Eric Kyprianidis <www.kyprianidis.com>
-
-precision highp float;
+precision mediump float;
 
 varying highp vec2 vTextureCoord;
 uniform sampler2D sTexture;
@@ -13,8 +6,6 @@ uniform sampler2D sTexture;
 uniform int radius;
 uniform int srcWidth;
 uniform int srcHeight;
-
-//const vec2 src_size = vec2 (1.0 / 768.0, 1.0 / 1024.0);
 
 void main() {
     vec2 src_size = vec2(1.0 / float(srcWidth), 1.0 / float(srcHeight));

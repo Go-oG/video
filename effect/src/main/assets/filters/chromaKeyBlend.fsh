@@ -1,9 +1,9 @@
 // Shader code based on Apple's CIChromaKeyFilter example: https://developer.apple.com/library/mac/#samplecode/CIChromaKeyFilter/Introduction/Intro.html
 
-precision highp float;
+precision mediump float;
 
-varying highp vec2 vTextureCoord;
-varying highp vec2 vTextureCoord2;
+varying mediump vec2 vTextureCoord;
+varying mediump vec2 vTextureCoord2;
 uniform sampler2D sTexture;
 uniform sampler2D sTexture2;
 
@@ -25,7 +25,7 @@ void main() {
     float Cr = 0.7132 * (textureColor.r - Y);
     float Cb = 0.5647 * (textureColor.b - Y);
 
-    //     float blendValue = 1.0 - smoothstep(thresholdSensitivity - smoothing, thresholdSensitivity , abs(Cr - maskCr) + abs(Cb - maskCb));
+    //float blendValue = 1.0 - smoothstep(thresholdSensitivity - smoothing, thresholdSensitivity , abs(Cr - maskCr) + abs(Cb - maskCb));
     float blendValue = 1.0 - smoothstep(thresholdSensitivity, thresholdSensitivity + smoothing, distance(vec2(Cr, Cb), vec2(maskCr, maskCb)));
     gl_FragColor = mix(textureColor, textureColor2, blendValue);
 }

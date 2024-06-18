@@ -15,12 +15,12 @@ class GLToneFilter : GLThreex3TextureSamplingFilter() {
 
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
-            const highp vec3 W = vec3(0.2125, 0.7154, 0.0721);
+            precision mediump float;
+            const vec3 W = vec3(0.2125, 0.7154, 0.0721);
 
             uniform lowp sampler2D sTexture;
-            uniform highp float threshold;
-            uniform highp float quantizationLevels;
+            uniform float threshold;
+            uniform float quantizationLevels;
 
             varying vec2 textureCoordinate;
             varying vec2 leftTextureCoordinate;

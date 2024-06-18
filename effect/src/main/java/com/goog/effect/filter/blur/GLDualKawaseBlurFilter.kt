@@ -47,7 +47,7 @@ private class DownSampleBlur : BaseSampleBlur(2f, false) {
 
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
+            precision mediump float;
             varying highp vec2 vTextureCoord;
             uniform sampler2D sTexture;
 
@@ -72,7 +72,7 @@ private class UpSampleBlur : BaseSampleBlur(1f, true) {
 
     override fun getFragmentShader(): String {
         return """
-           precision highp float;
+           precision mediump float;
            uniform sampler2D sTexture;
            varying highp vec2 vTextureCoord;
 

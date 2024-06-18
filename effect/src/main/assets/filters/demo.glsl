@@ -1,17 +1,15 @@
 precision mediump float;
-precision highp int;
 
-varying highp vec4 vTextureCoord;
+varying mediump vec4 vTextureCoord;
 uniform mediump sampler2D sTexture;
 
-uniform highp int operationMode;
-uniform highp float edgeThreshold;
-uniform highp float edgeSharpness;
+uniform int operationMode;
+uniform float edgeThreshold;
+uniform float edgeSharpness;
 
 ///视图Rect 信息
 //{1.0/original_tex_w,1.0/original_tex_h,original_tex_w,original_tex_h}?
-uniform highp vec4 viewportInfo;
-
+uniform vec4 viewportInfo;
 
 float fastLanczos2(float x) {
     float wA = x - 4.0;
@@ -34,17 +32,17 @@ void main() {
         color.xyzw = textureLod(sTexture, vTextureCoord.xy, 0.0).xyzw;
     }
 
-    highp float xCenter;
+    float xCenter;
     xCenter = abs(vTextureCoord.x + -0.5);
-    highp float yCenter;
+    float yCenter;
     yCenter = abs(vTextureCoord.y + -0.5);
 
     //todo: config the SR region based on needs
     //if ( mode!=4 && xCenter*xCenter+yCenter*yCenter<=0.4 * 0.4)
     if (mode != 4) {
-        highp vec2 imgCoord = ((vTextureCoord.xy * viewportInfo.zw) + vec2(-0.5, 0.5));
-        highp vec2 imgCoordPixel = floor(imgCoord);
-        highp vec2 coord = (imgCoordPixel * viewportInfo.xy);
+        vec2 imgCoord = ((vTextureCoord.xy * viewportInfo.zw) + vec2(-0.5, 0.5));
+        vec2 imgCoordPixel = floor(imgCoord);
+        vec2 coord = (imgCoordPixel * viewportInfo.xy);
         vec2 pl = (imgCoord + (-imgCoordPixel));
         vec4 left = textureGather(sTexture, coord, mode);
 

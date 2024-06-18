@@ -3,7 +3,7 @@ package com.goog.effect.filter
 class GLWeakPixelInclusionFilter : GLThreex3TextureSamplingFilter() {
     override fun getFragmentShader(): String {
         return """
-            precision lowp float;
+            precision mediump float;
             uniform lowp sampler2D sTexture;
 
             varying vec2 textureCoordinate;

@@ -16,7 +16,7 @@ class GLPolarPixelateFilter : GLFilter() {
 
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
+            precision mediump float;
             varying highp vec2 vTextureCoord;
             uniform sampler2D sTexture;
 

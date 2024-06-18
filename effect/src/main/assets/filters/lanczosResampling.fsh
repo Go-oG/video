@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 uniform sampler2D sTexture;
 
@@ -12,11 +12,8 @@ varying vec2 twoStepsRightTexCoord;
 varying vec2 threeStepsRightTexCoord;
 varying vec2 fourStepsRightTexCoord;
 
-// sinc(x) * sinc(x/a) = (a * sin(pi * x) * sin(pi * x / a)) / (pi^2 * x^2)
-// Assuming a Lanczos constant of 2.0, and scaling values to max out at x = +/- 1.5
-
 void main() {
-    lowp vec4 fragmentColor = texture2D(sTexture, vTextureCoord) * 0.38026;
+    vec4 fragmentColor = texture2D(sTexture, vTextureCoord) * 0.38026;
     
     fragmentColor += texture2D(sTexture, oneStepLeftTexCoord) * 0.27667;
     fragmentColor += texture2D(sTexture, oneStepRightTexCoord) * 0.27667;

@@ -9,7 +9,7 @@ class GLLaplacianFilter : GLBoxBoundFilter() {
 
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
+            precision mediump float;
 
             varying vec2 vTextureCoord;
             uniform sampler2D sTexture;
@@ -26,17 +26,17 @@ class GLLaplacianFilter : GLBoxBoundFilter() {
 
 
             void main() {
-                mediump vec3 bottomColor = texture2D(sTexture, bottomTextureCoord).rgb;
-                mediump vec3 bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoord).rgb;
-                mediump vec3 bottomRightColor = texture2D(sTexture, bottomRightTextureCoord).rgb;
-                mediump vec4 centerColor = texture2D(sTexture, vTextureCoord);
-                mediump vec3 leftColor = texture2D(sTexture, leftTextureCoord).rgb;
-                mediump vec3 rightColor = texture2D(sTexture, rightTextureCoord).rgb;
-                mediump vec3 topColor = texture2D(sTexture, topTextureCoord).rgb;
-                mediump vec3 topRightColor = texture2D(sTexture, topRightTextureCoord).rgb;
-                mediump vec3 topLeftColor = texture2D(sTexture, topLeftTextureCoord).rgb;
+                vec3 bottomColor = texture2D(sTexture, bottomTextureCoord).rgb;
+                vec3 bottomLeftColor = texture2D(sTexture, bottomLeftTextureCoord).rgb;
+                vec3 bottomRightColor = texture2D(sTexture, bottomRightTextureCoord).rgb;
+                vec4 centerColor = texture2D(sTexture, vTextureCoord);
+                vec3 leftColor = texture2D(sTexture, leftTextureCoord).rgb;
+                vec3 rightColor = texture2D(sTexture, rightTextureCoord).rgb;
+                vec3 topColor = texture2D(sTexture, topTextureCoord).rgb;
+                vec3 topRightColor = texture2D(sTexture, topRightTextureCoord).rgb;
+                vec3 topLeftColor = texture2D(sTexture, topLeftTextureCoord).rgb;
                 
-                mediump vec3 resultColor = topLeftColor * 0.5 + topColor * 1.0 + topRightColor * 0.5;
+                vec3 resultColor = topLeftColor * 0.5 + topColor * 1.0 + topRightColor * 0.5;
                 resultColor += leftColor * 1.0 + centerColor.rgb * (-6.0) + rightColor * 1.0;
                 resultColor += bottomLeftColor * 0.5 + bottomColor * 1.0 + bottomRightColor * 0.5;
                 

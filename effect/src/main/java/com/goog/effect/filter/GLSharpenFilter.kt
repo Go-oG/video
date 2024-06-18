@@ -48,22 +48,22 @@ class GLSharpenFilter : GLFilter() {
 
     override fun getFragmentShader(): String {
         return """
-            precision highp float;
+            precision mediump float;
             uniform lowp sampler2D sTexture;
-            varying highp vec2 textureCoordinate;
-            varying highp vec2 leftTextureCoordinate;
-            varying highp vec2 rightTextureCoordinate;
-            varying highp vec2 topTextureCoordinate;
-            varying highp vec2 bottomTextureCoordinate;
+            varying vec2 textureCoordinate;
+            varying vec2 leftTextureCoordinate;
+            varying vec2 rightTextureCoordinate;
+            varying vec2 topTextureCoordinate;
+            varying vec2 bottomTextureCoordinate;
             varying float centerMultiplier;
             varying float edgeMultiplier;
 
             void main() {
-                mediump vec3 textureColor = texture2D(sTexture, textureCoordinate).rgb;
-                mediump vec3 leftTextureColor = texture2D(sTexture, leftTextureCoordinate).rgb;
-                mediump vec3 rightTextureColor = texture2D(sTexture, rightTextureCoordinate).rgb;
-                mediump vec3 topTextureColor = texture2D(sTexture, topTextureCoordinate).rgb;
-                mediump vec3 bottomTextureColor = texture2D(sTexture, bottomTextureCoordinate).rgb;
+                vec3 textureColor = texture2D(sTexture, textureCoordinate).rgb;
+                vec3 leftTextureColor = texture2D(sTexture, leftTextureCoordinate).rgb;
+                vec3 rightTextureColor = texture2D(sTexture, rightTextureCoordinate).rgb;
+                vec3 topTextureColor = texture2D(sTexture, topTextureCoordinate).rgb;
+                vec3 bottomTextureColor = texture2D(sTexture, bottomTextureCoordinate).rgb;
                 gl_FragColor = vec4((textureColor * centerMultiplier - (leftTextureColor * edgeMultiplier + rightTextureColor * edgeMultiplier + topTextureColor * edgeMultiplier + bottomTextureColor * edgeMultiplier)), texture2D(sTexture, bottomTextureCoordinate).w);
             }
         """.trimIndent()

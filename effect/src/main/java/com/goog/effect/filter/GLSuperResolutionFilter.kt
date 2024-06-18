@@ -27,18 +27,18 @@ class GLSuperResolutionFilter : GLFilter() {
     override fun getFragmentShader(): String {
         return """
            precision mediump float;
-           precision highp int;
+           precision mediump int;
 
            varying highp vec4 vTextureCoord;
            uniform mediump sampler2D sTexture;
 
-           uniform highp int operationMode;
-           uniform mediump float edgeThreshold;
-           uniform mediump float edgeSharpness;
+           uniform int operationMode;
+           uniform float edgeThreshold;
+           uniform float edgeSharpness;
 
            ///视图Rect 信息
            //{1.0/original_tex_w,1.0/original_tex_h,original_tex_w,original_tex_h}?
-           uniform highp vec4 viewportInfo;
+           uniform vec4 viewportInfo;
 
            float fastLanczos2(float x) {
                float wA = x - 4.0;

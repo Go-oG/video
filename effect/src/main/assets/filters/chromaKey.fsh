@@ -1,14 +1,12 @@
 // Shader code based on Apple's CIChromaKeyFilter example: https://developer.apple.com/library/mac/#samplecode/CIChromaKeyFilter/Introduction/Intro.html
 
-precision highp float;
-
-varying highp vec2 vTextureCoord;
+precision mediump float;
+varying mediump vec2 vTextureCoord;
 uniform sampler2D sTexture;
 
 uniform float thresholdSensitivity;
 uniform float smoothing;
 uniform vec3 colorToReplace;
-
 
 void main() {
     vec4 textureColor = texture2D(sTexture, vTextureCoord);

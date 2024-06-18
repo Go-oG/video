@@ -1,9 +1,9 @@
-precision highp float;
+precision mediump float;
 varying highp vec2 vTextureCoord;
 uniform sampler2D sTexture;
 
-uniform highp vec2 uCenter;
-uniform highp vec2 uPixelSize;
+uniform vec2 uCenter;
+uniform vec2 uPixelSize;
 
 void main() {
     vec2 normCoord = 2.0 * vTextureCoord - 1.0;

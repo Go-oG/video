@@ -308,7 +308,6 @@ open class GLFilter {
         if (value != null) {
             return value
         }
-
         var location = GLES20.glGetAttribLocation(program, name)
         if (location == -1) {
             location = GLES20.glGetUniformLocation(program, name)
@@ -317,6 +316,8 @@ open class GLFilter {
         handleMap[name] = location
         return location
     }
+
+
 
 }
 

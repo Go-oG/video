@@ -1,4 +1,4 @@
-precision highp float;
+precision mediump float;
 
 varying vec2 centerTextureCoord;
 varying vec2 oneStepPositiveTextureCoord;
@@ -11,15 +11,14 @@ varying vec2 threeStepsNegativeTextureCoord;
 uniform sampler2D sTexture;
 
 void main() {
-    lowp vec4 centerIntensity = texture2D(sTexture, centerTextureCoord);
-    lowp vec4 oneStepPositiveIntensity = texture2D(sTexture, oneStepPositiveTextureCoord);
-    lowp vec4 oneStepNegativeIntensity = texture2D(sTexture, oneStepNegativeTextureCoord);
-    lowp vec4 twoStepsPositiveIntensity = texture2D(sTexture, twoStepsPositiveTextureCoord);
-    lowp vec4 twoStepsNegativeIntensity = texture2D(sTexture, twoStepsNegativeTextureCoord);
-    lowp vec4 threeStepsPositiveIntensity = texture2D(sTexture, threeStepsPositiveTextureCoord);
-    lowp vec4 threeStepsNegativeIntensity = texture2D(sTexture, threeStepsNegativeTextureCoord);
-    
-    lowp vec4 minValue = min(centerIntensity, oneStepPositiveIntensity);
+    mediump vec4 centerIntensity = texture2D(sTexture, centerTextureCoord);
+    mediump vec4 oneStepPositiveIntensity = texture2D(sTexture, oneStepPositiveTextureCoord);
+    mediump vec4 oneStepNegativeIntensity = texture2D(sTexture, oneStepNegativeTextureCoord);
+    mediump vec4 twoStepsPositiveIntensity = texture2D(sTexture, twoStepsPositiveTextureCoord);
+    mediump vec4 twoStepsNegativeIntensity = texture2D(sTexture, twoStepsNegativeTextureCoord);
+    mediump vec4 threeStepsPositiveIntensity = texture2D(sTexture, threeStepsPositiveTextureCoord);
+    mediump vec4 threeStepsNegativeIntensity = texture2D(sTexture, threeStepsNegativeTextureCoord);
+    mediump vec4 minValue = min(centerIntensity, oneStepPositiveIntensity);
     minValue = min(minValue, oneStepNegativeIntensity);
     minValue = min(minValue, twoStepsPositiveIntensity);
     minValue = min(minValue, twoStepsNegativeIntensity);
