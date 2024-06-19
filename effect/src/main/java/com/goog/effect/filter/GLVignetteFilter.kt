@@ -3,6 +3,7 @@ package com.goog.effect.filter
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.FloatDelegate
+import com.goog.effect.utils.loadFilterFromAsset
 
 class GLVignetteFilter : GLFilter() {
     var centerX by FloatDelegate(0.5f, 0f, 1f)
@@ -18,19 +19,6 @@ class GLVignetteFilter : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying vec2 vTextureCoord;
-            uniform lowp sampler2D sTexture;
-            uniform lowp vec2 vignetteCenter;
-            uniform highp float vignetteStart;
-            uniform highp float vignetteEnd;
-            void main() {
-                lowp vec3 rgb = texture2D(sTexture, vTextureCoord).rgb;
-                lowp float d = distance(vTextureCoord, vec2(vignetteCenter.x, vignetteCenter.y));
-                lowp float percent = smoothstep(vignetteStart, vignetteEnd, d);
-                gl_FragColor = vec4(mix(rgb.x, 0.0, percent), mix(rgb.y, 0.0, percent), mix(rgb.z, 0.0, percent), 1.0);
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/vignette.frag")
     }
 }

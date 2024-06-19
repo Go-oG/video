@@ -6,6 +6,7 @@ import android.opengl.GLES20
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.FrameBufferObject
 import com.goog.effect.model.CallBy
+import com.goog.effect.utils.loadFilterFromAsset
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -32,7 +33,6 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
     private val textures = IntArray(1)
 
     private lateinit var toneCurveByteArray: ByteArray
-
 
     init {
         val defaultCurvePoints = arrayOf(PointF(0.0f, 0.0f), PointF(0.5f, 0.5f), PointF(1.0f, 1.0f))
@@ -176,7 +176,6 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
             return null
         }
 
-        // Sort the array
         val pointsSorted = points.clone()
         Arrays.sort(pointsSorted) { point1, point2 ->
             if (point1!!.x < point2!!.x) {
@@ -192,7 +191,7 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
         val convertedPoints = arrayOfNulls<Point>(pointsSorted.size)
         for (i in points.indices) {
             val point = pointsSorted[i]
-            convertedPoints[i] = Point((point!!.x * 255).toInt(), (point.y * 255).toInt())
+            convertedPoints[i] = Point((point.x * 255).toInt(), (point.y * 255).toInt())
         }
 
         val splinePoints = createSplineCurve2(convertedPoints)
@@ -329,19 +328,6 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
     }
 
     override fun getFragmentShader(): String {
-        return """
-            precision mediump float;
-            varying highp vec2 vTextureCoord;
-            uniform lowp sampler2D sTexture;
-            uniform mediump sampler2D toneCurveTexture;
-
-            void main() {
-                lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
-                lowp float redCurveValue = texture2D(toneCurveTexture, vec2(textureColor.r, 0.0)).r;
-                lowp float greenCurveValue = texture2D(toneCurveTexture, vec2(textureColor.g, 0.0)).g;
-                lowp float blueCurveValue = texture2D(toneCurveTexture, vec2(textureColor.b, 0.0)).b;
-                gl_FragColor = vec4(redCurveValue, greenCurveValue, blueCurveValue, textureColor.a);
-            }
-        """.trimIndent()
+        return loadFilterFromAsset("filters/tone_curve.frag")
     }
 }

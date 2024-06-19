@@ -180,10 +180,7 @@ class GLScaleFilter : GLFilter() {
                 dx, dy, 0f, 1f
         )
     }
-
 }
-
-
 
 enum class ScaleType {
     NONE,
