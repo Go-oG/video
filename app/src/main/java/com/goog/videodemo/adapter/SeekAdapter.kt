@@ -1,4 +1,4 @@
-package com.goog.videodemo
+package com.goog.videodemo.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.goog.videodemo.R
+import com.goog.videodemo.data.FilterItem
+import com.goog.videodemo.data.Parameter
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 

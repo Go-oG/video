@@ -11,6 +11,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goog.effect.view.surface.GLSurfaceView2
+import com.goog.videodemo.adapter.FilterAdapter
+import com.goog.videodemo.adapter.SeekAdapter
+import com.goog.videodemo.data.FilterItem
 
 @SuppressLint("NotifyDataSetChanged")
 class MainActivity : AppCompatActivity() {

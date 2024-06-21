@@ -1,15 +1,15 @@
-package com.goog.videodemo
+package com.goog.videodemo.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.RadioButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.goog.videodemo.R
+import com.goog.videodemo.data.FilterItem
 
 class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
     val dataList = mutableListOf<FilterItem>()
