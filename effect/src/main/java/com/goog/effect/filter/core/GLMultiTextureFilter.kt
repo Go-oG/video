@@ -15,83 +15,49 @@ import com.goog.effect.utils.checkArgs
  */
 @Deprecated("待完善")
 abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
-    private val texturePosArray = arrayOf(
-        GLES20.GL_TEXTURE1,
-        GLES20.GL_TEXTURE2,
-        GLES20.GL_TEXTURE3,
-        GLES20.GL_TEXTURE4,
-        GLES20.GL_TEXTURE5,
-        GLES20.GL_TEXTURE6,
-        GLES20.GL_TEXTURE7,
-        GLES20.GL_TEXTURE8,
-        GLES20.GL_TEXTURE9,
-        GLES20.GL_TEXTURE10,
-        GLES20.GL_TEXTURE11
-    ).toIntArray()
+    companion object{
+        private val TEXTURE_PART_LIST = listOf(
+            InnerPart(GLES20.GL_TEXTURE3, GLConstant.K_UNIFORM_TEX2,3),
+            InnerPart(GLES20.GL_TEXTURE4, GLConstant.K_UNIFORM_TEX3,4),
+            InnerPart(GLES20.GL_TEXTURE5, GLConstant.K_UNIFORM_TEX4,5),
+            InnerPart(GLES20.GL_TEXTURE6, GLConstant.K_UNIFORM_TEX5,6),
+            InnerPart(GLES20.GL_TEXTURE7, GLConstant.K_UNIFORM_TEX6,7)
+        )
+    }
 
-    private var uniformTexArray = arrayOf(
-        GLConstant.K_UNIFORM_TEX2,
-        GLConstant.K_UNIFORM_TEX3,
-        GLConstant.K_UNIFORM_TEX4,
-        GLConstant.K_UNIFORM_TEX5,
-        GLConstant.K_UNIFORM_TEX6,
-        GLConstant.K_UNIFORM_TEX7,
-        GLConstant.K_UNIFORM_TEX8,
-        GLConstant.K_UNIFORM_TEX9,
-        GLConstant.K_UNIFORM_TEX10
-    )
-    private var itemList = listOf<MultiItem>()
+    private var mTextureList = listOf<TextureItem>()
 
     init {
-        checkArgs(texCount in 2..10)
+        checkArgs(texCount in 2..6)
         val count = texCount - 1
-        val list = mutableListOf<MultiItem>()
-        for (i in 2..count) {
-            val item = MultiItem(i - 2, texturePosArray[i - 2], uniformTexArray[i - 2])
+        val list = mutableListOf<TextureItem>()
+        for (i in 0..<count) {
+            val part = TEXTURE_PART_LIST[i]
+            val item = TextureItem(part.textureUnit, part.uniformName,part.offset)
             list.add(item)
         }
-        this.itemList = list
+        this.mTextureList = list
     }
 
-    override fun onInitialize(callBy: CallBy) {
-        super.onInitialize(callBy)
-        setTextures(itemList)
-    }
-
-    private fun setTextures(items: List<MultiItem>) {
-        for (item in items) {
+    override fun setFrameSize(width: Int, height: Int) {
+        super.setFrameSize(width, height)
+        for (item in mTextureList) {
             releaseBitmap(item.bitmap)
             item.bitmap = null
             val bitmap = createdBitmap()
             item.bitmap = bitmap
-            // 加载纹理并获得纹理ID
-            val textureId = loadTexture(bitmap)
-            item.texPoint = textureId
-            //并没有激活纹理单元，只是绑定纹理ID
-
+            item.texPoint = EGLUtil.loadOrUpdateTextureFromBitmap(bitmap,null,true)
         }
     }
 
     final override fun onDraw(fbo: FrameBufferObject?) {
-        for (item in itemList) {
+        for (item in mTextureList) {
             item.activeTexture(program)
         }
         onDraw2(fbo)
     }
 
     open fun onDraw2(fbo: FrameBufferObject?) {}
-
-    private fun loadTexture(bitmap: Bitmap): Int {
-        val args = IntArray(1)
-        GLES20.glGenTextures(1, args, 0)
-        if (args[0] != 0) {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, args[0])
-            EGLUtil.configTexture(args[0])
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0)
-            bitmap.recycle()
-        }
-        return args[0]
-    }
 
     private fun createdBitmap(): Bitmap {
         return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -103,29 +69,24 @@ abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
         }
     }
 
-    override fun getVertexShader(): String {
-        return VERTEX_SHADERS[texCount - 1]
-    }
 }
 
-private class MultiItem(val listIndex: Int, val texPosOffset: Int, val uniformName: String) {
+private class TextureItem(val textureUnit: Int, val uniformName: String, val offset:Int) {
     var bitmap: Bitmap? = null
 
     ///纹理指针
     var texPoint = 0
 
     fun activeTexture(program: Int) {
-        GLES20.glActiveTexture(texPosOffset)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texPoint)
-        val handle = GLES20.glGetUniformLocation(program, uniformName)
-        GLES20.glUniform1i(handle, listIndex + 1)
-
-        val map = bitmap
-        if (map != null && !map.isRecycled) {
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, map, 0)
+        val bitmap=this.bitmap
+        if(bitmap!=null){
+            GLES20.glActiveTexture(textureUnit)
+            EGLUtil.loadOrUpdateTextureFromBitmap(bitmap,texPoint,false)
+            val handle = GLES20.glGetUniformLocation(program, uniformName)
+            GLES20.glUniform1i(handle, offset)
         }
-
     }
-
-
 }
+
+
+private class InnerPart(val textureUnit:Int,val uniformName:String,val offset:Int)

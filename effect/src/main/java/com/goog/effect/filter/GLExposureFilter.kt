@@ -10,7 +10,7 @@ class GLExposureFilter : GLFilter() {
     var exposure by FloatDelegate(1f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("exposure", exposure)
+        put("uExposure", exposure)
     }
 
     override fun getFragmentShader(): String {

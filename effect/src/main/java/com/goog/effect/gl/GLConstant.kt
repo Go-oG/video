@@ -23,12 +23,14 @@ object GLConstant {
     const val K_UNIFORM_TEX2 = "sTexture2"
     const val K_UNIFORM_TEX3 = "sTexture3"
     const val K_UNIFORM_TEX4 = "sTexture4"
+    const val K_UNIFORM_TEX5 = "sTexture5"
+    const val K_UNIFORM_TEX6 = "sTexture6"
 
     ///预先创建好
-    val ONE_VERTEX_SHADER = loadFilterFromAsset("filters/vertex/one.vert")
-    val TWO_VERTEX_SHADER = loadFilterFromAsset("filters/vertex/two.vert")
-    val THREE_VERTEX_SHADER = loadFilterFromAsset("filters/vertex/three.vert")
-    val FOUR_VERTEX_SHADER = loadFilterFromAsset("filters/vertex/four.vert")
+    val ONE_VERTEX_SHADER = loadFilterFromAsset("filters/vert/one.vert")
+    val TWO_VERTEX_SHADER = loadFilterFromAsset("filters/vert/two.vert")
+    val THREE_VERTEX_SHADER = loadFilterFromAsset("filters/vert/three.vert")
+    val FOUR_VERTEX_SHADER = loadFilterFromAsset("filters/vert/four.vert")
 
     val VERTEX_SHADERS = arrayOf(
         ONE_VERTEX_SHADER,

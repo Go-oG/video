@@ -1,5 +1,6 @@
 package com.goog.videodemo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -26,10 +27,11 @@ class FilterAdapter(val context: Context) : Adapter<FilterHolder>() {
 
     override fun getItemCount(): Int = dataList.size
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: FilterHolder, position: Int) {
         val data = dataList[position]
         holder.indexTV.text = "$position"
-        holder.nameTv.text = dataList[position].name
+        holder.nameTv.text = dataList[position].showName
         if (data.select) {
             holder.root.setBackgroundColor(0xFF2196F3.toInt())
         } else {

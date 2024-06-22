@@ -4,16 +4,16 @@ uniform sampler2D sTexture;
 
 varying mediump vec2 vTextureCoord;
 
-varying vec2 upperLeftInputTextureCoord;
-varying vec2 upperRightInputTextureCoor;
-varying vec2 lowerLeftInputTextureCoord;
-varying vec2 lowerRightInputTextureCoord;
+varying vec2 upperLeftCoord;
+varying vec2 upperRightCoord;
+varying vec2 lowerLeftCoord;
+varying vec2 lowerRightCoord;
 
 void main() {
-    float upperLeftLuminance = texture2D(sTexture, upperLeftInputTextureCoord).r;
-    float upperRightLuminance = texture2D(sTexture, upperRightInputTextureCoor).r;
-    float lowerLeftLuminance = texture2D(sTexture, lowerLeftInputTextureCoord).r;
-    float lowerRightLuminance = texture2D(sTexture, lowerRightInputTextureCoord).r;
-    float luminosity = 0.25 * (upperLeftLuminance + upperRightLuminance + lowerLeftLuminance + lowerRightLuminance);
+    float upperLeft = texture2D(sTexture, upperLeftCoord).r;
+    float upperRight = texture2D(sTexture, upperRightCoord).r;
+    float lowerLeft = texture2D(sTexture, lowerLeftCoord).r;
+    float lowerRight = texture2D(sTexture, lowerRightCoord).r;
+    float luminosity = 0.25 * (upperLeft + upperRight + lowerLeft + lowerRight);
     gl_FragColor = vec4(luminosity, luminosity, luminosity, 1.0);
 }

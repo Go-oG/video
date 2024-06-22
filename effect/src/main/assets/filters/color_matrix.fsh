@@ -2,12 +2,12 @@ varying highp vec2 vTextureCoord;
 
 uniform sampler2D sTexture;
 
-uniform lowp mat4 colorMatrix;
-uniform lowp float intensity;
+uniform mat4 uColorMatrix;
+uniform float uIntensity;
 
 void main() {
-    lowp vec4 textureColor = texture2D(sTexture, vTextureCoord);
-    lowp vec4 outputColor = textureColor * colorMatrix;
+    vec4 textureColor = texture2D(sTexture, vTextureCoord);
+    vec4 outputColor = textureColor * uColorMatrix;
 
-    gl_FragColor = (intensity * outputColor) + ((1.0 - intensity) * textureColor);
+    gl_FragColor = (uIntensity * outputColor) + ((1.0 - uIntensity) * textureColor);
 }

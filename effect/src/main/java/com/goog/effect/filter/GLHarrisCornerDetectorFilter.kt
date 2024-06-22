@@ -11,7 +11,7 @@ class GLHarrisCornerDetectorFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("sensitivity", sensitivity)
+        put("uSensitivity", sensitivity)
     }
 
     override fun getFragmentShader(): String {

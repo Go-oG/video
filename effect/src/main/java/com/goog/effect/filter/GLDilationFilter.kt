@@ -6,7 +6,6 @@ import com.goog.effect.utils.loadFilterFromAsset
 
 class GLDilationFilter(val level: Level=Level.L1) : GLFilter() {
 
-
     override fun getFragmentShader(): String {
         if (level == Level.L1) {
             return loadFilterFromAsset("filters/dilation1.fsh")

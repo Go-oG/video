@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.goog.effect.view.texture
 
 import android.content.Context
@@ -8,6 +10,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.TextureView
 import androidx.annotation.CallSuper
+import com.goog.effect.Player
+import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.gl.ISurfaceView
 import com.goog.effect.gl.SimpleConfigChooser
 import com.goog.effect.gl.SimpleContextFactory
@@ -15,6 +19,7 @@ import com.goog.effect.gl.FilterRenderer
 import com.goog.effect.utils.ContextUtil
 import com.goog.effect.utils.safeInterrupt
 import com.goog.effect.utils.safeRun
+import com.goog.effect.view.IVideoView
 import java.lang.ref.WeakReference
 import java.util.concurrent.locks.ReentrantLock
 import javax.microedition.khronos.egl.EGL10
@@ -31,9 +36,11 @@ import kotlin.concurrent.withLock
  * copy from
  * https://github.com/appspell/ShaderView/blob/main/lib/src/main/java/com/appspell/shaderview/gl/view/GLTextureView.kt
  */
-open class GLTextureView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0) : TextureView(context, attrs, defStyleAttr),
-    TextureView.SurfaceTextureListener, ISurfaceView {
+open class GLTextureView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : TextureView(context, attrs, defStyleAttr),
+    TextureView.SurfaceTextureListener, ISurfaceView, IVideoView {
 
     private val sGLThreadManager = GLThreadManager()
     private val threadLock = ReentrantLock()
@@ -61,10 +68,25 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
         }
     }
 
+    private var renderer: FilterRenderer? = null
+
     init {
         ContextUtil.initContext(context)
+        val chooser = SimpleConfigChooser.RGBA8888()
+        setGLConfigChooser(chooser)
+        setGLContextFactory(SimpleContextFactory())
+
         surfaceTextureListener = this
-        setRenderer(FilterRenderer(this))
+        renderer = FilterRenderer(this)
+        setRenderer(renderer)
+    }
+
+    override fun setPlayer(player: Player?) {
+        renderer?.setPlayer(player)
+    }
+
+    override fun setGLFilter(glFilter: GLFilter?) {
+        renderer?.setGlFilter(glFilter)
     }
 
     fun setGLWrapper(glWrapper: GLWrapper?) {
@@ -150,6 +172,7 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
     @CallSuper
     fun onPause() {
         mGLThread?.onPause()
+        renderer?.onPause()
     }
 
     @CallSuper
@@ -265,9 +288,10 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
         private fun destroySurfaceImp() {
             if (mEglSurface != null && mEglSurface !== EGL10.EGL_NO_SURFACE) {
                 mEgl?.eglMakeCurrent(
-                        mEglDisplay, EGL10.EGL_NO_SURFACE,
-                        EGL10.EGL_NO_SURFACE,
-                        EGL10.EGL_NO_CONTEXT)
+                    mEglDisplay, EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_CONTEXT
+                )
                 val view = viewWeakRef.get()
                 view?.mWindowSurfaceFactory?.destroySurface(mEgl, mEglDisplay, mEglSurface)
                 mEglSurface = null
@@ -514,6 +538,7 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
                         EGL11.EGL_CONTEXT_LOST -> {
                             lostEglContext = true
                         }
+
                         else -> {
                             Log.e("GLThread", "eglSwapBuffers$swapError")
                             threadLock.withLock {
@@ -728,6 +753,7 @@ open class GLTextureView @JvmOverloads constructor(context: Context, attrs: Attr
     private fun checkRenderThreadState() {
         check(mGLThread == null) { "setRenderer has already been called for this instance." }
     }
+
 
     companion object {
         const val RENDERMODE_WHEN_DIRTY = 0

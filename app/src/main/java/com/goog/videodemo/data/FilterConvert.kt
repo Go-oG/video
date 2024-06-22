@@ -1,30 +1,61 @@
 package com.goog.videodemo.data
 
-import androidx.core.text.buildSpannedString
+
 import com.goog.effect.filter.core.GLFilter
 import com.goog.effect.model.CallBy
 import com.goog.effect.model.FloatDelegate
 import com.goog.effect.model.IntDelegate
-import java.lang.Math.addExact
-import java.lang.Math.max
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 
 object FilterConvert {
+    private val methodWeightMap = mapOf(
+        "iteratorcount" to 0,
+        "blursize" to 1,
 
-    private val methodNameList = listOf(
-            "iteratorcount",
-            "iterationcount",
-            "blursize",
-            "blurradius",
+        "sample" to 2,
+        "samples" to 2,
+
+        "centerx" to 3,
+        "centery" to 4,
+
+        "angle" to 5,
+        "anglex" to 6,
+        "angley" to 7,
+
+        "topleft" to 8,
+        "topright" to 9,
+        "bottomleft" to 10,
+        "bottomright" to 11,
+        "lefttop" to 8,
+        "leftbottom" to 9,
+        "righttop" to 10,
+        "rightbottom" to 11,
+
+        "texelheightoffset" to 12,
+        "texelwidthoffset" to 13,
+
+        "radius" to 14,
+        "strength" to 15,
+        "bluramount" to 16,
+        "aspect" to 17,
+        "scale" to 18,
+        "smoothing" to 19,
+        "threshold" to 20,
+        "intensity" to 21,
+        "brightness" to 22,
+        "contrast" to 23,
+        "crosshatch" to 24,
+        "linewidth" to 25,
+        "index" to 26,
+        "fractional" to 27
     )
-
 
     /**
      * 给定类名解析出参数列表和相关数据
      */
-    fun <T : GLFilter> parse(cls: Class<T>): FilterItem {
+    fun parse(cls: Class<*>): FilterItem {
         val parameterList = mutableListOf<Parameter>()
         val filterItem = FilterItem(getShowName(cls), cls, parameterList)
 
@@ -50,11 +81,9 @@ object FilterConvert {
         }
         val filter = createFilterByClass(cls)
 
-        val allField = getFiles(cls)
-
         for (method in methodSets) {
-            val para = buildParameterByMethod(filter, cls, method, allField)
-            if(para!=null){
+            val para = buildParameterByMethod(filter, cls, method)
+            if (para != null) {
                 parameterList.add(para)
             }
         }
@@ -62,35 +91,8 @@ object FilterConvert {
         return filterItem
     }
 
-    private fun buildParameterByMethod(obj: Any, cls: Class<*>, method: Method,
-        fieldList: Map<Class<*>, Set<Field>>): Parameter? {
-        return buildForNormal(method, cls, fieldList) ?: buildForDelegate(method, cls, obj, fieldList)
-    }
-
-
-
-
-    ///获取所有的属性字段
-    //public private protected
-    private fun getFiles(cls: Class<*>): Map<Class<*>, Set<Field>> {
-        ///先处理公共的
-        var nextCls: Class<*>? = cls
-        val fieldMap = mutableMapOf<Class<*>, Set<Field>>()
-        while (nextCls != null) {
-            val tmpList = nextCls.declaredFields
-            if (tmpList.isNullOrEmpty()) {
-                nextCls = nextCls.superclass
-                continue
-            }
-            val fieldSet = mutableSetOf<Field>()
-            fieldSet.addAll(tmpList)
-            fieldMap[cls] = fieldSet
-            if (nextCls == GLFilter::class.java) {
-                break
-            }
-            nextCls = nextCls.superclass
-        }
-        return fieldMap
+    private fun buildParameterByMethod(obj: Any, cls: Class<*>, method: Method): Parameter? {
+        return buildForNormal(obj, method, cls) ?: buildForDelegate(method, cls, obj)
     }
 
     private fun createFilterByClass(cls: Class<*>): Any {
@@ -104,7 +106,7 @@ object FilterConvert {
             a2.isAccessible = true
             val p1 = if (Modifier.isPublic(a1.modifiers)) 0 else 100
             val p2 = if (Modifier.isPublic(a2.modifiers)) 0 else 100
-            return@sortWith (p1 + a1.parameterCount).compareTo(p2 + a2.parameterCount)
+            return@sortWith (p1 + a1.parameterTypes.size).compareTo(p2 + a2.parameterTypes.size)
         }
         //TODO 暂时使用无参构造函数
         val constructor = list.first()
@@ -122,10 +124,8 @@ object FilterConvert {
         return showName
     }
 
-
-    private fun buildForDelegate(method: Method, cls: Class<*>, filter: Any,
-        fieldList: Map<Class<*>, Set<Field>>): Parameter? {
-        var s = method.substring(3)
+    private fun buildForDelegate(method: Method, cls: Class<*>, filter: Any): Parameter? {
+        var s = method.name.substring(3)
         s = s.replaceFirstChar {
             it.lowercaseChar()
         }
@@ -140,10 +140,11 @@ object FilterConvert {
                 val obj = field.get(filter)
                 val value = obj as FloatDelegate
                 val minV = value.minV ?: -10f
-                val maxV = value.maxV ?: (max(minV, 10f))
+                val maxV = value.maxV ?: (minV.coerceAtLeast(10f))
                 val step = (maxV - minV) / 100f
-                return Parameter(s, method, minV, maxV, step, value.getCurrent(), true)
-
+                return Parameter(s, method.name, minV, maxV, step, true).apply {
+                    curValue = value.getCurrent()
+                }
             }
             if (type == idcls) {
                 val obj = field.get(filter)
@@ -151,8 +152,9 @@ object FilterConvert {
                 val minV = value.minV ?: -10
                 val maxV = value.maxV ?: (kotlin.math.max(minV, 10))
                 val step = (maxV - minV) / 100
-                return Parameter(s, method, minV.toFloat(), maxV.toFloat(), step.toFloat(),
-                        value.getCurrent().toFloat(), false)
+                return Parameter(s, method.name, minV.toFloat(), maxV.toFloat(), step.toFloat(), false).apply {
+                    curValue = value.getCurrent().toFloat()
+                }
             }
         } catch (e: Exception) {
             return null
@@ -160,30 +162,31 @@ object FilterConvert {
         return null
     }
 
-    private fun buildForNormal(obj: Any, method: Method, cls: Class<*>,
-        fieldList: Map<Class<*>, Set<Field>>): Parameter? {
+    private fun buildForNormal(obj: Any, method: Method, cls: Class<*>): Parameter? {
         try {
             val pType = method.parameterTypes.first()
             val useFloat = pType == Float::class.java
             var showName = method.name
             if (showName.startsWith("set")) {
-                showName = showName.substring(2)
+                showName = showName.substring(3)
             }
             showName = showName.firstLowCase()
             val tryFieldName = "$showName\$delegate"
             val field =
-                getFieldByName(cls, tryFieldName) ?: return Parameter(showName, method.name, 0f, 100f,
-                        0.1f, useFloat)
-
+                getFieldByName(cls, tryFieldName) ?: return Parameter(
+                    showName, method.name, 0f, 100f,
+                    0.1f, useFloat
+                )
             return buildParameterByField(obj, cls, field, showName, method.name)
-
         } catch (e: Exception) {
             return null
         }
     }
 
-    private fun buildParameterByField(obj: Any, cls: Class<*>, field: Field, showName: String,
-        methodName: String): Parameter? {
+    private fun buildParameterByField(
+        obj: Any, cls: Class<*>, field: Field, showName: String,
+        methodName: String
+    ): Parameter? {
         if (field.type == FloatDelegate::class.java) {
             val delegate = (field.get(obj) as FloatDelegate)
             val cur = delegate.getCurrent()

@@ -14,10 +14,11 @@ class GLColorMatrixFilter : GLFilter() {
         Matrix.setIdentityM(colorMatrix, 0)
     }
 
+
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("intensity", intensity)
-        putMatrix4("colorMatrix", colorMatrix)
+        put("uIntensity", intensity)
+        putMatrix4("uColorMatrix", colorMatrix)
     }
 
     override fun getFragmentShader(): String {

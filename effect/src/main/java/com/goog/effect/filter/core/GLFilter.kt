@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.goog.effect.filter.core
 
 import android.opengl.GLES20
@@ -64,7 +66,6 @@ open class GLFilter {
 
     /**
      * 释放函数
-     * [objWillUse] 为true表示该对象将会被继续使用，
      * 调用该方法只是为了清理一些临时对象，此时不应该将一些全生命周期的数据清除
      */
     open fun release(callBy: CallBy) {
@@ -191,6 +192,13 @@ open class GLFilter {
         put("texelHeight", height.toFloat())
     }
 
+    protected val pixelWidth: Float
+        get() = 1f / width
+
+    protected val pixelHeight: Float
+        get() = 1f / height
+
+
     protected fun put(name: String, value: Int) {
         GLES20.glUniform1i(getHandle(name), value)
     }
@@ -316,7 +324,6 @@ open class GLFilter {
         handleMap[name] = location
         return location
     }
-
 
 
 }

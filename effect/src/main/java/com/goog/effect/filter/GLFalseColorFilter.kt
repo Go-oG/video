@@ -15,9 +15,9 @@ class GLFalseColorFilter : GLFilter() {
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("intensity", intensity)
-        putColor("firstColor", firstColor)
-        putColor("secondColor", secondColor)
+        put("uIntensity", intensity)
+        putColor("uFirstColor", firstColor)
+        putColor("uSecondColor", secondColor)
     }
 
     override fun getFragmentShader(): String {

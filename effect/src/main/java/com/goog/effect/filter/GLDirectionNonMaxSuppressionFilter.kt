@@ -9,16 +9,16 @@ class GLDirectionNonMaxSuppressionFilter : GLFilter() {
     var upperThreshold by FloatDelegate(1f, 0f, 1f)
     var lowerThreshold by FloatDelegate(0f, 0f, 1f)
 
-
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        putTextureSize()
-        put("upperThreshold", upperThreshold)
-        put("lowerThreshold", lowerThreshold)
+        put("uPixelWidth",pixelWidth)
+        put("uPixelHeight",pixelHeight)
+        put("uUpperThreshold", upperThreshold)
+        put("uLowerThreshold", lowerThreshold)
 
     }
 
     override fun getFragmentShader(): String {
-        return loadFilterFromAsset("filters/directional_non_Max_suppression.fsh")
+        return loadFilterFromAsset("filters/direction_non_max_suppression.fsh")
     }
 }

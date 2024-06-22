@@ -13,11 +13,11 @@ class GLBrightnessFilter : GLFilter() {
     var brightness by FloatDelegate(0f, -1f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        put("brightness", if (mEnable) brightness else 0.0f)
+        put("uBrightness", if (mEnable) brightness else 0.0f)
     }
 
     override fun getFragmentShader(): String {
-       return loadFilterFromAsset("filters/brightness.frag")
+        return loadFilterFromAsset("filters/brightness.frag")
     }
 
 

@@ -7,15 +7,17 @@ import com.goog.effect.model.FloatDelegate
 import com.goog.effect.utils.loadFilterFromAsset
 
 class GLChromaKeyFilter : GLFilter() {
-    var thresholdSensitivity by FloatDelegate(0.01f, 0f, 1f)
-    var smoothing by FloatDelegate(0.05f, 0f,1f)
-    var colorToReplace = FColor()
+    var threshold by FloatDelegate(0.01f, 0f, 1f)
+    var smoothing by FloatDelegate(0.05f, 0f, 1f)
+
+    var replaceColor = FColor()
+
 
     override fun onDraw(fbo: FrameBufferObject?) {
         super.onDraw(fbo)
-        put("thresholdSensitivity", thresholdSensitivity)
-        put("smoothing", smoothing)
-        putColor("colorToReplace", colorToReplace)
+        put("uThreshold", threshold)
+        put("uSmoothing", smoothing)
+        putColor("uReplaceColor", replaceColor)
     }
 
     override fun getFragmentShader(): String {

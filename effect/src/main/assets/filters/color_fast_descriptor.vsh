@@ -2,8 +2,8 @@ attribute vec4 aPosition;
 attribute vec4 aTextureCoord;
 attribute vec4 aTextureCoord2;
 
-uniform float texelWidth;
-uniform float texelHeight;
+uniform float uPixelWidth;
+uniform float uPixelHeight;
 
 varying vec2 vTextureCoord;
 
@@ -20,15 +20,15 @@ void main() {
     gl_Position = aPosition;
     vTextureCoord = aTextureCoord.xy;
 
-    float tripleTexelWidth = 3.0 * texelWidth;
-    float tripleTexelHeight = 3.0 * texelHeight;
+    float tripleTexelWidth = 3.0 * uPixelWidth;
+    float tripleTexelHeight = 3.0 * uPixelHeight;
 
-    pointATexCoord = vec2(aTextureCoord2.x + tripleTexelWidth, vTextureCoord.y + texelHeight);
-    pointBTexCoord = vec2(aTextureCoord2.x + texelWidth, vTextureCoord.y + tripleTexelHeight);
-    pointCTexCoord = vec2(aTextureCoord2.x - texelWidth, vTextureCoord.y + tripleTexelHeight);
-    pointDTexCoord = vec2(aTextureCoord2.x - tripleTexelWidth, vTextureCoord.y + texelHeight);
-    pointETexCoord = vec2(aTextureCoord2.x - tripleTexelWidth, vTextureCoord.y - texelHeight);
-    pointFTexCoord = vec2(aTextureCoord2.x - texelWidth, vTextureCoord.y - tripleTexelHeight);
-    pointGTexCoord = vec2(aTextureCoord2.x + texelWidth, vTextureCoord.y - tripleTexelHeight);
-    pointHTexCoord = vec2(aTextureCoord2.x + tripleTexelWidth, vTextureCoord.y - texelHeight);
+    pointATexCoord = vec2(aTextureCoord2.x + tripleTexelWidth, vTextureCoord.y + uPixelHeight);
+    pointBTexCoord = vec2(aTextureCoord2.x + uPixelWidth, vTextureCoord.y + tripleTexelHeight);
+    pointCTexCoord = vec2(aTextureCoord2.x - uPixelWidth, vTextureCoord.y + tripleTexelHeight);
+    pointDTexCoord = vec2(aTextureCoord2.x - tripleTexelWidth, vTextureCoord.y + uPixelHeight);
+    pointETexCoord = vec2(aTextureCoord2.x - tripleTexelWidth, vTextureCoord.y - uPixelHeight);
+    pointFTexCoord = vec2(aTextureCoord2.x - uPixelWidth, vTextureCoord.y - tripleTexelHeight);
+    pointGTexCoord = vec2(aTextureCoord2.x + uPixelWidth, vTextureCoord.y - tripleTexelHeight);
+    pointHTexCoord = vec2(aTextureCoord2.x + tripleTexelWidth, vTextureCoord.y - uPixelHeight);
 }

@@ -9,9 +9,9 @@ class Parameter(
     val minValue: Float,
     val maxValue: Float,
     val step: Float,
-    val useFloat: Boolean) {
-
-    var curValue by Delegates.notNull<Float>()
+    val useFloat: Boolean
+) {
+    var curValue = 0f
 }
 
 

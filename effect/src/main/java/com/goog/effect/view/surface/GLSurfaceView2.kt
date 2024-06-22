@@ -10,9 +10,10 @@ import com.goog.effect.gl.SimpleConfigChooser
 import com.goog.effect.gl.SimpleContextFactory
 import com.goog.effect.gl.FilterRenderer
 import com.goog.effect.utils.ContextUtil
+import com.goog.effect.view.IVideoView
 
 open class GLSurfaceView2 @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) :
-    GLSurfaceView(context, attrs), ISurfaceView {
+    GLSurfaceView(context, attrs), ISurfaceView, IVideoView {
     private val renderer: FilterRenderer
 
     init {
@@ -26,11 +27,11 @@ open class GLSurfaceView2 @JvmOverloads constructor(context: Context?, attrs: At
         setRenderer(renderer)
     }
 
-    open fun setPlayer(player: Player?) {
+    override fun setPlayer(player: Player?) {
         renderer.setPlayer(player)
     }
 
-    open fun setGlFilter(glFilter: GLFilter?) {
+    override fun setGLFilter(glFilter: GLFilter?) {
         renderer.setGlFilter(glFilter)
     }
 

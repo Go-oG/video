@@ -13,9 +13,9 @@ class GLBulgeDistortionFilter : GLFilter() {
     var scale by FloatDelegate(0.5f, 0f, 1f)
 
     override fun onDraw(fbo: FrameBufferObject?) {
-        putVec2("center", centerX, centerY)
-        put("radius", if (mEnable) radius else 0f)
-        put("scale", if (mEnable) scale else -1f)
+        putVec2("uCenter", centerX, centerY)
+        put("uRadius", if (mEnable) radius else 0f)
+        put("uScale", if (mEnable) scale else -1f)
     }
 
     override fun getFragmentShader(): String {

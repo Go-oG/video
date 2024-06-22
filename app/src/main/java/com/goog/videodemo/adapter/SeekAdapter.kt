@@ -31,7 +31,7 @@ class SeekAdapter(val context: Context, private var filterItem: FilterItem?) : R
             return
         }
         this.filterItem = item
-        dataList = item.parameter
+        dataList = item.parameterList
         notifyDataSetChanged()
     }
 

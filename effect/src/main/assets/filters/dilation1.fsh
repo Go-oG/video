@@ -1,10 +1,12 @@
 precision mediump float;
 
+uniform sampler2D sTexture;
+varying vec2 vTextureCoord;
+
 varying vec2 centerTextureCoord;
 varying vec2 oneStepPositiveTextureCoord;
 varying vec2 oneStepNegativeTextureCoord;
 
-uniform sampler2D sTexture;
 
 void main() {
     vec4 centerIntensity = texture2D(sTexture, centerTextureCoord);

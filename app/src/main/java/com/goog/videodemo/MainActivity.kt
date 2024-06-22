@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.goog.effect.view.surface.GLSurfaceView2
 import com.goog.videodemo.adapter.FilterAdapter
 import com.goog.videodemo.adapter.SeekAdapter
+import com.goog.videodemo.data.DataSources
 import com.goog.videodemo.data.FilterItem
 
 @SuppressLint("NotifyDataSetChanged")
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 videoView.setGlFilter(selectData?.filter)
             }
         }
-        adapter.dataList.addAll(FilterItem.loadFiltersData(this))
+        adapter.dataList.addAll(DataSources.loadFiltersData(this))
         listView.adapter = adapter
         listView.layoutManager = LinearLayoutManager(this)
     }
