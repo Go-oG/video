@@ -153,7 +153,9 @@ open class GLFilter {
         //设置纹理单元(sampler2D)
         GLES20.glUniform1i(getHandle(K_UNIFORM_TEX), 0)
 
-        onDraw(fbo)
+        if (mEnable) {
+            onDraw(fbo)
+        }
 
         ///绘制顶点数据
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
@@ -175,7 +177,7 @@ open class GLFilter {
     protected open fun onDrawEndHook(texName: Int, fbo: FrameBufferObject?) {}
 
     protected open fun useProgram(texName: Int, fbo: FrameBufferObject?) {
-        GLES20.glUseProgram(program)
+        GLES20.glUseProgram(if (mEnable) program else getPassthroughProgram())
     }
 
     ///subclass overwrite this
@@ -293,7 +295,7 @@ open class GLFilter {
 
     protected fun putMatrix2(name: String, value: FloatArray, offset: Int = 0) {
         checkArgs(value.size == 4, "value.size must be 4")
-        GLES20.glUniformMatrix4fv(getHandle(name), 1, false, value, offset)
+        GLES20.glUniformMatrix2fv(getHandle(name), 1, false, value, offset)
     }
 
     protected fun putMatrix2Array(name: String, value: FloatArray, count: Int) {
@@ -316,15 +318,32 @@ open class GLFilter {
         if (value != null) {
             return value
         }
-        var location = GLES20.glGetAttribLocation(program, name)
+        val activeProgram = if (mEnable) program else getPassthroughProgram()
+        var location = GLES20.glGetAttribLocation(activeProgram, name)
         if (location == -1) {
-            location = GLES20.glGetUniformLocation(program, name)
+            location = GLES20.glGetUniformLocation(activeProgram, name)
         }
         check(location != -1) { "Could not get attrib or uniform location for $name" }
         handleMap[name] = location
         return location
     }
 
+    companion object {
+        private var passthroughProgram = 0
+        private val passthroughHandleMap = ConcurrentHashMap<String, Int>()
+
+        @Synchronized
+        private fun getPassthroughProgram(): Int {
+            if (passthroughProgram == 0) {
+                val vs = loadShader(DEF_VERTEX_SHADER, false)
+                val fs = loadShader(DEF_FRAGMENT_SHADER, true)
+                passthroughProgram = createProgram(vs, fs)
+                GLES20.glDeleteShader(vs)
+                GLES20.glDeleteShader(fs)
+            }
+            return passthroughProgram
+        }
+    }
 
 }
 

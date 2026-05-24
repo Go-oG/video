@@ -4,49 +4,77 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 
-@SuppressLint("StaticFieldLeak,PrivateApi")
+/**
+ * Provides access to a global application [Context].
+ *
+ * The recommended way is to call [init] from your Application.onCreate():
+ * ```
+ * class MyApp : Application() {
+ *     override fun onCreate() {
+ *         super.onCreate()
+ *         ContextUtil.init(this)
+ *     }
+ * }
+ * ```
+ * If [init] was not called, a reflection-based fallback attempts to
+ * locate the Application instance automatically (may not work on all
+ * Android versions or in test environments).
+ */
+@SuppressLint("StaticFieldLeak")
 object ContextUtil {
 
-    private var application: Application? = null
-        get() {
-            if (field != null) {
-                return field
-            }
-            try {
-                val localClass1 = Class.forName("com.android.internal.os.RuntimeInit")
-                val localField1 = localClass1.getDeclaredField("mApplicationObject")
-                localField1.isAccessible = true
-                val localObject1 = localField1[localClass1]
-
-                val localClass2 = Class.forName("android.app.ActivityThread\$ApplicationThread")
-                val localField2 = localClass2.getDeclaredField("this$0")
-                localField2.isAccessible = true
-                val localObject2 = localField2[localObject1]
-
-                val localClass3 = Class.forName("android.app.ActivityThread")
-                val localMethod = localClass3.getMethod("getApplication", *arrayOfNulls(0))
-                localMethod.isAccessible = true
-                val localApplication = localMethod.invoke(localObject2, *arrayOfNulls(0)) as Application
-                field = localApplication
-            } catch (localException: Exception) {
-                localException.printStackTrace()
-            }
-            return field
-        }
-
+    @Volatile
     private var mContext: Context? = null
 
+    /**
+     * Initialize with an application context. Call this early from
+     * Application.onCreate() for the most reliable setup.
+     */
+    fun init(context: Context) {
+        mContext = context.applicationContext
+    }
+
+    /**
+     * @deprecated Use [init] instead.
+     */
+    @Deprecated("Use init() instead", ReplaceWith("init(context)"))
     fun initContext(c: Context?) {
-        mContext = c?.applicationContext
+        if (c != null) {
+            init(c)
+        }
     }
 
     fun getContext(): Context {
-        var c = mContext
-        if (c != null) {
-            return c
+        mContext?.let { return it }
+        return resolveViaReflection()
+    }
+
+    @Suppress("PrivateApi")
+    private fun resolveViaReflection(): Context {
+        try {
+            val runtimeInit = Class.forName("com.android.internal.os.RuntimeInit")
+            val appObjectField = runtimeInit.getDeclaredField("mApplicationObject")
+            appObjectField.isAccessible = true
+            val appObject = appObjectField.get(runtimeInit)
+
+            val appThreadClass = Class.forName("android.app.ActivityThread\$ApplicationThread")
+            val thisField = appThreadClass.getDeclaredField("this$0")
+            thisField.isAccessible = true
+            val activityThread = thisField.get(appObject)
+
+            val atClass = Class.forName("android.app.ActivityThread")
+            val getAppMethod = atClass.getMethod("getApplication")
+            getAppMethod.isAccessible = true
+            val app = getAppMethod.invoke(activityThread) as Application
+
+            mContext = app
+            return app
+        } catch (e: Exception) {
+            throw IllegalStateException(
+                "ContextUtil has not been initialized. " +
+                "Call ContextUtil.init(applicationContext) from your Application.onCreate().",
+                e
+            )
         }
-        c = application!!
-        mContext = c
-        return c
     }
 }

@@ -141,7 +141,7 @@ class GLToneCurveFilter(input: InputStream) : GLFilter() {
 
     private fun runOnDraw(runnable: Runnable) {
         synchronized(runOnDraw) {
-            runOnDraw.addLast(runnable)
+            runOnDraw.add(runnable)
         }
     }
 

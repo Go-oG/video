@@ -13,7 +13,6 @@ import com.goog.effect.utils.checkArgs
 /**
  * 实现多纹理对象的过滤器
  */
-@Deprecated("待完善")
 abstract class GLMultiTextureFilter(val texCount: Int) : GLFilter() {
     companion object{
         private val TEXTURE_PART_LIST = listOf(

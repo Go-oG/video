@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 selectData?.select()
                 seekAdapter.changeFilter(selectData)
                 adapter.notifyDataSetChanged()
-                videoView.setGlFilter(selectData?.filter)
+                videoView.setGLFilter(selectData?.filter)
             }
         }
         adapter.dataList.addAll(DataSources.loadFiltersData(this))
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clearFilter() {
-        videoView.setGlFilter(null)
+        videoView.setGLFilter(null)
         seekAdapter.changeFilter(null)
         for (item in adapter.dataList) {
             item.unselect()

@@ -10,7 +10,7 @@ varying vec2 vTextureCoord;
 varying vec2 blurCoordinates[GAUSSIAN_SAMPLES];
 
 void main() {
-    gl_Position = aposition;
+    gl_Position = aPosition;
     vTextureCoord = aTextureCoord.xy;
     
     // Calculate the positions for the blur

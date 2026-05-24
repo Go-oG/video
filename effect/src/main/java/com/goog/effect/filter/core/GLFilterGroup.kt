@@ -211,8 +211,8 @@ open class GLBaseFilterGroup(filters: List<GLFilter>? = null) : GLFilter() {
 
     override fun onUpdateArgs() {
         for (item in mFilters) {
-            item.initialize(CallBy.UPDATE_ARGS)
             item.setFrameSize(width, height)
+            item.markNeedUpdateArgs()
         }
     }
 

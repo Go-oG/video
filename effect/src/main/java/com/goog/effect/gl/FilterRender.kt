@@ -193,7 +193,9 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         }
 
         ///将当前渲染对象设置为指定的FBO对象并将视口设置为和FBO尺寸一致，避免拉伸
-        if (glFilter != null) {
+        val activeFilter = glFilter
+        val hasActiveFilter = activeFilter != null && activeFilter.isEnable()
+        if (hasActiveFilter) {
             filterFBO.enable()
             GLES20.glViewport(0, 0, filterFBO.width, filterFBO.height)
         }
@@ -223,11 +225,10 @@ class FilterRenderer(private val glSurfaceView: ISurfaceView) : FBORenderer(),
         previewFilter?.draw(externalTextureId, mvpMatrix, STMatrix, aspectRatio)
 
         //绘制设置的glFilter
-        glFilter?.let {
-            //TODO 这里是否应该只清除颜色而不应该清楚深度
+        if (hasActiveFilter) {
             fbo.enable(true)
-            it.runTaskQueueIfNeed()
-            it.draw(filterFBO.texName, fbo)
+            activeFilter!!.runTaskQueueIfNeed()
+            activeFilter.draw(filterFBO.texName, fbo)
         }
     }
 
